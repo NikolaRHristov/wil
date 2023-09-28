@@ -578,7 +578,9 @@ WI_ODR_PRAGMA("WIL_FreeMemory", "0")
 #endif
 // end-of-repeated fail-fast handling macros
 
-#define __WI_MSG_FMT_STRING(fmt, ...)                        (1 || ::wprintf(L"" fmt, ##__VA_ARGS__)) ? fmt : nullptr
+// Force the compiler to evaluate a call to 'wprintf' to verify the format string & args and produce warnings if there
+// are any issues. The short-circuit 'or' will prevent the call and strings used from making it into the binary
+#define __WI_MSG_FMT_STRING(fmt, ...)                        ((1 || ::wprintf(L"" fmt, ##__VA_ARGS__)), fmt)
 
 // Helpers for return macros
 #define __RETURN_HR_MSG(hr, str, fmt, ...)                   __WI_SUPPRESS_4127_S do { const HRESULT __hr = (hr); if (FAILED(__hr)) { __R_FN(Return_HrMsg)(__R_INFO(str) __hr, __WI_MSG_FMT_STRING(fmt, ##__VA_ARGS__), ##__VA_ARGS__); } return __hr; } __WI_SUPPRESS_4127_E while ((void)0, 0)
