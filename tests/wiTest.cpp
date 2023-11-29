@@ -31,40 +31,37 @@
 #include "test_objects.h"
 
 #pragma warning(push)
-#pragma warning(disable: 4702) // Unreachable code
+#pragma warning(disable : 4702) // Unreachable code
 
-TEST_CASE("WindowsInternalTests::CommonHelpers", "[resource]")
-{
-    {
-        wil::unique_handle spHandle;
-        REQUIRE(spHandle == nullptr);
-        REQUIRE(nullptr == spHandle);
-        REQUIRE_FALSE(spHandle != nullptr);
-        REQUIRE_FALSE(nullptr != spHandle);
+TEST_CASE("WindowsInternalTests::CommonHelpers", "[resource]"){{wil::unique_handle spHandle;
+REQUIRE(spHandle == nullptr);
+REQUIRE(nullptr == spHandle);
+REQUIRE_FALSE(spHandle != nullptr);
+REQUIRE_FALSE(nullptr != spHandle);
 
-        //equivalence check will static_assert because spMutex does not allow pointer access
-        wil::mutex_release_scope_exit spMutex;
-        //REQUIRE(spMutex == nullptr);
-        //REQUIRE(nullptr == spMutex);
+// equivalence check will static_assert because spMutex does not allow pointer access
+wil::mutex_release_scope_exit spMutex;
+// REQUIRE(spMutex == nullptr);
+// REQUIRE(nullptr == spMutex);
 
-        //equivalence check will static_assert because spFile does not use nullptr_t as a invalid value
-        wil::unique_hfile spFile;
-        //REQUIRE(spFile == nullptr);
-    }
+// equivalence check will static_assert because spFile does not use nullptr_t as a invalid value
+wil::unique_hfile spFile;
+// REQUIRE(spFile == nullptr);
+}
 #ifdef __WIL_WINBASE_STL
-    {
-        wil::shared_handle spHandle;
-        REQUIRE(spHandle == nullptr);
-        REQUIRE(nullptr == spHandle);
-        REQUIRE_FALSE(spHandle != nullptr);
-        REQUIRE_FALSE(nullptr != spHandle);
-    }
+{
+    wil::shared_handle spHandle;
+    REQUIRE(spHandle == nullptr);
+    REQUIRE(nullptr == spHandle);
+    REQUIRE_FALSE(spHandle != nullptr);
+    REQUIRE_FALSE(nullptr != spHandle);
+}
 #endif
 }
 
 TEST_CASE("WindowsInternalTests::AssertMacros", "[result_macros]")
 {
-    //WI_ASSERT macros are all no-ops if in retail
+    // WI_ASSERT macros are all no-ops if in retail
 #ifndef RESULT_DEBUG
     WI_ASSERT(false);
     WI_ASSERT_MSG(false, "WI_ASSERT_MSG");
@@ -92,8 +89,7 @@ void TestErrorCallbacks()
 {
     {
         size_t callbackCount = 0;
-        auto monitor = wil::ThreadFailureCallback([&](wil::FailureInfo const &failure) -> bool
-        {
+        auto monitor = wil::ThreadFailureCallback([&](wil::FailureInfo const& failure) -> bool {
             REQUIRE(failure.hr == E_ACCESSDENIED);
             callbackCount++;
             return false;
@@ -115,7 +111,8 @@ void TestErrorCallbacks()
 
         wil::ThreadFailureCache cacheNested;
 
-        LOG_HR(E_FAIL); unsigned long errorLine = __LINE__;
+        LOG_HR(E_FAIL);
+        unsigned long errorLine = __LINE__;
         LOG_HR(E_FAIL);
         LOG_HR(E_FAIL);
         REQUIRE(cache.GetFailure()->hr == E_FAIL);
@@ -188,7 +185,9 @@ class AlternateAccessDeniedException
 class DerivedAccessDeniedException : public wil::ResultException
 {
 public:
-    DerivedAccessDeniedException() : ResultException(E_AD) {}
+    DerivedAccessDeniedException() : ResultException(E_AD)
+    {
+    }
 };
 
 HRESULT __stdcall TestResultCaughtFromException() WI_NOEXCEPT
@@ -209,37 +208,70 @@ HRESULT __stdcall TestResultCaughtFromException() WI_NOEXCEPT
 #endif
 
 HANDLE hValid = reinterpret_cast<HANDLE>(1);
-HANDLE& hValidRef() { return hValid; }
+HANDLE& hValidRef()
+{
+    return hValid;
+}
 HANDLE hNull = NULL;
 HANDLE hInvalid = INVALID_HANDLE_VALUE;
-void* pValid = reinterpret_cast<void *>(1);
-void*& pValidRef() { return pValid; }
+void* pValid = reinterpret_cast<void*>(1);
+void*& pValidRef()
+{
+    return pValid;
+}
 void* pNull = nullptr;
-void*& pNullRef() { return pNull; }
+void*& pNullRef()
+{
+    return pNull;
+}
 bool fTrue = true;
-bool& fTrueRef() { return fTrue; }
+bool& fTrueRef()
+{
+    return fTrue;
+}
 bool fFalse = false;
-bool& fFalseRef() { return fFalse; }
+bool& fFalseRef()
+{
+    return fFalse;
+}
 BOOL fTRUE = TRUE;
-BOOL& fTRUERef() { return fTRUE; }
+BOOL& fTRUERef()
+{
+    return fTRUE;
+}
 BOOL fFALSE = FALSE;
 DWORD errSuccess = ERROR_SUCCESS;
-DWORD& errSuccessRef() { return errSuccess; }
+DWORD& errSuccessRef()
+{
+    return errSuccess;
+}
 HRESULT hrOK = S_OK;
-HRESULT& hrOKRef() { return hrOK; }
+HRESULT& hrOKRef()
+{
+    return hrOK;
+}
 HRESULT hrFAIL = E_FAIL;
-HRESULT& hrFAILRef() { return hrFAIL; }
+HRESULT& hrFAILRef()
+{
+    return hrFAIL;
+}
 const HRESULT E_hrOutOfPaper = HRESULT_FROM_WIN32(ERROR_OUT_OF_PAPER);
 NTSTATUS ntOK = STATUS_SUCCESS;
-NTSTATUS& ntOKRef() { return ntOK; }
+NTSTATUS& ntOKRef()
+{
+    return ntOK;
+}
 NTSTATUS ntFAIL = STATUS_NO_MEMORY;
-NTSTATUS& ntFAILRef() { return ntFAIL; }
+NTSTATUS& ntFAILRef()
+{
+    return ntFAIL;
+}
 const HRESULT S_hrNtOkay = wil::details::NtStatusToHr(STATUS_SUCCESS);
 const HRESULT E_hrNtAssertionFailure = wil::details::NtStatusToHr(STATUS_ASSERTION_FAILURE);
 
 wil::StoredFailureInfo g_log;
 
-void __stdcall ResultMacrosLoggingCallback(wil::FailureInfo *pFailure, PWSTR, size_t) WI_NOEXCEPT
+void __stdcall ResultMacrosLoggingCallback(wil::FailureInfo* pFailure, PWSTR, size_t) WI_NOEXCEPT
 {
     g_log = *pFailure;
 }
@@ -249,9 +281,9 @@ enum class EType
     None = 0x00,
     Expected = 0x02,
     Msg = 0x04,
-    FailFast = 0x08,        // overall fail fast (throw exception on successful result code, for example)
-    FailFastMacro = 0x10,   // explicit use of fast fail fast (FAIL_FAST_IF...)
-    NoContext = 0x20        // file and line info can be wrong (throw does not happen in context to code)
+    FailFast = 0x08,      // overall fail fast (throw exception on successful result code, for example)
+    FailFastMacro = 0x10, // explicit use of fast fail fast (FAIL_FAST_IF...)
+    NoContext = 0x20      // file and line info can be wrong (throw does not happen in context to code)
 };
 DEFINE_ENUM_FLAG_OPERATORS(EType);
 
@@ -266,8 +298,7 @@ bool VerifyResult(unsigned int lineNumber, EType type, HRESULT hr, TLambda&& lam
         HRESULT lambdaResult = E_FAIL;
         bool didFailFast = true;
         {
-            didFailFast = witest::DoesCodeCrash([&]()
-            {
+            didFailFast = witest::DoesCodeCrash([&]() {
                 lambdaResult = lambda();
             });
         }
@@ -316,12 +347,12 @@ HRESULT TranslateException(TLambda&& lambda)
     {
         lambda();
     }
-    catch (wil::ResultException &re)
+    catch (wil::ResultException& re)
     {
         return re.GetErrorCode();
     }
 #ifdef __cplusplus_winrt
-    catch (Platform::Exception ^pe)
+    catch (Platform::Exception ^ pe)
     {
         return wil::details::GetErrorCode(pe);
     }
@@ -334,24 +365,55 @@ HRESULT TranslateException(TLambda&& lambda)
 }
 #endif
 
-#define REQUIRE_RETURNS(hr, lambda)             REQUIRE(VerifyResult(__LINE__, EType::None, hr, lambda))
-#define REQUIRE_RETURNS_MSG(hr, lambda)         REQUIRE(VerifyResult(__LINE__, EType::Msg, hr, lambda))
-#define REQUIRE_RETURNS_EXPECTED(hr, lambda)    REQUIRE(VerifyResult(__LINE__, EType::Expected, hr, lambda))
+#define REQUIRE_RETURNS(hr, lambda) REQUIRE(VerifyResult(__LINE__, EType::None, hr, lambda))
+#define REQUIRE_RETURNS_MSG(hr, lambda) REQUIRE(VerifyResult(__LINE__, EType::Msg, hr, lambda))
+#define REQUIRE_RETURNS_EXPECTED(hr, lambda) REQUIRE(VerifyResult(__LINE__, EType::Expected, hr, lambda))
 
 #ifdef WIL_ENABLE_EXCEPTIONS
-#define REQUIRE_THROWS_RESULT(hr, lambda)       REQUIRE(VerifyResult(__LINE__, EType::None, hr, [&] { return TranslateException(lambda); }))
-#define REQUIRE_THROWS_MSG(hr, lambda)          REQUIRE(VerifyResult(__LINE__, EType::Msg, hr, [&] { return TranslateException(lambda); }))
+#define REQUIRE_THROWS_RESULT(hr, lambda) \
+    REQUIRE(VerifyResult(__LINE__, EType::None, hr, [&] { \
+        return TranslateException(lambda); \
+    }))
+#define REQUIRE_THROWS_MSG(hr, lambda) \
+    REQUIRE(VerifyResult(__LINE__, EType::Msg, hr, [&] { \
+        return TranslateException(lambda); \
+    }))
 #else
 #define REQUIRE_THROWS_RESULT(hr, lambda)
 #define REQUIRE_THROWS_MSG(hr, lambda)
 #endif
 
-#define REQUIRE_LOG(hr, lambda)                 REQUIRE(VerifyResult(__LINE__, EType::None, hr, [&] { auto fn = (lambda); fn(); return hr; }))
-#define REQUIRE_LOG_MSG(hr, lambda)             REQUIRE(VerifyResult(__LINE__, EType::Msg, hr, [&] { auto fn = (lambda); fn(); return hr; }))
+#define REQUIRE_LOG(hr, lambda) \
+    REQUIRE(VerifyResult(__LINE__, EType::None, hr, [&] { \
+        auto fn = (lambda); \
+        fn(); \
+        return hr; \
+    }))
+#define REQUIRE_LOG_MSG(hr, lambda) \
+    REQUIRE(VerifyResult(__LINE__, EType::Msg, hr, [&] { \
+        auto fn = (lambda); \
+        fn(); \
+        return hr; \
+    }))
 
-#define REQUIRE_FAILFAST(hr, lambda)            REQUIRE(VerifyResult(__LINE__, EType::FailFastMacro, hr, [&] { auto fn = (lambda); fn(); return hr; }))
-#define REQUIRE_FAILFAST_MSG(hr, lambda)        REQUIRE(VerifyResult(__LINE__, EType::FailFastMacro | EType::Msg, hr, [&] { auto fn = (lambda); fn(); return hr; }))
-#define REQUIRE_FAILFAST_UNSPECIFIED(lambda)    REQUIRE(VerifyResult(__LINE__, EType::FailFast, S_OK, [&] { auto fn = (lambda); fn(); return S_OK; }))
+#define REQUIRE_FAILFAST(hr, lambda) \
+    REQUIRE(VerifyResult(__LINE__, EType::FailFastMacro, hr, [&] { \
+        auto fn = (lambda); \
+        fn(); \
+        return hr; \
+    }))
+#define REQUIRE_FAILFAST_MSG(hr, lambda) \
+    REQUIRE(VerifyResult(__LINE__, EType::FailFastMacro | EType::Msg, hr, [&] { \
+        auto fn = (lambda); \
+        fn(); \
+        return hr; \
+    }))
+#define REQUIRE_FAILFAST_UNSPECIFIED(lambda) \
+    REQUIRE(VerifyResult(__LINE__, EType::FailFast, S_OK, [&] { \
+        auto fn = (lambda); \
+        fn(); \
+        return S_OK; \
+    }))
 
 TEST_CASE("WindowsInternalTests::ResultMacros", "[result_macros]")
 {
@@ -360,569 +422,1689 @@ TEST_CASE("WindowsInternalTests::ResultMacros", "[result_macros]")
     auto restoreExceptionCallback = witest::AssignTemporaryValue(&wil::g_pfnResultFromCaughtException, TestResultCaughtFromException);
 #endif
 
-    REQUIRE_RETURNS(S_OK, [] { RETURN_HR(MDEC(hrOKRef())); });
-    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__); });
-    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_HR(MDEC(hrOKRef())); });
-    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_HR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(S_OK, [] {
+        RETURN_HR(MDEC(hrOKRef()));
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        RETURN_HR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__);
+    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        FAIL_FAST_HR(MDEC(hrOKRef()));
+    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        FAIL_FAST_HR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS(E_FAIL, [] { RETURN_HR(E_FAIL); });
-    REQUIRE_RETURNS_MSG(E_FAIL, [] { RETURN_HR_MSG(E_FAIL, "msg: %d", __LINE__); });
-    REQUIRE_THROWS_RESULT(E_FAIL, [] { THROW_HR(E_FAIL); });
-    REQUIRE_THROWS_MSG(E_FAIL, [] { THROW_HR_MSG(E_FAIL, "msg: %d", __LINE__); });
-    REQUIRE_LOG(E_FAIL, [] { LOG_HR(E_FAIL); });
-    REQUIRE_LOG_MSG(E_FAIL, [] { LOG_HR_MSG(E_FAIL, "msg: %d", __LINE__); });
-    REQUIRE_FAILFAST(E_FAIL, [] { FAIL_FAST_HR(E_FAIL); });
-    REQUIRE_FAILFAST_MSG(E_FAIL, [] { FAIL_FAST_HR_MSG(E_FAIL, "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(E_FAIL, [] {
+        RETURN_HR(E_FAIL);
+    });
+    REQUIRE_RETURNS_MSG(E_FAIL, [] {
+        RETURN_HR_MSG(E_FAIL, "msg: %d", __LINE__);
+    });
+    REQUIRE_THROWS_RESULT(E_FAIL, [] {
+        THROW_HR(E_FAIL);
+    });
+    REQUIRE_THROWS_MSG(E_FAIL, [] {
+        THROW_HR_MSG(E_FAIL, "msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(E_FAIL, [] {
+        LOG_HR(E_FAIL);
+    });
+    REQUIRE_LOG_MSG(E_FAIL, [] {
+        LOG_HR_MSG(E_FAIL, "msg: %d", __LINE__);
+    });
+    REQUIRE_FAILFAST(E_FAIL, [] {
+        FAIL_FAST_HR(E_FAIL);
+    });
+    REQUIRE_FAILFAST_MSG(E_FAIL, [] {
+        FAIL_FAST_HR_MSG(E_FAIL, "msg: %d", __LINE__);
+    });
 
-    REQUIRE_FAILFAST_UNSPECIFIED([] { ::SetLastError(0); FAIL_FAST_LAST_ERROR(); });
-    REQUIRE_FAILFAST_UNSPECIFIED([] { ::SetLastError(0); FAIL_FAST_LAST_ERROR_MSG("msg: %d", __LINE__); });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        ::SetLastError(0);
+        FAIL_FAST_LAST_ERROR();
+    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        ::SetLastError(0);
+        FAIL_FAST_LAST_ERROR_MSG("msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS(E_AD, [] { SetAD(); RETURN_LAST_ERROR(); });
-    REQUIRE_RETURNS_MSG(E_AD, [] { SetAD(); RETURN_LAST_ERROR_MSG("msg: %d", __LINE__); });
-    REQUIRE_THROWS_RESULT(E_AD, [] { SetAD(); THROW_LAST_ERROR(); });
-    REQUIRE_THROWS_MSG(E_AD, [] { SetAD(); THROW_LAST_ERROR_MSG("msg: %d", __LINE__); });
-    REQUIRE_LOG(E_AD, [] { SetAD(); LOG_LAST_ERROR(); });
-    REQUIRE_LOG_MSG(E_AD, [] { SetAD(); LOG_LAST_ERROR_MSG("msg: %d", __LINE__); });
-    REQUIRE_FAILFAST(E_AD, [] { SetAD(); FAIL_FAST_LAST_ERROR(); });
-    REQUIRE_FAILFAST_MSG(E_AD, [] { SetAD(); FAIL_FAST_LAST_ERROR_MSG("msg: %d", __LINE__); });
+    REQUIRE_RETURNS(E_AD, [] {
+        SetAD();
+        RETURN_LAST_ERROR();
+    });
+    REQUIRE_RETURNS_MSG(E_AD, [] {
+        SetAD();
+        RETURN_LAST_ERROR_MSG("msg: %d", __LINE__);
+    });
+    REQUIRE_THROWS_RESULT(E_AD, [] {
+        SetAD();
+        THROW_LAST_ERROR();
+    });
+    REQUIRE_THROWS_MSG(E_AD, [] {
+        SetAD();
+        THROW_LAST_ERROR_MSG("msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(E_AD, [] {
+        SetAD();
+        LOG_LAST_ERROR();
+    });
+    REQUIRE_LOG_MSG(E_AD, [] {
+        SetAD();
+        LOG_LAST_ERROR_MSG("msg: %d", __LINE__);
+    });
+    REQUIRE_FAILFAST(E_AD, [] {
+        SetAD();
+        FAIL_FAST_LAST_ERROR();
+    });
+    REQUIRE_FAILFAST_MSG(E_AD, [] {
+        SetAD();
+        FAIL_FAST_LAST_ERROR_MSG("msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS(S_OK, [] { RETURN_WIN32(MDEC(errSuccessRef())); });
-    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_WIN32_MSG(MDEC(errSuccessRef()), "msg: %d", __LINE__); });
-    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_WIN32(MDEC(errSuccessRef())); });
-    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_WIN32_MSG(MDEC(errSuccessRef()), "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(S_OK, [] {
+        RETURN_WIN32(MDEC(errSuccessRef()));
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        RETURN_WIN32_MSG(MDEC(errSuccessRef()), "msg: %d", __LINE__);
+    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        FAIL_FAST_WIN32(MDEC(errSuccessRef()));
+    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        FAIL_FAST_WIN32_MSG(MDEC(errSuccessRef()), "msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS(E_AD, [] { RETURN_WIN32(ERROR_ACCESS_DENIED); });
-    REQUIRE_RETURNS_MSG(E_AD, [] { RETURN_WIN32_MSG(ERROR_ACCESS_DENIED, "msg: %d", __LINE__); });
-    REQUIRE_THROWS_RESULT(E_AD, [] { THROW_WIN32(ERROR_ACCESS_DENIED); });
-    REQUIRE_THROWS_MSG(E_AD, [] { THROW_WIN32_MSG(ERROR_ACCESS_DENIED, "msg: %d", __LINE__); });
-    REQUIRE_LOG(E_AD, [] { LOG_WIN32(ERROR_ACCESS_DENIED); });
-    REQUIRE_LOG_MSG(E_AD, [] { LOG_WIN32_MSG(ERROR_ACCESS_DENIED, "msg: %d", __LINE__); });
-    REQUIRE_FAILFAST(E_AD, [] { FAIL_FAST_WIN32(ERROR_ACCESS_DENIED); });
-    REQUIRE_FAILFAST_MSG(E_AD, [] { FAIL_FAST_WIN32_MSG(ERROR_ACCESS_DENIED, "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(E_AD, [] {
+        RETURN_WIN32(ERROR_ACCESS_DENIED);
+    });
+    REQUIRE_RETURNS_MSG(E_AD, [] {
+        RETURN_WIN32_MSG(ERROR_ACCESS_DENIED, "msg: %d", __LINE__);
+    });
+    REQUIRE_THROWS_RESULT(E_AD, [] {
+        THROW_WIN32(ERROR_ACCESS_DENIED);
+    });
+    REQUIRE_THROWS_MSG(E_AD, [] {
+        THROW_WIN32_MSG(ERROR_ACCESS_DENIED, "msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(E_AD, [] {
+        LOG_WIN32(ERROR_ACCESS_DENIED);
+    });
+    REQUIRE_LOG_MSG(E_AD, [] {
+        LOG_WIN32_MSG(ERROR_ACCESS_DENIED, "msg: %d", __LINE__);
+    });
+    REQUIRE_FAILFAST(E_AD, [] {
+        FAIL_FAST_WIN32(ERROR_ACCESS_DENIED);
+    });
+    REQUIRE_FAILFAST_MSG(E_AD, [] {
+        FAIL_FAST_WIN32_MSG(ERROR_ACCESS_DENIED, "msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS(S_OK, [] { RETURN_IF_FAILED(MDEC(hrOKRef())); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_IF_FAILED_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_IF_FAILED_EXPECTED(MDEC(hrOKRef())); return S_OK; });
-    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(S_OK == THROW_IF_FAILED(MDEC(hrOKRef()))); });
-    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(S_OK == THROW_IF_FAILED_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__)); });
-    REQUIRE_LOG(S_OK, [] { REQUIRE(S_OK == LOG_IF_FAILED(MDEC(hrOKRef()))); });
-    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(S_OK == LOG_IF_FAILED_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(S_OK == FAIL_FAST_IF_FAILED(MDEC(hrOKRef()))); });
-    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(S_OK == FAIL_FAST_IF_FAILED_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__)); });
+    REQUIRE_RETURNS(S_OK, [] {
+        RETURN_IF_FAILED(MDEC(hrOKRef()));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        RETURN_IF_FAILED_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        RETURN_IF_FAILED_EXPECTED(MDEC(hrOKRef()));
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(S_OK, [] {
+        REQUIRE(S_OK == THROW_IF_FAILED(MDEC(hrOKRef())));
+    });
+    REQUIRE_THROWS_MSG(S_OK, [] {
+        REQUIRE(S_OK == THROW_IF_FAILED_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_LOG(S_OK, [] {
+        REQUIRE(S_OK == LOG_IF_FAILED(MDEC(hrOKRef())));
+    });
+    REQUIRE_LOG_MSG(S_OK, [] {
+        REQUIRE(S_OK == LOG_IF_FAILED_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(S_OK, [] {
+        REQUIRE(S_OK == FAIL_FAST_IF_FAILED(MDEC(hrOKRef())));
+    });
+    REQUIRE_FAILFAST_MSG(S_OK, [] {
+        REQUIRE(S_OK == FAIL_FAST_IF_FAILED_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__));
+    });
 
-    REQUIRE_RETURNS(E_FAIL, [] { RETURN_IF_FAILED(E_FAIL); return S_OK; });
-    REQUIRE_RETURNS_MSG(E_FAIL, [] { RETURN_IF_FAILED_MSG(E_FAIL, "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] { RETURN_IF_FAILED_EXPECTED(E_FAIL); return S_OK; });
-    REQUIRE_THROWS_RESULT(E_FAIL, [] { THROW_IF_FAILED(E_FAIL); });
-    REQUIRE_THROWS_MSG(E_FAIL, [] { THROW_IF_FAILED_MSG(E_FAIL, "msg: %d", __LINE__); });
-    REQUIRE_LOG(E_FAIL, [] { REQUIRE(E_FAIL == LOG_IF_FAILED(E_FAIL)); });
-    REQUIRE_LOG_MSG(E_FAIL, [] { REQUIRE(E_FAIL == LOG_IF_FAILED_MSG(E_FAIL, "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(E_FAIL, [] { FAIL_FAST_IF_FAILED(E_FAIL); });
-    REQUIRE_FAILFAST_MSG(E_FAIL, [] { FAIL_FAST_IF_FAILED_MSG(E_FAIL, "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(E_FAIL, [] {
+        RETURN_IF_FAILED(E_FAIL);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(E_FAIL, [] {
+        RETURN_IF_FAILED_MSG(E_FAIL, "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] {
+        RETURN_IF_FAILED_EXPECTED(E_FAIL);
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(E_FAIL, [] {
+        THROW_IF_FAILED(E_FAIL);
+    });
+    REQUIRE_THROWS_MSG(E_FAIL, [] {
+        THROW_IF_FAILED_MSG(E_FAIL, "msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(E_FAIL, [] {
+        REQUIRE(E_FAIL == LOG_IF_FAILED(E_FAIL));
+    });
+    REQUIRE_LOG_MSG(E_FAIL, [] {
+        REQUIRE(E_FAIL == LOG_IF_FAILED_MSG(E_FAIL, "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(E_FAIL, [] {
+        FAIL_FAST_IF_FAILED(E_FAIL);
+    });
+    REQUIRE_FAILFAST_MSG(E_FAIL, [] {
+        FAIL_FAST_IF_FAILED_MSG(E_FAIL, "msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS(S_OK, [] { RETURN_IF_WIN32_BOOL_FALSE(MDEC(fTRUERef())); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_IF_WIN32_BOOL_FALSE_MSG(MDEC(fTRUERef()), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_IF_WIN32_BOOL_FALSE_EXPECTED(MDEC(fTRUERef())); return S_OK; });
-    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(fTRUE == THROW_IF_WIN32_BOOL_FALSE(MDEC(fTRUERef()))); });
-    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(fTRUE == THROW_IF_WIN32_BOOL_FALSE_MSG(MDEC(fTRUERef()), "msg: %d", __LINE__)); });
-    REQUIRE_LOG(S_OK, [] { REQUIRE(fTRUE == LOG_IF_WIN32_BOOL_FALSE(MDEC(fTRUERef()))); });
-    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(fTRUE == LOG_IF_WIN32_BOOL_FALSE_MSG(MDEC(fTRUERef()), "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(fTRUE == FAIL_FAST_IF_WIN32_BOOL_FALSE(MDEC(fTRUERef()))); });
-    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(fTRUE == FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(MDEC(fTRUERef()), "msg: %d", __LINE__)); });
+    REQUIRE_RETURNS(S_OK, [] {
+        RETURN_IF_WIN32_BOOL_FALSE(MDEC(fTRUERef()));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        RETURN_IF_WIN32_BOOL_FALSE_MSG(MDEC(fTRUERef()), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        RETURN_IF_WIN32_BOOL_FALSE_EXPECTED(MDEC(fTRUERef()));
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(S_OK, [] {
+        REQUIRE(fTRUE == THROW_IF_WIN32_BOOL_FALSE(MDEC(fTRUERef())));
+    });
+    REQUIRE_THROWS_MSG(S_OK, [] {
+        REQUIRE(fTRUE == THROW_IF_WIN32_BOOL_FALSE_MSG(MDEC(fTRUERef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_LOG(S_OK, [] {
+        REQUIRE(fTRUE == LOG_IF_WIN32_BOOL_FALSE(MDEC(fTRUERef())));
+    });
+    REQUIRE_LOG_MSG(S_OK, [] {
+        REQUIRE(fTRUE == LOG_IF_WIN32_BOOL_FALSE_MSG(MDEC(fTRUERef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(S_OK, [] {
+        REQUIRE(fTRUE == FAIL_FAST_IF_WIN32_BOOL_FALSE(MDEC(fTRUERef())));
+    });
+    REQUIRE_FAILFAST_MSG(S_OK, [] {
+        REQUIRE(fTRUE == FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(MDEC(fTRUERef()), "msg: %d", __LINE__));
+    });
 
-    REQUIRE_RETURNS(E_AD, [] { SetAD(); RETURN_IF_WIN32_BOOL_FALSE(fFALSE); return S_OK; });
-    REQUIRE_RETURNS_MSG(E_AD, [] { SetAD(); RETURN_IF_WIN32_BOOL_FALSE_MSG(fFALSE, "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(E_AD, [] { SetAD(); RETURN_IF_WIN32_BOOL_FALSE_EXPECTED(fFALSE); return S_OK; });
-    REQUIRE_THROWS_RESULT(E_AD, [] { SetAD(); THROW_IF_WIN32_BOOL_FALSE(fFALSE); });
-    REQUIRE_THROWS_MSG(E_AD, [] { SetAD(); THROW_IF_WIN32_BOOL_FALSE_MSG(fFALSE, "msg: %d", __LINE__); });
-    REQUIRE_LOG(E_AD, [] { SetAD(); REQUIRE(fFALSE == LOG_IF_WIN32_BOOL_FALSE(fFALSE)); });
-    REQUIRE_LOG_MSG(E_AD, [] { SetAD(); REQUIRE(fFALSE == LOG_IF_WIN32_BOOL_FALSE_MSG(fFALSE, "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(E_AD, [] { SetAD(); FAIL_FAST_IF_WIN32_BOOL_FALSE(fFALSE); });
-    REQUIRE_FAILFAST_MSG(E_AD, [] { SetAD(); FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(fFALSE, "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(E_AD, [] {
+        SetAD();
+        RETURN_IF_WIN32_BOOL_FALSE(fFALSE);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(E_AD, [] {
+        SetAD();
+        RETURN_IF_WIN32_BOOL_FALSE_MSG(fFALSE, "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(E_AD, [] {
+        SetAD();
+        RETURN_IF_WIN32_BOOL_FALSE_EXPECTED(fFALSE);
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(E_AD, [] {
+        SetAD();
+        THROW_IF_WIN32_BOOL_FALSE(fFALSE);
+    });
+    REQUIRE_THROWS_MSG(E_AD, [] {
+        SetAD();
+        THROW_IF_WIN32_BOOL_FALSE_MSG(fFALSE, "msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(E_AD, [] {
+        SetAD();
+        REQUIRE(fFALSE == LOG_IF_WIN32_BOOL_FALSE(fFALSE));
+    });
+    REQUIRE_LOG_MSG(E_AD, [] {
+        SetAD();
+        REQUIRE(fFALSE == LOG_IF_WIN32_BOOL_FALSE_MSG(fFALSE, "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(E_AD, [] {
+        SetAD();
+        FAIL_FAST_IF_WIN32_BOOL_FALSE(fFALSE);
+    });
+    REQUIRE_FAILFAST_MSG(E_AD, [] {
+        SetAD();
+        FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(fFALSE, "msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS(S_OK, [] { RETURN_IF_WIN32_ERROR(MDEC(hrOKRef())); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_IF_WIN32_ERROR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_IF_WIN32_ERROR_EXPECTED(MDEC(hrOKRef())); return S_OK; });
-    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(S_OK == THROW_IF_WIN32_ERROR(MDEC(hrOKRef()))); });
-    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(S_OK == THROW_IF_WIN32_ERROR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__)); });
-    REQUIRE_LOG(S_OK, [] { REQUIRE(S_OK == LOG_IF_WIN32_ERROR(MDEC(hrOKRef()))); });
-    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(S_OK == LOG_IF_WIN32_ERROR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(S_OK == FAIL_FAST_IF_WIN32_ERROR(MDEC(hrOKRef()))); });
-    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(S_OK == FAIL_FAST_IF_WIN32_ERROR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__)); });
+    REQUIRE_RETURNS(S_OK, [] {
+        RETURN_IF_WIN32_ERROR(MDEC(hrOKRef()));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        RETURN_IF_WIN32_ERROR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        RETURN_IF_WIN32_ERROR_EXPECTED(MDEC(hrOKRef()));
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(S_OK, [] {
+        REQUIRE(S_OK == THROW_IF_WIN32_ERROR(MDEC(hrOKRef())));
+    });
+    REQUIRE_THROWS_MSG(S_OK, [] {
+        REQUIRE(S_OK == THROW_IF_WIN32_ERROR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_LOG(S_OK, [] {
+        REQUIRE(S_OK == LOG_IF_WIN32_ERROR(MDEC(hrOKRef())));
+    });
+    REQUIRE_LOG_MSG(S_OK, [] {
+        REQUIRE(S_OK == LOG_IF_WIN32_ERROR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(S_OK, [] {
+        REQUIRE(S_OK == FAIL_FAST_IF_WIN32_ERROR(MDEC(hrOKRef())));
+    });
+    REQUIRE_FAILFAST_MSG(S_OK, [] {
+        REQUIRE(S_OK == FAIL_FAST_IF_WIN32_ERROR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__));
+    });
 
-    REQUIRE_RETURNS(E_hrOutOfPaper, [] { RETURN_IF_WIN32_ERROR(ERROR_OUT_OF_PAPER); return S_OK; });
-    REQUIRE_RETURNS_MSG(E_hrOutOfPaper, [] { RETURN_IF_WIN32_ERROR_MSG(ERROR_OUT_OF_PAPER, "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(E_hrOutOfPaper, [] { RETURN_IF_WIN32_ERROR_EXPECTED(ERROR_OUT_OF_PAPER); return S_OK; });
-    REQUIRE_THROWS_RESULT(E_hrOutOfPaper, [] { THROW_IF_WIN32_ERROR(ERROR_OUT_OF_PAPER); });
-    REQUIRE_THROWS_MSG(E_hrOutOfPaper, [] { THROW_IF_WIN32_ERROR_MSG(ERROR_OUT_OF_PAPER, "msg: %d", __LINE__); });
-    REQUIRE_LOG(E_hrOutOfPaper, [] { REQUIRE(ERROR_OUT_OF_PAPER == LOG_IF_WIN32_ERROR(ERROR_OUT_OF_PAPER)); });
-    REQUIRE_LOG_MSG(E_hrOutOfPaper, [] { REQUIRE(ERROR_OUT_OF_PAPER == LOG_IF_WIN32_ERROR_MSG(ERROR_OUT_OF_PAPER, "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(E_hrOutOfPaper, [] { FAIL_FAST_IF_WIN32_ERROR(ERROR_OUT_OF_PAPER); });
-    REQUIRE_FAILFAST_MSG(E_hrOutOfPaper, [] { FAIL_FAST_IF_WIN32_ERROR_MSG(ERROR_OUT_OF_PAPER, "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(E_hrOutOfPaper, [] {
+        RETURN_IF_WIN32_ERROR(ERROR_OUT_OF_PAPER);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(E_hrOutOfPaper, [] {
+        RETURN_IF_WIN32_ERROR_MSG(ERROR_OUT_OF_PAPER, "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(E_hrOutOfPaper, [] {
+        RETURN_IF_WIN32_ERROR_EXPECTED(ERROR_OUT_OF_PAPER);
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(E_hrOutOfPaper, [] {
+        THROW_IF_WIN32_ERROR(ERROR_OUT_OF_PAPER);
+    });
+    REQUIRE_THROWS_MSG(E_hrOutOfPaper, [] {
+        THROW_IF_WIN32_ERROR_MSG(ERROR_OUT_OF_PAPER, "msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(E_hrOutOfPaper, [] {
+        REQUIRE(ERROR_OUT_OF_PAPER == LOG_IF_WIN32_ERROR(ERROR_OUT_OF_PAPER));
+    });
+    REQUIRE_LOG_MSG(E_hrOutOfPaper, [] {
+        REQUIRE(ERROR_OUT_OF_PAPER == LOG_IF_WIN32_ERROR_MSG(ERROR_OUT_OF_PAPER, "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(E_hrOutOfPaper, [] {
+        FAIL_FAST_IF_WIN32_ERROR(ERROR_OUT_OF_PAPER);
+    });
+    REQUIRE_FAILFAST_MSG(E_hrOutOfPaper, [] {
+        FAIL_FAST_IF_WIN32_ERROR_MSG(ERROR_OUT_OF_PAPER, "msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS(S_hrNtOkay, [] { RETURN_NTSTATUS(MDEC(ntOKRef())); });
-    REQUIRE_RETURNS_MSG(S_hrNtOkay, [] { RETURN_NTSTATUS_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__); });
-    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_NTSTATUS(MDEC(ntOKRef())); });
-    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_NTSTATUS_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(S_hrNtOkay, [] {
+        RETURN_NTSTATUS(MDEC(ntOKRef()));
+    });
+    REQUIRE_RETURNS_MSG(S_hrNtOkay, [] {
+        RETURN_NTSTATUS_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__);
+    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        FAIL_FAST_NTSTATUS(MDEC(ntOKRef()));
+    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        FAIL_FAST_NTSTATUS_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS(E_hrNtAssertionFailure, [] { RETURN_NTSTATUS(STATUS_ASSERTION_FAILURE); });
-    REQUIRE_RETURNS_MSG(E_hrNtAssertionFailure, [] { RETURN_NTSTATUS_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__); });
-    REQUIRE_THROWS_RESULT(E_hrNtAssertionFailure, [] { THROW_NTSTATUS(STATUS_ASSERTION_FAILURE); });
-    REQUIRE_THROWS_MSG(E_hrNtAssertionFailure, [] { THROW_NTSTATUS_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__); });
-    REQUIRE_LOG(E_hrNtAssertionFailure, [] { LOG_NTSTATUS(STATUS_ASSERTION_FAILURE); });
-    REQUIRE_LOG_MSG(E_hrNtAssertionFailure, [] { LOG_NTSTATUS_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__); });
-    REQUIRE_FAILFAST(E_hrNtAssertionFailure, [] { FAIL_FAST_NTSTATUS(STATUS_ASSERTION_FAILURE); });
-    REQUIRE_FAILFAST_MSG(E_hrNtAssertionFailure, [] { FAIL_FAST_NTSTATUS_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(E_hrNtAssertionFailure, [] {
+        RETURN_NTSTATUS(STATUS_ASSERTION_FAILURE);
+    });
+    REQUIRE_RETURNS_MSG(E_hrNtAssertionFailure, [] {
+        RETURN_NTSTATUS_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__);
+    });
+    REQUIRE_THROWS_RESULT(E_hrNtAssertionFailure, [] {
+        THROW_NTSTATUS(STATUS_ASSERTION_FAILURE);
+    });
+    REQUIRE_THROWS_MSG(E_hrNtAssertionFailure, [] {
+        THROW_NTSTATUS_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(E_hrNtAssertionFailure, [] {
+        LOG_NTSTATUS(STATUS_ASSERTION_FAILURE);
+    });
+    REQUIRE_LOG_MSG(E_hrNtAssertionFailure, [] {
+        LOG_NTSTATUS_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__);
+    });
+    REQUIRE_FAILFAST(E_hrNtAssertionFailure, [] {
+        FAIL_FAST_NTSTATUS(STATUS_ASSERTION_FAILURE);
+    });
+    REQUIRE_FAILFAST_MSG(E_hrNtAssertionFailure, [] {
+        FAIL_FAST_NTSTATUS_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_IF_NTSTATUS_FAILED_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_IF_NTSTATUS_FAILED_EXPECTED(MDEC(ntOKRef())); return S_OK; });
-    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(STATUS_WAIT_0 == THROW_IF_NTSTATUS_FAILED(MDEC(ntOKRef()))); });
-    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(STATUS_WAIT_0 == THROW_IF_NTSTATUS_FAILED_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__)); });
-    REQUIRE_LOG(S_OK, [] { REQUIRE(STATUS_WAIT_0 == LOG_IF_NTSTATUS_FAILED(MDEC(ntOKRef()))); });
-    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(STATUS_WAIT_0 == LOG_IF_NTSTATUS_FAILED_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(STATUS_WAIT_0 == FAIL_FAST_IF_NTSTATUS_FAILED(MDEC(ntOKRef()))); });
-    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(STATUS_WAIT_0 == FAIL_FAST_IF_NTSTATUS_FAILED_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__)); });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        RETURN_IF_NTSTATUS_FAILED_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        RETURN_IF_NTSTATUS_FAILED_EXPECTED(MDEC(ntOKRef()));
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(S_OK, [] {
+        REQUIRE(STATUS_WAIT_0 == THROW_IF_NTSTATUS_FAILED(MDEC(ntOKRef())));
+    });
+    REQUIRE_THROWS_MSG(S_OK, [] {
+        REQUIRE(STATUS_WAIT_0 == THROW_IF_NTSTATUS_FAILED_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_LOG(S_OK, [] {
+        REQUIRE(STATUS_WAIT_0 == LOG_IF_NTSTATUS_FAILED(MDEC(ntOKRef())));
+    });
+    REQUIRE_LOG_MSG(S_OK, [] {
+        REQUIRE(STATUS_WAIT_0 == LOG_IF_NTSTATUS_FAILED_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(S_OK, [] {
+        REQUIRE(STATUS_WAIT_0 == FAIL_FAST_IF_NTSTATUS_FAILED(MDEC(ntOKRef())));
+    });
+    REQUIRE_FAILFAST_MSG(S_OK, [] {
+        REQUIRE(STATUS_WAIT_0 == FAIL_FAST_IF_NTSTATUS_FAILED_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__));
+    });
 
-    REQUIRE_RETURNS(E_hrNtAssertionFailure, [] { RETURN_IF_NTSTATUS_FAILED(STATUS_ASSERTION_FAILURE); return S_OK; });
-    REQUIRE_RETURNS_MSG(E_hrNtAssertionFailure, [] { RETURN_IF_NTSTATUS_FAILED_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(E_hrNtAssertionFailure, [] { RETURN_IF_NTSTATUS_FAILED_EXPECTED(STATUS_ASSERTION_FAILURE); return S_OK; });
-    REQUIRE_THROWS_RESULT(E_hrNtAssertionFailure, [] { THROW_IF_NTSTATUS_FAILED(STATUS_ASSERTION_FAILURE); });
-    REQUIRE_THROWS_MSG(E_hrNtAssertionFailure, [] { THROW_IF_NTSTATUS_FAILED_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__); });
-    REQUIRE_LOG(E_hrNtAssertionFailure, [] { REQUIRE(STATUS_ASSERTION_FAILURE == static_cast<DWORD>(LOG_IF_NTSTATUS_FAILED(STATUS_ASSERTION_FAILURE))); });
-    REQUIRE_LOG_MSG(E_hrNtAssertionFailure, [] { REQUIRE(STATUS_ASSERTION_FAILURE == static_cast<DWORD>(LOG_IF_NTSTATUS_FAILED_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__))); });
-    REQUIRE_FAILFAST(E_hrNtAssertionFailure, [] { FAIL_FAST_IF_NTSTATUS_FAILED(STATUS_ASSERTION_FAILURE); });
-    REQUIRE_FAILFAST_MSG(E_hrNtAssertionFailure, [] { FAIL_FAST_IF_NTSTATUS_FAILED_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(E_hrNtAssertionFailure, [] {
+        RETURN_IF_NTSTATUS_FAILED(STATUS_ASSERTION_FAILURE);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(E_hrNtAssertionFailure, [] {
+        RETURN_IF_NTSTATUS_FAILED_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(E_hrNtAssertionFailure, [] {
+        RETURN_IF_NTSTATUS_FAILED_EXPECTED(STATUS_ASSERTION_FAILURE);
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(E_hrNtAssertionFailure, [] {
+        THROW_IF_NTSTATUS_FAILED(STATUS_ASSERTION_FAILURE);
+    });
+    REQUIRE_THROWS_MSG(E_hrNtAssertionFailure, [] {
+        THROW_IF_NTSTATUS_FAILED_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(E_hrNtAssertionFailure, [] {
+        REQUIRE(STATUS_ASSERTION_FAILURE == static_cast<DWORD>(LOG_IF_NTSTATUS_FAILED(STATUS_ASSERTION_FAILURE)));
+    });
+    REQUIRE_LOG_MSG(E_hrNtAssertionFailure, [] {
+        REQUIRE(STATUS_ASSERTION_FAILURE == static_cast<DWORD>(LOG_IF_NTSTATUS_FAILED_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__)));
+    });
+    REQUIRE_FAILFAST(E_hrNtAssertionFailure, [] {
+        FAIL_FAST_IF_NTSTATUS_FAILED(STATUS_ASSERTION_FAILURE);
+    });
+    REQUIRE_FAILFAST_MSG(E_hrNtAssertionFailure, [] {
+        FAIL_FAST_IF_NTSTATUS_FAILED_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS(E_OUTOFMEMORY, [] { RETURN_IF_NTSTATUS_FAILED(STATUS_NO_MEMORY); return S_OK; });
-    REQUIRE_RETURNS_MSG(E_OUTOFMEMORY, [] { RETURN_IF_NTSTATUS_FAILED_MSG(STATUS_NO_MEMORY, "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(E_OUTOFMEMORY, [] { RETURN_IF_NTSTATUS_FAILED_EXPECTED(STATUS_NO_MEMORY); return S_OK; });
-    REQUIRE_THROWS_RESULT(E_OUTOFMEMORY, [] { THROW_IF_NTSTATUS_FAILED(STATUS_NO_MEMORY); });
-    REQUIRE_THROWS_MSG(E_OUTOFMEMORY, [] { THROW_IF_NTSTATUS_FAILED_MSG(STATUS_NO_MEMORY, "msg: %d", __LINE__); });
-    REQUIRE_LOG(E_OUTOFMEMORY, [] { REQUIRE(STATUS_NO_MEMORY == static_cast<DWORD>(LOG_IF_NTSTATUS_FAILED(STATUS_NO_MEMORY))); });
-    REQUIRE_LOG_MSG(E_OUTOFMEMORY, [] { REQUIRE(STATUS_NO_MEMORY == static_cast<DWORD>(LOG_IF_NTSTATUS_FAILED_MSG(STATUS_NO_MEMORY, "msg: %d", __LINE__))); });
-    REQUIRE_FAILFAST(E_OUTOFMEMORY, [] { FAIL_FAST_IF_NTSTATUS_FAILED(STATUS_NO_MEMORY); });
-    REQUIRE_FAILFAST_MSG(E_OUTOFMEMORY, [] { FAIL_FAST_IF_NTSTATUS_FAILED_MSG(STATUS_NO_MEMORY, "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(E_OUTOFMEMORY, [] {
+        RETURN_IF_NTSTATUS_FAILED(STATUS_NO_MEMORY);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(E_OUTOFMEMORY, [] {
+        RETURN_IF_NTSTATUS_FAILED_MSG(STATUS_NO_MEMORY, "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(E_OUTOFMEMORY, [] {
+        RETURN_IF_NTSTATUS_FAILED_EXPECTED(STATUS_NO_MEMORY);
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(E_OUTOFMEMORY, [] {
+        THROW_IF_NTSTATUS_FAILED(STATUS_NO_MEMORY);
+    });
+    REQUIRE_THROWS_MSG(E_OUTOFMEMORY, [] {
+        THROW_IF_NTSTATUS_FAILED_MSG(STATUS_NO_MEMORY, "msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(E_OUTOFMEMORY, [] {
+        REQUIRE(STATUS_NO_MEMORY == static_cast<DWORD>(LOG_IF_NTSTATUS_FAILED(STATUS_NO_MEMORY)));
+    });
+    REQUIRE_LOG_MSG(E_OUTOFMEMORY, [] {
+        REQUIRE(STATUS_NO_MEMORY == static_cast<DWORD>(LOG_IF_NTSTATUS_FAILED_MSG(STATUS_NO_MEMORY, "msg: %d", __LINE__)));
+    });
+    REQUIRE_FAILFAST(E_OUTOFMEMORY, [] {
+        FAIL_FAST_IF_NTSTATUS_FAILED(STATUS_NO_MEMORY);
+    });
+    REQUIRE_FAILFAST_MSG(E_OUTOFMEMORY, [] {
+        FAIL_FAST_IF_NTSTATUS_FAILED_MSG(STATUS_NO_MEMORY, "msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS(S_OK, [] { RETURN_IF_NULL_ALLOC(MDEC(pValidRef())); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_IF_NULL_ALLOC_MSG(MDEC(pValidRef()), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_IF_NULL_ALLOC_EXPECTED(MDEC(pValidRef())); return S_OK; });
-    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(pValid == THROW_IF_NULL_ALLOC(MDEC(pValidRef()))); });
-    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(pValid == THROW_IF_NULL_ALLOC_MSG(MDEC(pValidRef()), "msg: %d", __LINE__)); });
-    REQUIRE_LOG(S_OK, [] { REQUIRE(pValid == LOG_IF_NULL_ALLOC(MDEC(pValidRef()))); });
-    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(pValid == LOG_IF_NULL_ALLOC_MSG(MDEC(pValidRef()), "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(pValid == FAIL_FAST_IF_NULL_ALLOC(MDEC(pValidRef()))); });
-    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(pValid == FAIL_FAST_IF_NULL_ALLOC_MSG(MDEC(pValidRef()), "msg: %d", __LINE__)); });
+    REQUIRE_RETURNS(S_OK, [] {
+        RETURN_IF_NULL_ALLOC(MDEC(pValidRef()));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        RETURN_IF_NULL_ALLOC_MSG(MDEC(pValidRef()), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        RETURN_IF_NULL_ALLOC_EXPECTED(MDEC(pValidRef()));
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(S_OK, [] {
+        REQUIRE(pValid == THROW_IF_NULL_ALLOC(MDEC(pValidRef())));
+    });
+    REQUIRE_THROWS_MSG(S_OK, [] {
+        REQUIRE(pValid == THROW_IF_NULL_ALLOC_MSG(MDEC(pValidRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_LOG(S_OK, [] {
+        REQUIRE(pValid == LOG_IF_NULL_ALLOC(MDEC(pValidRef())));
+    });
+    REQUIRE_LOG_MSG(S_OK, [] {
+        REQUIRE(pValid == LOG_IF_NULL_ALLOC_MSG(MDEC(pValidRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(S_OK, [] {
+        REQUIRE(pValid == FAIL_FAST_IF_NULL_ALLOC(MDEC(pValidRef())));
+    });
+    REQUIRE_FAILFAST_MSG(S_OK, [] {
+        REQUIRE(pValid == FAIL_FAST_IF_NULL_ALLOC_MSG(MDEC(pValidRef()), "msg: %d", __LINE__));
+    });
 
-    REQUIRE_RETURNS(E_OUTOFMEMORY, [] { RETURN_IF_NULL_ALLOC(pNull); return S_OK; });
-    REQUIRE_RETURNS_MSG(E_OUTOFMEMORY, [] { RETURN_IF_NULL_ALLOC_MSG(pNull, "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(E_OUTOFMEMORY, [] { RETURN_IF_NULL_ALLOC_EXPECTED(pNull); return S_OK; });
-    REQUIRE_THROWS_RESULT(E_OUTOFMEMORY, [] { THROW_IF_NULL_ALLOC(pNull); });
-    REQUIRE_THROWS_MSG(E_OUTOFMEMORY, [] { THROW_IF_NULL_ALLOC_MSG(pNull, "msg: %d", __LINE__); });
-    REQUIRE_LOG(E_OUTOFMEMORY, [] { REQUIRE(pNull == LOG_IF_NULL_ALLOC(pNull)); });
-    REQUIRE_LOG_MSG(E_OUTOFMEMORY, [] { REQUIRE(pNull == LOG_IF_NULL_ALLOC_MSG(pNull, "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(E_OUTOFMEMORY, [] { FAIL_FAST_IF_NULL_ALLOC(pNull); });
-    REQUIRE_FAILFAST_MSG(E_OUTOFMEMORY, [] { FAIL_FAST_IF_NULL_ALLOC_MSG(pNull, "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(E_OUTOFMEMORY, [] {
+        RETURN_IF_NULL_ALLOC(pNull);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(E_OUTOFMEMORY, [] {
+        RETURN_IF_NULL_ALLOC_MSG(pNull, "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(E_OUTOFMEMORY, [] {
+        RETURN_IF_NULL_ALLOC_EXPECTED(pNull);
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(E_OUTOFMEMORY, [] {
+        THROW_IF_NULL_ALLOC(pNull);
+    });
+    REQUIRE_THROWS_MSG(E_OUTOFMEMORY, [] {
+        THROW_IF_NULL_ALLOC_MSG(pNull, "msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(E_OUTOFMEMORY, [] {
+        REQUIRE(pNull == LOG_IF_NULL_ALLOC(pNull));
+    });
+    REQUIRE_LOG_MSG(E_OUTOFMEMORY, [] {
+        REQUIRE(pNull == LOG_IF_NULL_ALLOC_MSG(pNull, "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(E_OUTOFMEMORY, [] {
+        FAIL_FAST_IF_NULL_ALLOC(pNull);
+    });
+    REQUIRE_FAILFAST_MSG(E_OUTOFMEMORY, [] {
+        FAIL_FAST_IF_NULL_ALLOC_MSG(pNull, "msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS(S_OK, [] { RETURN_HR_IF(MDEC(S_OK), MDEC(fTrueRef())); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_IF_MSG(MDEC(S_OK), MDEC(fTrueRef()), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_HR_IF_EXPECTED(MDEC(S_OK), MDEC(fTrueRef())); return S_OK; });
-    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_HR_IF(MDEC(S_OK), MDEC(fTrueRef())); });
-    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_HR_IF_MSG(MDEC(S_OK), MDEC(fTrueRef()), "msg: %d", __LINE__); });
-    REQUIRE_RETURNS(E_FAIL, [] { RETURN_HR_IF(E_FAIL, fTrue); return S_OK; });
-    REQUIRE_RETURNS_MSG(E_FAIL, [] { RETURN_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] { RETURN_HR_IF_EXPECTED(E_FAIL, fTrue); return S_OK; });
-    REQUIRE_THROWS_RESULT(E_FAIL, [] { THROW_HR_IF(E_FAIL, fTrue); });
-    REQUIRE_THROWS_MSG(E_FAIL, [] { THROW_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__); });
-    REQUIRE_LOG(E_FAIL, [] { REQUIRE(fTrue == LOG_HR_IF(E_FAIL, fTrue)); });
-    REQUIRE_LOG_MSG(E_FAIL, [] { REQUIRE(fTrue == LOG_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(E_FAIL, [] { FAIL_FAST_HR_IF(E_FAIL, fTrue); });
-    REQUIRE_FAILFAST_MSG(E_FAIL, [] { FAIL_FAST_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(S_OK, [] {
+        RETURN_HR_IF(MDEC(S_OK), MDEC(fTrueRef()));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        RETURN_HR_IF_MSG(MDEC(S_OK), MDEC(fTrueRef()), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        RETURN_HR_IF_EXPECTED(MDEC(S_OK), MDEC(fTrueRef()));
+        return S_OK;
+    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        FAIL_FAST_HR_IF(MDEC(S_OK), MDEC(fTrueRef()));
+    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        FAIL_FAST_HR_IF_MSG(MDEC(S_OK), MDEC(fTrueRef()), "msg: %d", __LINE__);
+    });
+    REQUIRE_RETURNS(E_FAIL, [] {
+        RETURN_HR_IF(E_FAIL, fTrue);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(E_FAIL, [] {
+        RETURN_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] {
+        RETURN_HR_IF_EXPECTED(E_FAIL, fTrue);
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(E_FAIL, [] {
+        THROW_HR_IF(E_FAIL, fTrue);
+    });
+    REQUIRE_THROWS_MSG(E_FAIL, [] {
+        THROW_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(E_FAIL, [] {
+        REQUIRE(fTrue == LOG_HR_IF(E_FAIL, fTrue));
+    });
+    REQUIRE_LOG_MSG(E_FAIL, [] {
+        REQUIRE(fTrue == LOG_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(E_FAIL, [] {
+        FAIL_FAST_HR_IF(E_FAIL, fTrue);
+    });
+    REQUIRE_FAILFAST_MSG(E_FAIL, [] {
+        FAIL_FAST_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS(S_OK, [] { RETURN_HR_IF(MDEC(S_OK), MDEC(fTrueRef())); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_IF_MSG(MDEC(S_OK), MDEC(fTrueRef()), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_HR_IF_EXPECTED(MDEC(S_OK), MDEC(fTrueRef())); return S_OK; });
-    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_HR_IF(MDEC(S_OK), MDEC(fTrueRef())); });
-    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_HR_IF_MSG(MDEC(S_OK), MDEC(fTrueRef()), "msg: %d", __LINE__); });
-    REQUIRE_RETURNS(E_FAIL, [] { RETURN_HR_IF(E_FAIL, fTrue); return S_OK; });
-    REQUIRE_RETURNS_MSG(E_FAIL, [] { RETURN_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] { RETURN_HR_IF_EXPECTED(E_FAIL, fTrue); return S_OK; });
-    REQUIRE_THROWS_RESULT(E_FAIL, [] { THROW_HR_IF(E_FAIL, fTrue); });
-    REQUIRE_THROWS_MSG(E_FAIL, [] { THROW_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__); });
-    REQUIRE_LOG(E_FAIL, [] { REQUIRE(fTrue == LOG_HR_IF(E_FAIL, fTrue)); });
-    REQUIRE_LOG_MSG(E_FAIL, [] { REQUIRE(fTrue == LOG_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(E_FAIL, [] { FAIL_FAST_HR_IF(E_FAIL, fTrue); });
-    REQUIRE_FAILFAST_MSG(E_FAIL, [] { FAIL_FAST_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(S_OK, [] {
+        RETURN_HR_IF(MDEC(S_OK), MDEC(fTrueRef()));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        RETURN_HR_IF_MSG(MDEC(S_OK), MDEC(fTrueRef()), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        RETURN_HR_IF_EXPECTED(MDEC(S_OK), MDEC(fTrueRef()));
+        return S_OK;
+    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        FAIL_FAST_HR_IF(MDEC(S_OK), MDEC(fTrueRef()));
+    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        FAIL_FAST_HR_IF_MSG(MDEC(S_OK), MDEC(fTrueRef()), "msg: %d", __LINE__);
+    });
+    REQUIRE_RETURNS(E_FAIL, [] {
+        RETURN_HR_IF(E_FAIL, fTrue);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(E_FAIL, [] {
+        RETURN_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] {
+        RETURN_HR_IF_EXPECTED(E_FAIL, fTrue);
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(E_FAIL, [] {
+        THROW_HR_IF(E_FAIL, fTrue);
+    });
+    REQUIRE_THROWS_MSG(E_FAIL, [] {
+        THROW_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(E_FAIL, [] {
+        REQUIRE(fTrue == LOG_HR_IF(E_FAIL, fTrue));
+    });
+    REQUIRE_LOG_MSG(E_FAIL, [] {
+        REQUIRE(fTrue == LOG_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(E_FAIL, [] {
+        FAIL_FAST_HR_IF(E_FAIL, fTrue);
+    });
+    REQUIRE_FAILFAST_MSG(E_FAIL, [] {
+        FAIL_FAST_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS(S_OK, [] { RETURN_HR_IF(MDEC(S_OK), MDEC(fFalseRef())); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_HR_IF_EXPECTED(MDEC(S_OK), MDEC(fFalseRef())); return S_OK; });
-    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(fFalse == THROW_HR_IF(MDEC(S_OK), MDEC(fFalseRef()))); });
-    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(fFalse == THROW_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__)); });
-    REQUIRE_LOG(S_OK, [] { REQUIRE(fFalse == LOG_HR_IF(MDEC(S_OK), MDEC(fFalseRef()))); });
-    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(fFalse == LOG_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_HR_IF(MDEC(S_OK), MDEC(fFalseRef()))); });
-    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__)); });
-    REQUIRE_RETURNS(S_OK, [] { RETURN_HR_IF(E_FAIL, MDEC(fFalseRef())); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_HR_IF_EXPECTED(E_FAIL, MDEC(fFalseRef())); return S_OK; });
-    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(fFalse == THROW_HR_IF(E_FAIL, MDEC(fFalseRef()))); });
-    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(fFalse == THROW_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__)); });
-    REQUIRE_LOG(S_OK, [] { REQUIRE(fFalse == LOG_HR_IF(E_FAIL, MDEC(fFalseRef()))); });
-    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(fFalse == LOG_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_HR_IF(E_FAIL, MDEC(fFalseRef()))); });
-    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__)); });
+    REQUIRE_RETURNS(S_OK, [] {
+        RETURN_HR_IF(MDEC(S_OK), MDEC(fFalseRef()));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        RETURN_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        RETURN_HR_IF_EXPECTED(MDEC(S_OK), MDEC(fFalseRef()));
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(S_OK, [] {
+        REQUIRE(fFalse == THROW_HR_IF(MDEC(S_OK), MDEC(fFalseRef())));
+    });
+    REQUIRE_THROWS_MSG(S_OK, [] {
+        REQUIRE(fFalse == THROW_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_LOG(S_OK, [] {
+        REQUIRE(fFalse == LOG_HR_IF(MDEC(S_OK), MDEC(fFalseRef())));
+    });
+    REQUIRE_LOG_MSG(S_OK, [] {
+        REQUIRE(fFalse == LOG_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(S_OK, [] {
+        REQUIRE(fFalse == FAIL_FAST_HR_IF(MDEC(S_OK), MDEC(fFalseRef())));
+    });
+    REQUIRE_FAILFAST_MSG(S_OK, [] {
+        REQUIRE(fFalse == FAIL_FAST_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_RETURNS(S_OK, [] {
+        RETURN_HR_IF(E_FAIL, MDEC(fFalseRef()));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        RETURN_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        RETURN_HR_IF_EXPECTED(E_FAIL, MDEC(fFalseRef()));
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(S_OK, [] {
+        REQUIRE(fFalse == THROW_HR_IF(E_FAIL, MDEC(fFalseRef())));
+    });
+    REQUIRE_THROWS_MSG(S_OK, [] {
+        REQUIRE(fFalse == THROW_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_LOG(S_OK, [] {
+        REQUIRE(fFalse == LOG_HR_IF(E_FAIL, MDEC(fFalseRef())));
+    });
+    REQUIRE_LOG_MSG(S_OK, [] {
+        REQUIRE(fFalse == LOG_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(S_OK, [] {
+        REQUIRE(fFalse == FAIL_FAST_HR_IF(E_FAIL, MDEC(fFalseRef())));
+    });
+    REQUIRE_FAILFAST_MSG(S_OK, [] {
+        REQUIRE(fFalse == FAIL_FAST_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__));
+    });
 
-    REQUIRE_RETURNS(S_OK, [] { RETURN_HR_IF(MDEC(S_OK), MDEC(fFalseRef())); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_HR_IF_EXPECTED(MDEC(S_OK), MDEC(fFalseRef())); return S_OK; });
-    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(fFalse == THROW_HR_IF(MDEC(S_OK), MDEC(fFalseRef()))); });
-    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(fFalse == THROW_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__)); });
-    REQUIRE_LOG(S_OK, [] { REQUIRE(fFalse == LOG_HR_IF(MDEC(S_OK), MDEC(fFalseRef()))); });
-    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(fFalse == LOG_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_HR_IF(MDEC(S_OK), MDEC(fFalseRef()))); });
-    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__)); });
-    REQUIRE_RETURNS(S_OK, [] { RETURN_HR_IF(E_FAIL, MDEC(fFalseRef())); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_HR_IF_EXPECTED(E_FAIL, MDEC(fFalseRef())); return S_OK; });
-    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(fFalse == THROW_HR_IF(E_FAIL, MDEC(fFalseRef()))); });
-    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(fFalse == THROW_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__)); });
-    REQUIRE_LOG(S_OK, [] { REQUIRE(fFalse == LOG_HR_IF(E_FAIL, MDEC(fFalseRef()))); });
-    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(fFalse == LOG_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_HR_IF(E_FAIL, MDEC(fFalseRef()))); });
-    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__)); });
+    REQUIRE_RETURNS(S_OK, [] {
+        RETURN_HR_IF(MDEC(S_OK), MDEC(fFalseRef()));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        RETURN_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        RETURN_HR_IF_EXPECTED(MDEC(S_OK), MDEC(fFalseRef()));
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(S_OK, [] {
+        REQUIRE(fFalse == THROW_HR_IF(MDEC(S_OK), MDEC(fFalseRef())));
+    });
+    REQUIRE_THROWS_MSG(S_OK, [] {
+        REQUIRE(fFalse == THROW_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_LOG(S_OK, [] {
+        REQUIRE(fFalse == LOG_HR_IF(MDEC(S_OK), MDEC(fFalseRef())));
+    });
+    REQUIRE_LOG_MSG(S_OK, [] {
+        REQUIRE(fFalse == LOG_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(S_OK, [] {
+        REQUIRE(fFalse == FAIL_FAST_HR_IF(MDEC(S_OK), MDEC(fFalseRef())));
+    });
+    REQUIRE_FAILFAST_MSG(S_OK, [] {
+        REQUIRE(fFalse == FAIL_FAST_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_RETURNS(S_OK, [] {
+        RETURN_HR_IF(E_FAIL, MDEC(fFalseRef()));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        RETURN_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        RETURN_HR_IF_EXPECTED(E_FAIL, MDEC(fFalseRef()));
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(S_OK, [] {
+        REQUIRE(fFalse == THROW_HR_IF(E_FAIL, MDEC(fFalseRef())));
+    });
+    REQUIRE_THROWS_MSG(S_OK, [] {
+        REQUIRE(fFalse == THROW_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_LOG(S_OK, [] {
+        REQUIRE(fFalse == LOG_HR_IF(E_FAIL, MDEC(fFalseRef())));
+    });
+    REQUIRE_LOG_MSG(S_OK, [] {
+        REQUIRE(fFalse == LOG_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(S_OK, [] {
+        REQUIRE(fFalse == FAIL_FAST_HR_IF(E_FAIL, MDEC(fFalseRef())));
+    });
+    REQUIRE_FAILFAST_MSG(S_OK, [] {
+        REQUIRE(fFalse == FAIL_FAST_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__));
+    });
 
-    REQUIRE_RETURNS(S_OK, [] { RETURN_HR_IF_NULL(S_OK, pNull); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_IF_NULL_MSG(S_OK, pNull, "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_HR_IF_NULL_EXPECTED(S_OK, pNull); return S_OK; });
-    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_HR_IF_NULL(S_OK, pNull); });
-    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_HR_IF_NULL_MSG(S_OK, pNull, "msg: %d", __LINE__); });
-    REQUIRE_RETURNS(E_FAIL, [] { RETURN_HR_IF_NULL(E_FAIL, pNull); return S_OK; });
-    REQUIRE_RETURNS_MSG(E_FAIL, [] { RETURN_HR_IF_NULL_MSG(E_FAIL, pNull, "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] { RETURN_HR_IF_NULL_EXPECTED(E_FAIL, pNull); return S_OK; });
-    REQUIRE_THROWS_RESULT(E_FAIL, [] { THROW_HR_IF_NULL(E_FAIL, pNull); });
-    REQUIRE_THROWS_MSG(E_FAIL, [] { THROW_HR_IF_NULL_MSG(E_FAIL, pNull, "msg: %d", __LINE__); });
-    REQUIRE_LOG(E_FAIL, [] { REQUIRE(pNull == LOG_HR_IF_NULL(E_FAIL, pNull)); });
-    REQUIRE_LOG_MSG(E_FAIL, [] { REQUIRE(pNull == LOG_HR_IF_NULL_MSG(E_FAIL, pNull, "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(E_FAIL, [] { FAIL_FAST_HR_IF_NULL(E_FAIL, pNull); });
-    REQUIRE_FAILFAST_MSG(E_FAIL, [] { FAIL_FAST_HR_IF_NULL_MSG(E_FAIL, pNull, "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(S_OK, [] {
+        RETURN_HR_IF_NULL(S_OK, pNull);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        RETURN_HR_IF_NULL_MSG(S_OK, pNull, "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        RETURN_HR_IF_NULL_EXPECTED(S_OK, pNull);
+        return S_OK;
+    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        FAIL_FAST_HR_IF_NULL(S_OK, pNull);
+    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        FAIL_FAST_HR_IF_NULL_MSG(S_OK, pNull, "msg: %d", __LINE__);
+    });
+    REQUIRE_RETURNS(E_FAIL, [] {
+        RETURN_HR_IF_NULL(E_FAIL, pNull);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(E_FAIL, [] {
+        RETURN_HR_IF_NULL_MSG(E_FAIL, pNull, "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] {
+        RETURN_HR_IF_NULL_EXPECTED(E_FAIL, pNull);
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(E_FAIL, [] {
+        THROW_HR_IF_NULL(E_FAIL, pNull);
+    });
+    REQUIRE_THROWS_MSG(E_FAIL, [] {
+        THROW_HR_IF_NULL_MSG(E_FAIL, pNull, "msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(E_FAIL, [] {
+        REQUIRE(pNull == LOG_HR_IF_NULL(E_FAIL, pNull));
+    });
+    REQUIRE_LOG_MSG(E_FAIL, [] {
+        REQUIRE(pNull == LOG_HR_IF_NULL_MSG(E_FAIL, pNull, "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(E_FAIL, [] {
+        FAIL_FAST_HR_IF_NULL(E_FAIL, pNull);
+    });
+    REQUIRE_FAILFAST_MSG(E_FAIL, [] {
+        FAIL_FAST_HR_IF_NULL_MSG(E_FAIL, pNull, "msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS(S_OK, [] { RETURN_HR_IF_NULL(MDEC(S_OK), MDEC(pValidRef())); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_IF_NULL_MSG(MDEC(S_OK), MDEC(pValidRef()), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_HR_IF_NULL_EXPECTED(MDEC(S_OK), MDEC(pValidRef())); return S_OK; });
-    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(pValid == THROW_HR_IF_NULL(MDEC(S_OK), MDEC(pValidRef()))); });
-    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(pValid == THROW_HR_IF_NULL_MSG(MDEC(S_OK), MDEC(pValidRef()), "msg: %d", __LINE__)); });
-    REQUIRE_LOG(S_OK, [] { REQUIRE(pValid == LOG_HR_IF_NULL(MDEC(S_OK), MDEC(pValidRef()))); });
-    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(pValid == LOG_HR_IF_NULL_MSG(MDEC(S_OK), MDEC(pValidRef()), "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(pValid == FAIL_FAST_HR_IF_NULL(MDEC(S_OK), MDEC(pValidRef()))); });
-    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(pValid == FAIL_FAST_HR_IF_NULL_MSG(MDEC(S_OK), MDEC(pValidRef()), "msg: %d", __LINE__)); });
-    REQUIRE_RETURNS(S_OK, [] { RETURN_HR_IF_NULL(E_FAIL, MDEC(pValidRef())); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_IF_NULL_MSG(E_FAIL, MDEC(pValidRef()), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_HR_IF_NULL_EXPECTED(E_FAIL, MDEC(pValidRef())); return S_OK; });
-    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(pValid == THROW_HR_IF_NULL(E_FAIL, MDEC(pValidRef()))); });
-    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(pValid == THROW_HR_IF_NULL_MSG(E_FAIL, MDEC(pValidRef()), "msg: %d", __LINE__)); });
-    REQUIRE_LOG(S_OK, [] { REQUIRE(pValid == LOG_HR_IF_NULL(E_FAIL, MDEC(pValidRef()))); });
-    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(pValid == LOG_HR_IF_NULL_MSG(E_FAIL, MDEC(pValidRef()), "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(pValid == FAIL_FAST_HR_IF_NULL(E_FAIL, MDEC(pValidRef()))); });
-    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(pValid == FAIL_FAST_HR_IF_NULL_MSG(E_FAIL, MDEC(pValidRef()), "msg: %d", __LINE__)); });
+    REQUIRE_RETURNS(S_OK, [] {
+        RETURN_HR_IF_NULL(MDEC(S_OK), MDEC(pValidRef()));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        RETURN_HR_IF_NULL_MSG(MDEC(S_OK), MDEC(pValidRef()), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        RETURN_HR_IF_NULL_EXPECTED(MDEC(S_OK), MDEC(pValidRef()));
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(S_OK, [] {
+        REQUIRE(pValid == THROW_HR_IF_NULL(MDEC(S_OK), MDEC(pValidRef())));
+    });
+    REQUIRE_THROWS_MSG(S_OK, [] {
+        REQUIRE(pValid == THROW_HR_IF_NULL_MSG(MDEC(S_OK), MDEC(pValidRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_LOG(S_OK, [] {
+        REQUIRE(pValid == LOG_HR_IF_NULL(MDEC(S_OK), MDEC(pValidRef())));
+    });
+    REQUIRE_LOG_MSG(S_OK, [] {
+        REQUIRE(pValid == LOG_HR_IF_NULL_MSG(MDEC(S_OK), MDEC(pValidRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(S_OK, [] {
+        REQUIRE(pValid == FAIL_FAST_HR_IF_NULL(MDEC(S_OK), MDEC(pValidRef())));
+    });
+    REQUIRE_FAILFAST_MSG(S_OK, [] {
+        REQUIRE(pValid == FAIL_FAST_HR_IF_NULL_MSG(MDEC(S_OK), MDEC(pValidRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_RETURNS(S_OK, [] {
+        RETURN_HR_IF_NULL(E_FAIL, MDEC(pValidRef()));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        RETURN_HR_IF_NULL_MSG(E_FAIL, MDEC(pValidRef()), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        RETURN_HR_IF_NULL_EXPECTED(E_FAIL, MDEC(pValidRef()));
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(S_OK, [] {
+        REQUIRE(pValid == THROW_HR_IF_NULL(E_FAIL, MDEC(pValidRef())));
+    });
+    REQUIRE_THROWS_MSG(S_OK, [] {
+        REQUIRE(pValid == THROW_HR_IF_NULL_MSG(E_FAIL, MDEC(pValidRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_LOG(S_OK, [] {
+        REQUIRE(pValid == LOG_HR_IF_NULL(E_FAIL, MDEC(pValidRef())));
+    });
+    REQUIRE_LOG_MSG(S_OK, [] {
+        REQUIRE(pValid == LOG_HR_IF_NULL_MSG(E_FAIL, MDEC(pValidRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(S_OK, [] {
+        REQUIRE(pValid == FAIL_FAST_HR_IF_NULL(E_FAIL, MDEC(pValidRef())));
+    });
+    REQUIRE_FAILFAST_MSG(S_OK, [] {
+        REQUIRE(pValid == FAIL_FAST_HR_IF_NULL_MSG(E_FAIL, MDEC(pValidRef()), "msg: %d", __LINE__));
+    });
 
-    REQUIRE_FAILFAST_UNSPECIFIED([] { ::SetLastError(0); FAIL_FAST_LAST_ERROR_IF(fTrue); });
-    REQUIRE_FAILFAST_UNSPECIFIED([] { ::SetLastError(0); FAIL_FAST_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__); });
-    REQUIRE_RETURNS(E_AD, [] { SetAD(); RETURN_LAST_ERROR_IF(fTrue); return S_OK; });
-    REQUIRE_RETURNS_MSG(E_AD, [] { SetAD(); RETURN_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(E_AD, [] { SetAD(); RETURN_LAST_ERROR_IF_EXPECTED(fTrue); return S_OK; });
-    REQUIRE_THROWS_RESULT(E_AD, [] { SetAD(); THROW_LAST_ERROR_IF(fTrue); });
-    REQUIRE_THROWS_MSG(E_AD, [] { SetAD(); THROW_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__); });
-    REQUIRE_LOG(E_AD, [] { SetAD(); REQUIRE(fTrue == LOG_LAST_ERROR_IF(fTrue)); });
-    REQUIRE_LOG_MSG(E_AD, [] { SetAD(); REQUIRE(fTrue == LOG_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(E_AD, [] { SetAD(); FAIL_FAST_LAST_ERROR_IF(fTrue); });
-    REQUIRE_FAILFAST_MSG(E_AD, [] { SetAD(); FAIL_FAST_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__); });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        ::SetLastError(0);
+        FAIL_FAST_LAST_ERROR_IF(fTrue);
+    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        ::SetLastError(0);
+        FAIL_FAST_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__);
+    });
+    REQUIRE_RETURNS(E_AD, [] {
+        SetAD();
+        RETURN_LAST_ERROR_IF(fTrue);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(E_AD, [] {
+        SetAD();
+        RETURN_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(E_AD, [] {
+        SetAD();
+        RETURN_LAST_ERROR_IF_EXPECTED(fTrue);
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(E_AD, [] {
+        SetAD();
+        THROW_LAST_ERROR_IF(fTrue);
+    });
+    REQUIRE_THROWS_MSG(E_AD, [] {
+        SetAD();
+        THROW_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(E_AD, [] {
+        SetAD();
+        REQUIRE(fTrue == LOG_LAST_ERROR_IF(fTrue));
+    });
+    REQUIRE_LOG_MSG(E_AD, [] {
+        SetAD();
+        REQUIRE(fTrue == LOG_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(E_AD, [] {
+        SetAD();
+        FAIL_FAST_LAST_ERROR_IF(fTrue);
+    });
+    REQUIRE_FAILFAST_MSG(E_AD, [] {
+        SetAD();
+        FAIL_FAST_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS(S_OK, [] { RETURN_LAST_ERROR_IF(MDEC(fFalseRef())); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_LAST_ERROR_IF_MSG(MDEC(fFalseRef()), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_LAST_ERROR_IF_EXPECTED(MDEC(fFalseRef())); return S_OK; });
-    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(fFalse == THROW_LAST_ERROR_IF(MDEC(fFalseRef()))); });
-    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(fFalse == THROW_LAST_ERROR_IF_MSG(MDEC(fFalseRef()), "msg: %d", __LINE__)); });
-    REQUIRE_LOG(S_OK, [] { REQUIRE(fFalse == LOG_LAST_ERROR_IF(MDEC(fFalseRef()))); });
-    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(fFalse == LOG_LAST_ERROR_IF_MSG(MDEC(fFalseRef()), "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_LAST_ERROR_IF(MDEC(fFalseRef()))); });
-    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_LAST_ERROR_IF_MSG(MDEC(fFalseRef()), "msg: %d", __LINE__)); });
+    REQUIRE_RETURNS(S_OK, [] {
+        RETURN_LAST_ERROR_IF(MDEC(fFalseRef()));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        RETURN_LAST_ERROR_IF_MSG(MDEC(fFalseRef()), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        RETURN_LAST_ERROR_IF_EXPECTED(MDEC(fFalseRef()));
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(S_OK, [] {
+        REQUIRE(fFalse == THROW_LAST_ERROR_IF(MDEC(fFalseRef())));
+    });
+    REQUIRE_THROWS_MSG(S_OK, [] {
+        REQUIRE(fFalse == THROW_LAST_ERROR_IF_MSG(MDEC(fFalseRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_LOG(S_OK, [] {
+        REQUIRE(fFalse == LOG_LAST_ERROR_IF(MDEC(fFalseRef())));
+    });
+    REQUIRE_LOG_MSG(S_OK, [] {
+        REQUIRE(fFalse == LOG_LAST_ERROR_IF_MSG(MDEC(fFalseRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(S_OK, [] {
+        REQUIRE(fFalse == FAIL_FAST_LAST_ERROR_IF(MDEC(fFalseRef())));
+    });
+    REQUIRE_FAILFAST_MSG(S_OK, [] {
+        REQUIRE(fFalse == FAIL_FAST_LAST_ERROR_IF_MSG(MDEC(fFalseRef()), "msg: %d", __LINE__));
+    });
 
-    REQUIRE_FAILFAST_UNSPECIFIED([] { ::SetLastError(0); FAIL_FAST_LAST_ERROR_IF_NULL(pNull); });
-    REQUIRE_FAILFAST_UNSPECIFIED([] { ::SetLastError(0); FAIL_FAST_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__); });
-    REQUIRE_RETURNS(E_AD, [] { SetAD(); RETURN_LAST_ERROR_IF_NULL(pNull); return S_OK; });
-    REQUIRE_RETURNS_MSG(E_AD, [] { SetAD(); RETURN_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(E_AD, [] { SetAD(); RETURN_LAST_ERROR_IF_NULL_EXPECTED(pNull); return S_OK; });
-    REQUIRE_THROWS_RESULT(E_AD, [] { SetAD(); THROW_LAST_ERROR_IF_NULL(pNull); });
-    REQUIRE_THROWS_MSG(E_AD, [] { SetAD(); THROW_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__); });
-    REQUIRE_LOG(E_AD, [] { SetAD(); REQUIRE(pNull == LOG_LAST_ERROR_IF_NULL(pNull)); });
-    REQUIRE_LOG_MSG(E_AD, [] { SetAD(); REQUIRE(pNull == LOG_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(E_AD, [] { SetAD(); FAIL_FAST_LAST_ERROR_IF_NULL(pNull); });
-    REQUIRE_FAILFAST_MSG(E_AD, [] { SetAD(); FAIL_FAST_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__); });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        ::SetLastError(0);
+        FAIL_FAST_LAST_ERROR_IF_NULL(pNull);
+    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        ::SetLastError(0);
+        FAIL_FAST_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__);
+    });
+    REQUIRE_RETURNS(E_AD, [] {
+        SetAD();
+        RETURN_LAST_ERROR_IF_NULL(pNull);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(E_AD, [] {
+        SetAD();
+        RETURN_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(E_AD, [] {
+        SetAD();
+        RETURN_LAST_ERROR_IF_NULL_EXPECTED(pNull);
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(E_AD, [] {
+        SetAD();
+        THROW_LAST_ERROR_IF_NULL(pNull);
+    });
+    REQUIRE_THROWS_MSG(E_AD, [] {
+        SetAD();
+        THROW_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(E_AD, [] {
+        SetAD();
+        REQUIRE(pNull == LOG_LAST_ERROR_IF_NULL(pNull));
+    });
+    REQUIRE_LOG_MSG(E_AD, [] {
+        SetAD();
+        REQUIRE(pNull == LOG_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(E_AD, [] {
+        SetAD();
+        FAIL_FAST_LAST_ERROR_IF_NULL(pNull);
+    });
+    REQUIRE_FAILFAST_MSG(E_AD, [] {
+        SetAD();
+        FAIL_FAST_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS(S_OK, [] { RETURN_LAST_ERROR_IF_NULL(MDEC(pValidRef())); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_LAST_ERROR_IF_NULL_MSG(MDEC(pValidRef()), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_LAST_ERROR_IF_NULL_EXPECTED(MDEC(pValidRef())); return S_OK; });
-    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(pNull != THROW_LAST_ERROR_IF_NULL(MDEC(pValidRef()))); });
-    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(pNull != THROW_LAST_ERROR_IF_NULL_MSG(MDEC(pValidRef()), "msg: %d", __LINE__)); });
-    REQUIRE_LOG(S_OK, [] { REQUIRE(pNull != LOG_LAST_ERROR_IF_NULL(MDEC(pValidRef()))); });
-    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(pNull != LOG_LAST_ERROR_IF_NULL_MSG(MDEC(pValidRef()), "msg: %d", __LINE__)); });
-    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(pNull != FAIL_FAST_LAST_ERROR_IF_NULL(MDEC(pValidRef()))); });
-    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(pNull != FAIL_FAST_LAST_ERROR_IF_NULL_MSG(MDEC(pValidRef()), "msg: %d", __LINE__)); });
+    REQUIRE_RETURNS(S_OK, [] {
+        RETURN_LAST_ERROR_IF_NULL(MDEC(pValidRef()));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        RETURN_LAST_ERROR_IF_NULL_MSG(MDEC(pValidRef()), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        RETURN_LAST_ERROR_IF_NULL_EXPECTED(MDEC(pValidRef()));
+        return S_OK;
+    });
+    REQUIRE_THROWS_RESULT(S_OK, [] {
+        REQUIRE(pNull != THROW_LAST_ERROR_IF_NULL(MDEC(pValidRef())));
+    });
+    REQUIRE_THROWS_MSG(S_OK, [] {
+        REQUIRE(pNull != THROW_LAST_ERROR_IF_NULL_MSG(MDEC(pValidRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_LOG(S_OK, [] {
+        REQUIRE(pNull != LOG_LAST_ERROR_IF_NULL(MDEC(pValidRef())));
+    });
+    REQUIRE_LOG_MSG(S_OK, [] {
+        REQUIRE(pNull != LOG_LAST_ERROR_IF_NULL_MSG(MDEC(pValidRef()), "msg: %d", __LINE__));
+    });
+    REQUIRE_FAILFAST(S_OK, [] {
+        REQUIRE(pNull != FAIL_FAST_LAST_ERROR_IF_NULL(MDEC(pValidRef())));
+    });
+    REQUIRE_FAILFAST_MSG(S_OK, [] {
+        REQUIRE(pNull != FAIL_FAST_LAST_ERROR_IF_NULL_MSG(MDEC(pValidRef()), "msg: %d", __LINE__));
+    });
 
-    REQUIRE_LOG(S_OK, [] { REQUIRE(true == SUCCEEDED_LOG(MDEC(S_OK))); });
-    REQUIRE_LOG(E_FAIL, [] { REQUIRE(false == SUCCEEDED_LOG(E_FAIL)); });
-    REQUIRE_LOG(S_OK, [] { REQUIRE(false == FAILED_LOG(MDEC(S_OK))); });
-    REQUIRE_LOG(E_FAIL, [] { REQUIRE(true == FAILED_LOG(E_FAIL)); });
+    REQUIRE_LOG(S_OK, [] {
+        REQUIRE(true == SUCCEEDED_LOG(MDEC(S_OK)));
+    });
+    REQUIRE_LOG(E_FAIL, [] {
+        REQUIRE(false == SUCCEEDED_LOG(E_FAIL));
+    });
+    REQUIRE_LOG(S_OK, [] {
+        REQUIRE(false == FAILED_LOG(MDEC(S_OK)));
+    });
+    REQUIRE_LOG(E_FAIL, [] {
+        REQUIRE(true == FAILED_LOG(E_FAIL));
+    });
 
-    REQUIRE_LOG(ERROR_SUCCESS, [] { REQUIRE(true == SUCCEEDED_WIN32_LOG(MDEC(ERROR_SUCCESS))); });
-    REQUIRE_LOG(HRESULT_FROM_WIN32(ERROR_ACCESS_DENIED), [] { REQUIRE(false == SUCCEEDED_WIN32_LOG(ERROR_ACCESS_DENIED)); });
-    REQUIRE_LOG(ERROR_SUCCESS, [] { REQUIRE(false == FAILED_WIN32_LOG(MDEC(ERROR_SUCCESS))); });
-    REQUIRE_LOG(HRESULT_FROM_WIN32(ERROR_ACCESS_DENIED), [] { REQUIRE(true == FAILED_WIN32_LOG(ERROR_ACCESS_DENIED)); });
+    REQUIRE_LOG(ERROR_SUCCESS, [] {
+        REQUIRE(true == SUCCEEDED_WIN32_LOG(MDEC(ERROR_SUCCESS)));
+    });
+    REQUIRE_LOG(HRESULT_FROM_WIN32(ERROR_ACCESS_DENIED), [] {
+        REQUIRE(false == SUCCEEDED_WIN32_LOG(ERROR_ACCESS_DENIED));
+    });
+    REQUIRE_LOG(ERROR_SUCCESS, [] {
+        REQUIRE(false == FAILED_WIN32_LOG(MDEC(ERROR_SUCCESS)));
+    });
+    REQUIRE_LOG(HRESULT_FROM_WIN32(ERROR_ACCESS_DENIED), [] {
+        REQUIRE(true == FAILED_WIN32_LOG(ERROR_ACCESS_DENIED));
+    });
 
-    REQUIRE_LOG(ntOK, [] { REQUIRE(true == SUCCEEDED_NTSTATUS_LOG(MDEC(ntOK))); });
-    REQUIRE_LOG(wil::details::NtStatusToHr(ntFAIL), [] { REQUIRE(false == SUCCEEDED_NTSTATUS_LOG(ntFAIL)); });
-    REQUIRE_LOG(ntOK, [] { REQUIRE(false == FAILED_NTSTATUS_LOG(MDEC(ntOK))); });
-    REQUIRE_LOG(wil::details::NtStatusToHr(ntFAIL), [] { REQUIRE(true == FAILED_NTSTATUS_LOG(ntFAIL)); });
+    REQUIRE_LOG(ntOK, [] {
+        REQUIRE(true == SUCCEEDED_NTSTATUS_LOG(MDEC(ntOK)));
+    });
+    REQUIRE_LOG(wil::details::NtStatusToHr(ntFAIL), [] {
+        REQUIRE(false == SUCCEEDED_NTSTATUS_LOG(ntFAIL));
+    });
+    REQUIRE_LOG(ntOK, [] {
+        REQUIRE(false == FAILED_NTSTATUS_LOG(MDEC(ntOK)));
+    });
+    REQUIRE_LOG(wil::details::NtStatusToHr(ntFAIL), [] {
+        REQUIRE(true == FAILED_NTSTATUS_LOG(ntFAIL));
+    });
 
     // FAIL_FAST_IMMEDIATE* directly invokes __fastfail, which we can't catch, so disabled for now
     // REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_IMMEDIATE(); });
     // REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_IMMEDIATE_IF_FAILED(E_FAIL); });
-    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(S_OK == FAIL_FAST_IMMEDIATE_IF_FAILED(MDEC(S_OK))); });
+    REQUIRE_FAILFAST(S_OK, [] {
+        REQUIRE(S_OK == FAIL_FAST_IMMEDIATE_IF_FAILED(MDEC(S_OK)));
+    });
     // REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_IMMEDIATE_IF(fTrue); });
-    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_IMMEDIATE_IF(MDEC(fFalseRef()))); });
+    REQUIRE_FAILFAST(S_OK, [] {
+        REQUIRE(fFalse == FAIL_FAST_IMMEDIATE_IF(MDEC(fFalseRef())));
+    });
     // REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_IMMEDIATE_IF_NULL(pNull); });
-    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(pValid == FAIL_FAST_IMMEDIATE_IF_NULL(MDEC(pValidRef()))); });
+    REQUIRE_FAILFAST(S_OK, [] {
+        REQUIRE(pValid == FAIL_FAST_IMMEDIATE_IF_NULL(MDEC(pValidRef())));
+    });
 
 #ifdef WIL_ENABLE_EXCEPTIONS
-    REQUIRE_RETURNS(S_OK, [] { try { THROW_IF_FAILED(hrOK); } CATCH_RETURN(); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { try { THROW_IF_FAILED(hrOK); } CATCH_RETURN_MSG("msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { try { THROW_IF_FAILED(hrOK); } CATCH_RETURN_EXPECTED(); return S_OK; });
-    REQUIRE_LOG(S_OK, [] { try { THROW_IF_FAILED(hrOK); } CATCH_LOG(); });
-    REQUIRE_LOG_MSG(S_OK, [] { try { THROW_IF_FAILED(hrOK); } CATCH_LOG_MSG("msg: %d", __LINE__); });
-    REQUIRE_FAILFAST(S_OK, [] { try { THROW_IF_FAILED(hrOK); } CATCH_FAIL_FAST(); });
-    REQUIRE_FAILFAST_MSG(S_OK, [] { try { THROW_IF_FAILED(hrOK); } CATCH_FAIL_FAST_MSG("msg: %d", __LINE__); });
-    REQUIRE_THROWS_RESULT(S_OK, [] { try { THROW_IF_FAILED(hrOK); } CATCH_THROW_NORMALIZED(); });
-    REQUIRE_THROWS_MSG(S_OK, [] { try { THROW_IF_FAILED(hrOK); } CATCH_THROW_NORMALIZED_MSG("msg: %d", __LINE__); });
+    REQUIRE_RETURNS(S_OK, [] {
+        try
+        {
+            THROW_IF_FAILED(hrOK);
+        }
+        CATCH_RETURN();
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        try
+        {
+            THROW_IF_FAILED(hrOK);
+        }
+        CATCH_RETURN_MSG("msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        try
+        {
+            THROW_IF_FAILED(hrOK);
+        }
+        CATCH_RETURN_EXPECTED();
+        return S_OK;
+    });
+    REQUIRE_LOG(S_OK, [] {
+        try
+        {
+            THROW_IF_FAILED(hrOK);
+        }
+        CATCH_LOG();
+    });
+    REQUIRE_LOG_MSG(S_OK, [] {
+        try
+        {
+            THROW_IF_FAILED(hrOK);
+        }
+        CATCH_LOG_MSG("msg: %d", __LINE__);
+    });
+    REQUIRE_FAILFAST(S_OK, [] {
+        try
+        {
+            THROW_IF_FAILED(hrOK);
+        }
+        CATCH_FAIL_FAST();
+    });
+    REQUIRE_FAILFAST_MSG(S_OK, [] {
+        try
+        {
+            THROW_IF_FAILED(hrOK);
+        }
+        CATCH_FAIL_FAST_MSG("msg: %d", __LINE__);
+    });
+    REQUIRE_THROWS_RESULT(S_OK, [] {
+        try
+        {
+            THROW_IF_FAILED(hrOK);
+        }
+        CATCH_THROW_NORMALIZED();
+    });
+    REQUIRE_THROWS_MSG(S_OK, [] {
+        try
+        {
+            THROW_IF_FAILED(hrOK);
+        }
+        CATCH_THROW_NORMALIZED_MSG("msg: %d", __LINE__);
+    });
 
-    REQUIRE_RETURNS(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_RETURN(); return S_OK; });
-    REQUIRE_RETURNS_MSG(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_RETURN_MSG("msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_RETURN_EXPECTED(); return S_OK; });
-    REQUIRE_LOG(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_LOG(); });
-    REQUIRE_LOG_MSG(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_LOG_MSG("msg: %d", __LINE__); });
-    REQUIRE_FAILFAST(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_FAIL_FAST(); });
-    REQUIRE_FAILFAST_MSG(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_FAIL_FAST_MSG("msg: %d", __LINE__); });
-    REQUIRE_THROWS_RESULT(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_THROW_NORMALIZED(); });
-    REQUIRE_THROWS_MSG(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_THROW_NORMALIZED_MSG("msg: %d", __LINE__); });
+    REQUIRE_RETURNS(E_FAIL, [] {
+        try
+        {
+            THROW_IF_FAILED(hrFAIL);
+        }
+        CATCH_RETURN();
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(E_FAIL, [] {
+        try
+        {
+            THROW_IF_FAILED(hrFAIL);
+        }
+        CATCH_RETURN_MSG("msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] {
+        try
+        {
+            THROW_IF_FAILED(hrFAIL);
+        }
+        CATCH_RETURN_EXPECTED();
+        return S_OK;
+    });
+    REQUIRE_LOG(E_FAIL, [] {
+        try
+        {
+            THROW_IF_FAILED(hrFAIL);
+        }
+        CATCH_LOG();
+    });
+    REQUIRE_LOG_MSG(E_FAIL, [] {
+        try
+        {
+            THROW_IF_FAILED(hrFAIL);
+        }
+        CATCH_LOG_MSG("msg: %d", __LINE__);
+    });
+    REQUIRE_FAILFAST(E_FAIL, [] {
+        try
+        {
+            THROW_IF_FAILED(hrFAIL);
+        }
+        CATCH_FAIL_FAST();
+    });
+    REQUIRE_FAILFAST_MSG(E_FAIL, [] {
+        try
+        {
+            THROW_IF_FAILED(hrFAIL);
+        }
+        CATCH_FAIL_FAST_MSG("msg: %d", __LINE__);
+    });
+    REQUIRE_THROWS_RESULT(E_FAIL, [] {
+        try
+        {
+            THROW_IF_FAILED(hrFAIL);
+        }
+        CATCH_THROW_NORMALIZED();
+    });
+    REQUIRE_THROWS_MSG(E_FAIL, [] {
+        try
+        {
+            THROW_IF_FAILED(hrFAIL);
+        }
+        CATCH_THROW_NORMALIZED_MSG("msg: %d", __LINE__);
+    });
 
-    REQUIRE_FAILFAST_UNSPECIFIED([] { try { if (FAILED(hrFAIL)) { throw E_FAIL; } } CATCH_FAIL_FAST(); });
-    REQUIRE_FAILFAST_UNSPECIFIED([] { try { if (FAILED(hrFAIL)) { throw E_FAIL; } } CATCH_FAIL_FAST_MSG("msg: %d", __LINE__); });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        try
+        {
+            if (FAILED(hrFAIL))
+            {
+                throw E_FAIL;
+            }
+        }
+        CATCH_FAIL_FAST();
+    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        try
+        {
+            if (FAILED(hrFAIL))
+            {
+                throw E_FAIL;
+            }
+        }
+        CATCH_FAIL_FAST_MSG("msg: %d", __LINE__);
+    });
 
-    REQUIRE_THROWS_RESULT(E_AD, [] { THROW_EXCEPTION(MDEC(DerivedAccessDeniedException())); });
-    REQUIRE_THROWS_MSG(E_AD, [] { THROW_EXCEPTION_MSG(MDEC(DerivedAccessDeniedException()), "msg: %d", __LINE__); });
+    REQUIRE_THROWS_RESULT(E_AD, [] {
+        THROW_EXCEPTION(MDEC(DerivedAccessDeniedException()));
+    });
+    REQUIRE_THROWS_MSG(E_AD, [] {
+        THROW_EXCEPTION_MSG(MDEC(DerivedAccessDeniedException()), "msg: %d", __LINE__);
+    });
 
-    REQUIRE_LOG(E_AD, [] { try { throw AlternateAccessDeniedException(); } CATCH_LOG(); });
-    REQUIRE_THROWS_RESULT(E_AD, [] { try { throw AlternateAccessDeniedException(); } CATCH_THROW_NORMALIZED(); });
+    REQUIRE_LOG(E_AD, [] {
+        try
+        {
+            throw AlternateAccessDeniedException();
+        }
+        CATCH_LOG();
+    });
+    REQUIRE_THROWS_RESULT(E_AD, [] {
+        try
+        {
+            throw AlternateAccessDeniedException();
+        }
+        CATCH_THROW_NORMALIZED();
+    });
 
-    REQUIRE_RETURNS(S_OK, [] { return wil::ResultFromException([] { THROW_IF_FAILED(hrOK); }); });
-    REQUIRE_RETURNS(E_FAIL, [] { return wil::ResultFromException([] { THROW_IF_FAILED(hrFAIL); }); });
-    REQUIRE(E_AD == wil::ResultFromException([] { throw AlternateAccessDeniedException(); }));
+    REQUIRE_RETURNS(S_OK, [] {
+        return wil::ResultFromException([] {
+            THROW_IF_FAILED(hrOK);
+        });
+    });
+    REQUIRE_RETURNS(E_FAIL, [] {
+        return wil::ResultFromException([] {
+            THROW_IF_FAILED(hrFAIL);
+        });
+    });
+    REQUIRE(E_AD == wil::ResultFromException([] {
+                throw AlternateAccessDeniedException();
+            }));
 
-    try { THROW_HR(E_FAIL); }
-    catch (...) { REQUIRE(E_FAIL == wil::ResultFromCaughtException()); };
+    try
+    {
+        THROW_HR(E_FAIL);
+    }
+    catch (...)
+    {
+        REQUIRE(E_FAIL == wil::ResultFromCaughtException());
+    };
 #endif
 
 #ifdef WIL_ENABLE_EXCEPTIONS
-    REQUIRE_LOG(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_LOG(); });
+    REQUIRE_LOG(E_FAIL, [] {
+        try
+        {
+            THROW_IF_FAILED(hrFAIL);
+        }
+        CATCH_LOG();
+    });
 #endif
 
-    REQUIRE_RETURNS(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; RETURN_IF_NULL_ALLOC(MDEC(pInt)); return S_OK; });
-    REQUIRE_RETURNS_MSG(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; RETURN_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; RETURN_IF_NULL_ALLOC_EXPECTED(MDEC(pInt)); return S_OK; });
-    REQUIRE_RETURNS(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); RETURN_IF_NULL_ALLOC(MDEC(pInt)); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); RETURN_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); RETURN_IF_NULL_ALLOC_EXPECTED(MDEC(pInt)); return S_OK; });
+    REQUIRE_RETURNS(E_OUTOFMEMORY, [] {
+        std::unique_ptr<int> pInt;
+        RETURN_IF_NULL_ALLOC(MDEC(pInt));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(E_OUTOFMEMORY, [] {
+        std::unique_ptr<int> pInt;
+        RETURN_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(E_OUTOFMEMORY, [] {
+        std::unique_ptr<int> pInt;
+        RETURN_IF_NULL_ALLOC_EXPECTED(MDEC(pInt));
+        return S_OK;
+    });
+    REQUIRE_RETURNS(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        RETURN_IF_NULL_ALLOC(MDEC(pInt));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        RETURN_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        RETURN_IF_NULL_ALLOC_EXPECTED(MDEC(pInt));
+        return S_OK;
+    });
 
-    REQUIRE_RETURNS(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; RETURN_HR_IF_NULL(E_OUTOFMEMORY, MDEC(pInt)); return S_OK; });
-    REQUIRE_RETURNS_MSG(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; RETURN_HR_IF_NULL_MSG(E_OUTOFMEMORY, pInt, "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; RETURN_HR_IF_NULL_EXPECTED(E_OUTOFMEMORY, MDEC(pInt)); return S_OK; });
-    REQUIRE_RETURNS(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); RETURN_HR_IF_NULL(E_OUTOFMEMORY, MDEC(pInt)); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); RETURN_HR_IF_NULL_MSG(E_OUTOFMEMORY, MDEC(pInt), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); RETURN_HR_IF_NULL_EXPECTED(E_OUTOFMEMORY, MDEC(pInt)); return S_OK; });
+    REQUIRE_RETURNS(E_OUTOFMEMORY, [] {
+        std::unique_ptr<int> pInt;
+        RETURN_HR_IF_NULL(E_OUTOFMEMORY, MDEC(pInt));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(E_OUTOFMEMORY, [] {
+        std::unique_ptr<int> pInt;
+        RETURN_HR_IF_NULL_MSG(E_OUTOFMEMORY, pInt, "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(E_OUTOFMEMORY, [] {
+        std::unique_ptr<int> pInt;
+        RETURN_HR_IF_NULL_EXPECTED(E_OUTOFMEMORY, MDEC(pInt));
+        return S_OK;
+    });
+    REQUIRE_RETURNS(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        RETURN_HR_IF_NULL(E_OUTOFMEMORY, MDEC(pInt));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        RETURN_HR_IF_NULL_MSG(E_OUTOFMEMORY, MDEC(pInt), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        RETURN_HR_IF_NULL_EXPECTED(E_OUTOFMEMORY, MDEC(pInt));
+        return S_OK;
+    });
 
-    REQUIRE_RETURNS(E_AD, [] { std::unique_ptr<int> pInt; SetAD(); RETURN_LAST_ERROR_IF_NULL(MDEC(pInt)); return S_OK; });
-    REQUIRE_RETURNS_MSG(E_AD, [] { std::unique_ptr<int> pInt; SetAD(); RETURN_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(E_AD, [] { std::unique_ptr<int> pInt; SetAD(); RETURN_LAST_ERROR_IF_NULL_EXPECTED(MDEC(pInt)); return S_OK; });
-    REQUIRE_RETURNS(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); SetAD(); RETURN_LAST_ERROR_IF_NULL(MDEC(pInt)); return S_OK; });
-    REQUIRE_RETURNS_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); SetAD(); RETURN_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); SetAD(); RETURN_LAST_ERROR_IF_NULL_EXPECTED(MDEC(pInt)); return S_OK; });
+    REQUIRE_RETURNS(E_AD, [] {
+        std::unique_ptr<int> pInt;
+        SetAD();
+        RETURN_LAST_ERROR_IF_NULL(MDEC(pInt));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(E_AD, [] {
+        std::unique_ptr<int> pInt;
+        SetAD();
+        RETURN_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(E_AD, [] {
+        std::unique_ptr<int> pInt;
+        SetAD();
+        RETURN_LAST_ERROR_IF_NULL_EXPECTED(MDEC(pInt));
+        return S_OK;
+    });
+    REQUIRE_RETURNS(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        SetAD();
+        RETURN_LAST_ERROR_IF_NULL(MDEC(pInt));
+        return S_OK;
+    });
+    REQUIRE_RETURNS_MSG(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        SetAD();
+        RETURN_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        SetAD();
+        RETURN_LAST_ERROR_IF_NULL_EXPECTED(MDEC(pInt));
+        return S_OK;
+    });
 
-    REQUIRE_THROWS_RESULT(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; THROW_IF_NULL_ALLOC(MDEC(pInt)); });
-    REQUIRE_THROWS_MSG(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; THROW_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__); });
-    REQUIRE_LOG(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; LOG_IF_NULL_ALLOC(MDEC(pInt)); });
-    REQUIRE_LOG_MSG(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; LOG_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__); });
-    REQUIRE_FAILFAST(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; FAIL_FAST_IF_NULL_ALLOC(MDEC(pInt)); });
-    REQUIRE_FAILFAST_MSG(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; FAIL_FAST_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__); });
-    REQUIRE_THROWS_RESULT(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); THROW_IF_NULL_ALLOC(MDEC(pInt)); });
-    REQUIRE_THROWS_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); THROW_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__); });
-    REQUIRE_LOG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); LOG_IF_NULL_ALLOC(MDEC(pInt)); });
-    REQUIRE_LOG_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); LOG_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__); });
-    REQUIRE_FAILFAST(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); FAIL_FAST_IF_NULL_ALLOC(MDEC(pInt)); });
-    REQUIRE_FAILFAST_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); FAIL_FAST_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__); });
+    REQUIRE_THROWS_RESULT(E_OUTOFMEMORY, [] {
+        std::unique_ptr<int> pInt;
+        THROW_IF_NULL_ALLOC(MDEC(pInt));
+    });
+    REQUIRE_THROWS_MSG(E_OUTOFMEMORY, [] {
+        std::unique_ptr<int> pInt;
+        THROW_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(E_OUTOFMEMORY, [] {
+        std::unique_ptr<int> pInt;
+        LOG_IF_NULL_ALLOC(MDEC(pInt));
+    });
+    REQUIRE_LOG_MSG(E_OUTOFMEMORY, [] {
+        std::unique_ptr<int> pInt;
+        LOG_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__);
+    });
+    REQUIRE_FAILFAST(E_OUTOFMEMORY, [] {
+        std::unique_ptr<int> pInt;
+        FAIL_FAST_IF_NULL_ALLOC(MDEC(pInt));
+    });
+    REQUIRE_FAILFAST_MSG(E_OUTOFMEMORY, [] {
+        std::unique_ptr<int> pInt;
+        FAIL_FAST_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__);
+    });
+    REQUIRE_THROWS_RESULT(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        THROW_IF_NULL_ALLOC(MDEC(pInt));
+    });
+    REQUIRE_THROWS_MSG(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        THROW_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        LOG_IF_NULL_ALLOC(MDEC(pInt));
+    });
+    REQUIRE_LOG_MSG(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        LOG_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__);
+    });
+    REQUIRE_FAILFAST(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        FAIL_FAST_IF_NULL_ALLOC(MDEC(pInt));
+    });
+    REQUIRE_FAILFAST_MSG(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        FAIL_FAST_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__);
+    });
 
-    REQUIRE_LOG(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(pInt)); });
-    REQUIRE_LOG_MSG(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; LOG_HR_IF_NULL_MSG(MDEC(E_OUTOFMEMORY), MDEC(pInt), "msg: %d", __LINE__); });
-    REQUIRE_FAILFAST(E_FAIL, [] { std::unique_ptr<int> pInt; FAIL_FAST_HR_IF_NULL(MDEC(E_FAIL), MDEC(pInt)); });
-    REQUIRE_FAILFAST_MSG(E_FAIL, [] { std::unique_ptr<int> pInt; FAIL_FAST_HR_IF_NULL_MSG(MDEC(E_FAIL), MDEC(pInt), "msg: %d", __LINE__); });
-    REQUIRE_THROWS_RESULT(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; THROW_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(pInt)); });
-    REQUIRE_THROWS_MSG(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; THROW_HR_IF_NULL_MSG(MDEC(E_OUTOFMEMORY), MDEC(pInt), "msg: %d", __LINE__); });
-    REQUIRE_LOG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(pInt)); });
-    REQUIRE_LOG_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); LOG_HR_IF_NULL_MSG(MDEC(E_OUTOFMEMORY), MDEC(pInt), "msg: %d", __LINE__); });
-    REQUIRE_FAILFAST(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); FAIL_FAST_HR_IF_NULL(MDEC(E_FAIL), MDEC(pInt)); });
-    REQUIRE_FAILFAST_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); FAIL_FAST_HR_IF_NULL_MSG(MDEC(E_FAIL), MDEC(pInt), "msg: %d", __LINE__); });
-    REQUIRE_THROWS_RESULT(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); THROW_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(pInt)); });
-    REQUIRE_THROWS_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); THROW_HR_IF_NULL_MSG(MDEC(E_OUTOFMEMORY), MDEC(pInt), "msg: %d", __LINE__); });
+    REQUIRE_LOG(E_OUTOFMEMORY, [] {
+        std::unique_ptr<int> pInt;
+        LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(pInt));
+    });
+    REQUIRE_LOG_MSG(E_OUTOFMEMORY, [] {
+        std::unique_ptr<int> pInt;
+        LOG_HR_IF_NULL_MSG(MDEC(E_OUTOFMEMORY), MDEC(pInt), "msg: %d", __LINE__);
+    });
+    REQUIRE_FAILFAST(E_FAIL, [] {
+        std::unique_ptr<int> pInt;
+        FAIL_FAST_HR_IF_NULL(MDEC(E_FAIL), MDEC(pInt));
+    });
+    REQUIRE_FAILFAST_MSG(E_FAIL, [] {
+        std::unique_ptr<int> pInt;
+        FAIL_FAST_HR_IF_NULL_MSG(MDEC(E_FAIL), MDEC(pInt), "msg: %d", __LINE__);
+    });
+    REQUIRE_THROWS_RESULT(E_OUTOFMEMORY, [] {
+        std::unique_ptr<int> pInt;
+        THROW_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(pInt));
+    });
+    REQUIRE_THROWS_MSG(E_OUTOFMEMORY, [] {
+        std::unique_ptr<int> pInt;
+        THROW_HR_IF_NULL_MSG(MDEC(E_OUTOFMEMORY), MDEC(pInt), "msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(pInt));
+    });
+    REQUIRE_LOG_MSG(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        LOG_HR_IF_NULL_MSG(MDEC(E_OUTOFMEMORY), MDEC(pInt), "msg: %d", __LINE__);
+    });
+    REQUIRE_FAILFAST(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        FAIL_FAST_HR_IF_NULL(MDEC(E_FAIL), MDEC(pInt));
+    });
+    REQUIRE_FAILFAST_MSG(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        FAIL_FAST_HR_IF_NULL_MSG(MDEC(E_FAIL), MDEC(pInt), "msg: %d", __LINE__);
+    });
+    REQUIRE_THROWS_RESULT(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        THROW_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(pInt));
+    });
+    REQUIRE_THROWS_MSG(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        THROW_HR_IF_NULL_MSG(MDEC(E_OUTOFMEMORY), MDEC(pInt), "msg: %d", __LINE__);
+    });
 
-    REQUIRE_LOG(E_AD, [] {  std::unique_ptr<int> pInt; SetAD(); LOG_LAST_ERROR_IF_NULL(MDEC(pInt)); });
-    REQUIRE_LOG_MSG(E_AD, [] { std::unique_ptr<int> pInt; SetAD(); LOG_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__); });
-    REQUIRE_FAILFAST(E_AD, [] { std::unique_ptr<int> pInt; SetAD(); FAIL_FAST_LAST_ERROR_IF_NULL(pInt); });
-    REQUIRE_FAILFAST_MSG(E_AD, [] { std::unique_ptr<int> pInt; SetAD(); FAIL_FAST_LAST_ERROR_IF_NULL_MSG(pInt, "msg: %d", __LINE__); });
-    REQUIRE_THROWS_RESULT(E_AD, [] { std::unique_ptr<int> pInt; SetAD(); THROW_LAST_ERROR_IF_NULL(MDEC(pInt)); });
-    REQUIRE_THROWS_MSG(E_AD, [] { std::unique_ptr<int> pInt; SetAD(); THROW_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__); });
-    REQUIRE_LOG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); LOG_LAST_ERROR_IF_NULL(MDEC(pInt)); });
-    REQUIRE_LOG_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); LOG_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__); });
-    REQUIRE_FAILFAST(S_OK, [] { std::unique_ptr<int> pInt(new int(5));  FAIL_FAST_LAST_ERROR_IF_NULL(pInt); });
-    REQUIRE_FAILFAST_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5));  FAIL_FAST_LAST_ERROR_IF_NULL_MSG(pInt, "msg: %d", __LINE__); });
-    REQUIRE_THROWS_RESULT(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); THROW_LAST_ERROR_IF_NULL(MDEC(pInt)); });
-    REQUIRE_THROWS_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); THROW_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__); });
+    REQUIRE_LOG(E_AD, [] {
+        std::unique_ptr<int> pInt;
+        SetAD();
+        LOG_LAST_ERROR_IF_NULL(MDEC(pInt));
+    });
+    REQUIRE_LOG_MSG(E_AD, [] {
+        std::unique_ptr<int> pInt;
+        SetAD();
+        LOG_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__);
+    });
+    REQUIRE_FAILFAST(E_AD, [] {
+        std::unique_ptr<int> pInt;
+        SetAD();
+        FAIL_FAST_LAST_ERROR_IF_NULL(pInt);
+    });
+    REQUIRE_FAILFAST_MSG(E_AD, [] {
+        std::unique_ptr<int> pInt;
+        SetAD();
+        FAIL_FAST_LAST_ERROR_IF_NULL_MSG(pInt, "msg: %d", __LINE__);
+    });
+    REQUIRE_THROWS_RESULT(E_AD, [] {
+        std::unique_ptr<int> pInt;
+        SetAD();
+        THROW_LAST_ERROR_IF_NULL(MDEC(pInt));
+    });
+    REQUIRE_THROWS_MSG(E_AD, [] {
+        std::unique_ptr<int> pInt;
+        SetAD();
+        THROW_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__);
+    });
+    REQUIRE_LOG(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        LOG_LAST_ERROR_IF_NULL(MDEC(pInt));
+    });
+    REQUIRE_LOG_MSG(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        LOG_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__);
+    });
+    REQUIRE_FAILFAST(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        FAIL_FAST_LAST_ERROR_IF_NULL(pInt);
+    });
+    REQUIRE_FAILFAST_MSG(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        FAIL_FAST_LAST_ERROR_IF_NULL_MSG(pInt, "msg: %d", __LINE__);
+    });
+    REQUIRE_THROWS_RESULT(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        THROW_LAST_ERROR_IF_NULL(MDEC(pInt));
+    });
+    REQUIRE_THROWS_MSG(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        THROW_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__);
+    });
 
     // REQUIRE_FAILFAST_UNSPECIFIED([] { std::unique_ptr<int> pInt; FAIL_FAST_IMMEDIATE_IF_NULL(pNull); });
-    REQUIRE_FAILFAST(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); FAIL_FAST_IMMEDIATE_IF_NULL(MDEC(pValidRef())); });
-    REQUIRE_FAILFAST_UNSPECIFIED([] { std::unique_ptr<int> pInt; FAIL_FAST_IF_NULL(pNull); });
-    REQUIRE_FAILFAST(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); FAIL_FAST_IF_NULL(MDEC(pInt)); });
+    REQUIRE_FAILFAST(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        FAIL_FAST_IMMEDIATE_IF_NULL(MDEC(pValidRef()));
+    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] {
+        std::unique_ptr<int> pInt;
+        FAIL_FAST_IF_NULL(pNull);
+    });
+    REQUIRE_FAILFAST(S_OK, [] {
+        std::unique_ptr<int> pInt(new int(5));
+        FAIL_FAST_IF_NULL(MDEC(pInt));
+    });
 
-    REQUIRE_RETURNS(E_OUTOFMEMORY, [] { Microsoft::WRL::ComPtr<IUnknown> ptr; RETURN_IF_NULL_ALLOC(MDEC(ptr)); return S_OK; });
-    REQUIRE_LOG(E_OUTOFMEMORY, [] { Microsoft::WRL::ComPtr<IUnknown> ptr; LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(ptr)); });
+    REQUIRE_RETURNS(E_OUTOFMEMORY, [] {
+        Microsoft::WRL::ComPtr<IUnknown> ptr;
+        RETURN_IF_NULL_ALLOC(MDEC(ptr));
+        return S_OK;
+    });
+    REQUIRE_LOG(E_OUTOFMEMORY, [] {
+        Microsoft::WRL::ComPtr<IUnknown> ptr;
+        LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(ptr));
+    });
 
-    REQUIRE_RETURNS(E_OUTOFMEMORY, [] { std::shared_ptr<int> ptr; RETURN_IF_NULL_ALLOC(MDEC(ptr)); return S_OK; });
-    REQUIRE_LOG(E_OUTOFMEMORY, [] { std::shared_ptr<int> ptr; LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(ptr)); });
-    REQUIRE_RETURNS(S_OK, [] { std::shared_ptr<int> ptr(new int(5)); RETURN_IF_NULL_ALLOC(MDEC(ptr)); return S_OK; });
-    REQUIRE_LOG(S_OK, [] { std::shared_ptr<int> ptr(new int(5)); LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(ptr)); });
+    REQUIRE_RETURNS(E_OUTOFMEMORY, [] {
+        std::shared_ptr<int> ptr;
+        RETURN_IF_NULL_ALLOC(MDEC(ptr));
+        return S_OK;
+    });
+    REQUIRE_LOG(E_OUTOFMEMORY, [] {
+        std::shared_ptr<int> ptr;
+        LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(ptr));
+    });
+    REQUIRE_RETURNS(S_OK, [] {
+        std::shared_ptr<int> ptr(new int(5));
+        RETURN_IF_NULL_ALLOC(MDEC(ptr));
+        return S_OK;
+    });
+    REQUIRE_LOG(S_OK, [] {
+        std::shared_ptr<int> ptr(new int(5));
+        LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(ptr));
+    });
 
 #ifdef __cplusplus_winrt
-    REQUIRE_RETURNS(E_OUTOFMEMORY, [] { Platform::String^ str(nullptr); RETURN_IF_NULL_ALLOC(MDEC(str)); return S_OK; });
-    REQUIRE_LOG(E_OUTOFMEMORY, [] { Platform::String^ str(nullptr); LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(str)); });
-    REQUIRE_RETURNS(S_OK, [] { Platform::String^ str(L"a"); RETURN_IF_NULL_ALLOC(MDEC(str)); return S_OK; });
-    REQUIRE_LOG(S_OK, [] { Platform::String^ str(L"a"); LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(str)); });
+    REQUIRE_RETURNS(E_OUTOFMEMORY, [] {
+        Platform::String ^ str(nullptr);
+        RETURN_IF_NULL_ALLOC(MDEC(str));
+        return S_OK;
+    });
+    REQUIRE_LOG(E_OUTOFMEMORY, [] {
+        Platform::String ^ str(nullptr);
+        LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(str));
+    });
+    REQUIRE_RETURNS(S_OK, [] {
+        Platform::String ^ str(L"a");
+        RETURN_IF_NULL_ALLOC(MDEC(str));
+        return S_OK;
+    });
+    REQUIRE_LOG(S_OK, [] {
+        Platform::String ^ str(L"a");
+        LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(str));
+    });
 #endif
 }
 
-#define WRAP_LAMBDA(code)           [&] {code;};
+#define WRAP_LAMBDA(code) \
+    [&] { \
+        code; \
+    };
 
-//these macros should all have compile errors due to use of an invalid type
+// these macros should all have compile errors due to use of an invalid type
 void InvalidTypeChecks()
 {
     std::unique_ptr<int> boolCastClass;
     std::vector<int> noBoolCastClass;
 
-    //WRAP_LAMBDA(RETURN_IF_FAILED(fTrue));
-    //WRAP_LAMBDA(RETURN_IF_FAILED(fTRUE));
-    //WRAP_LAMBDA(RETURN_IF_FAILED(boolCastClass));
-    //WRAP_LAMBDA(RETURN_IF_FAILED(noBoolCastClass));
-    //WRAP_LAMBDA(RETURN_IF_FAILED(errSuccess));
+    // WRAP_LAMBDA(RETURN_IF_FAILED(fTrue));
+    // WRAP_LAMBDA(RETURN_IF_FAILED(fTRUE));
+    // WRAP_LAMBDA(RETURN_IF_FAILED(boolCastClass));
+    // WRAP_LAMBDA(RETURN_IF_FAILED(noBoolCastClass));
+    // WRAP_LAMBDA(RETURN_IF_FAILED(errSuccess));
 
-    //WRAP_LAMBDA(RETURN_IF_WIN32_BOOL_FALSE(fTrue));
-    //WRAP_LAMBDA(RETURN_IF_WIN32_BOOL_FALSE(noBoolCastClass));
-    //WRAP_LAMBDA(RETURN_IF_WIN32_BOOL_FALSE(hrOK));
-    //WRAP_LAMBDA(RETURN_IF_WIN32_BOOL_FALSE(errSuccess));
+    // WRAP_LAMBDA(RETURN_IF_WIN32_BOOL_FALSE(fTrue));
+    // WRAP_LAMBDA(RETURN_IF_WIN32_BOOL_FALSE(noBoolCastClass));
+    // WRAP_LAMBDA(RETURN_IF_WIN32_BOOL_FALSE(hrOK));
+    // WRAP_LAMBDA(RETURN_IF_WIN32_BOOL_FALSE(errSuccess));
 
-    //WRAP_LAMBDA(RETURN_HR_IF(errSuccess, false));
-    //WRAP_LAMBDA(RETURN_HR_IF(errSuccess, true));
-    //WRAP_LAMBDA(RETURN_HR_IF(hrOK, noBoolCastClass));
-    //WRAP_LAMBDA(RETURN_HR_IF(hrOK, hrOK));
-    //WRAP_LAMBDA(RETURN_HR_IF(hrOK, errSuccess));
+    // WRAP_LAMBDA(RETURN_HR_IF(errSuccess, false));
+    // WRAP_LAMBDA(RETURN_HR_IF(errSuccess, true));
+    // WRAP_LAMBDA(RETURN_HR_IF(hrOK, noBoolCastClass));
+    // WRAP_LAMBDA(RETURN_HR_IF(hrOK, hrOK));
+    // WRAP_LAMBDA(RETURN_HR_IF(hrOK, errSuccess));
 
-    //WRAP_LAMBDA(RETURN_HR_IF_NULL(errSuccess, nullptr));
-    //WRAP_LAMBDA(RETURN_HR_IF_NULL(errSuccess, pValid));
+    // WRAP_LAMBDA(RETURN_HR_IF_NULL(errSuccess, nullptr));
+    // WRAP_LAMBDA(RETURN_HR_IF_NULL(errSuccess, pValid));
 
-    //WRAP_LAMBDA(RETURN_LAST_ERROR_IF(noBoolCastClass));
-    //WRAP_LAMBDA(RETURN_LAST_ERROR_IF(errSuccess));
-    //WRAP_LAMBDA(RETURN_LAST_ERROR_IF(hrOK));
+    // WRAP_LAMBDA(RETURN_LAST_ERROR_IF(noBoolCastClass));
+    // WRAP_LAMBDA(RETURN_LAST_ERROR_IF(errSuccess));
+    // WRAP_LAMBDA(RETURN_LAST_ERROR_IF(hrOK));
 
-    //WRAP_LAMBDA(RETURN_IF_FAILED_EXPECTED(fTrue));
-    //WRAP_LAMBDA(RETURN_IF_FAILED_EXPECTED(fTRUE));
-    //WRAP_LAMBDA(RETURN_IF_FAILED_EXPECTED(boolCastClass));
-    //WRAP_LAMBDA(RETURN_IF_FAILED_EXPECTED(noBoolCastClass));
-    //WRAP_LAMBDA(RETURN_IF_FAILED_EXPECTED(errSuccess));
+    // WRAP_LAMBDA(RETURN_IF_FAILED_EXPECTED(fTrue));
+    // WRAP_LAMBDA(RETURN_IF_FAILED_EXPECTED(fTRUE));
+    // WRAP_LAMBDA(RETURN_IF_FAILED_EXPECTED(boolCastClass));
+    // WRAP_LAMBDA(RETURN_IF_FAILED_EXPECTED(noBoolCastClass));
+    // WRAP_LAMBDA(RETURN_IF_FAILED_EXPECTED(errSuccess));
 
-    //WRAP_LAMBDA(RETURN_IF_WIN32_BOOL_FALSE_EXPECTED(fTrue));
-    //WRAP_LAMBDA(RETURN_IF_WIN32_BOOL_FALSE_EXPECTED(noBoolCastClass));
-    //WRAP_LAMBDA(RETURN_IF_WIN32_BOOL_FALSE_EXPECTED(hrOK));
-    //WRAP_LAMBDA(RETURN_IF_WIN32_BOOL_FALSE_EXPECTED(errSuccess));
+    // WRAP_LAMBDA(RETURN_IF_WIN32_BOOL_FALSE_EXPECTED(fTrue));
+    // WRAP_LAMBDA(RETURN_IF_WIN32_BOOL_FALSE_EXPECTED(noBoolCastClass));
+    // WRAP_LAMBDA(RETURN_IF_WIN32_BOOL_FALSE_EXPECTED(hrOK));
+    // WRAP_LAMBDA(RETURN_IF_WIN32_BOOL_FALSE_EXPECTED(errSuccess));
 
-    //LOG_IF_FAILED(fTrue);
-    //LOG_IF_FAILED(fTRUE);
-    //LOG_IF_FAILED(boolCastClass);
-    //LOG_IF_FAILED(noBoolCastClass);
-    //LOG_IF_FAILED(errSuccess);
+    // LOG_IF_FAILED(fTrue);
+    // LOG_IF_FAILED(fTRUE);
+    // LOG_IF_FAILED(boolCastClass);
+    // LOG_IF_FAILED(noBoolCastClass);
+    // LOG_IF_FAILED(errSuccess);
 
-    //LOG_IF_WIN32_BOOL_FALSE(fTrue);
-    //LOG_IF_WIN32_BOOL_FALSE(noBoolCastClass);
-    //LOG_IF_WIN32_BOOL_FALSE(hrOK);
-    //LOG_IF_WIN32_BOOL_FALSE(errSuccess);
+    // LOG_IF_WIN32_BOOL_FALSE(fTrue);
+    // LOG_IF_WIN32_BOOL_FALSE(noBoolCastClass);
+    // LOG_IF_WIN32_BOOL_FALSE(hrOK);
+    // LOG_IF_WIN32_BOOL_FALSE(errSuccess);
 
-    //LOG_HR_IF(errSuccess, false);
-    //LOG_HR_IF(errSuccess, true);
-    //LOG_HR_IF(hrOK, noBoolCastClass);
-    //LOG_HR_IF(hrOK, hrOK);
-    //LOG_HR_IF(hrOK, errSuccess);
+    // LOG_HR_IF(errSuccess, false);
+    // LOG_HR_IF(errSuccess, true);
+    // LOG_HR_IF(hrOK, noBoolCastClass);
+    // LOG_HR_IF(hrOK, hrOK);
+    // LOG_HR_IF(hrOK, errSuccess);
 
-    //FAIL_FAST_IF_FAILED(fTrue);
-    //FAIL_FAST_IF_FAILED(fTRUE);
-    //FAIL_FAST_IF_FAILED(boolCastClass);
-    //FAIL_FAST_IF_FAILED(noBoolCastClass);
-    //FAIL_FAST_IF_FAILED(errSuccess);
+    // FAIL_FAST_IF_FAILED(fTrue);
+    // FAIL_FAST_IF_FAILED(fTRUE);
+    // FAIL_FAST_IF_FAILED(boolCastClass);
+    // FAIL_FAST_IF_FAILED(noBoolCastClass);
+    // FAIL_FAST_IF_FAILED(errSuccess);
 
-    //FAIL_FAST_IF_WIN32_BOOL_FALSE(fTrue);
-    //FAIL_FAST_IF_WIN32_BOOL_FALSE(noBoolCastClass);
-    //FAIL_FAST_IF_WIN32_BOOL_FALSE(hrOK);
-    //FAIL_FAST_IF_WIN32_BOOL_FALSE(errSuccess);
+    // FAIL_FAST_IF_WIN32_BOOL_FALSE(fTrue);
+    // FAIL_FAST_IF_WIN32_BOOL_FALSE(noBoolCastClass);
+    // FAIL_FAST_IF_WIN32_BOOL_FALSE(hrOK);
+    // FAIL_FAST_IF_WIN32_BOOL_FALSE(errSuccess);
 
-    //FAIL_FAST_HR_IF(errSuccess, false);
-    //FAIL_FAST_HR_IF(errSuccess, true);
-    //FAIL_FAST_HR_IF(hrOK, noBoolCastClass);
-    //FAIL_FAST_HR_IF(hrOK, hrOK);
-    //FAIL_FAST_HR_IF(hrOK, errSuccess);
+    // FAIL_FAST_HR_IF(errSuccess, false);
+    // FAIL_FAST_HR_IF(errSuccess, true);
+    // FAIL_FAST_HR_IF(hrOK, noBoolCastClass);
+    // FAIL_FAST_HR_IF(hrOK, hrOK);
+    // FAIL_FAST_HR_IF(hrOK, errSuccess);
 
-    //THROW_IF_FAILED(fTrue);
-    //THROW_IF_FAILED(fTRUE);
-    //THROW_IF_FAILED(boolCastClass);
-    //THROW_IF_FAILED(noBoolCastClass);
-    //THROW_IF_FAILED(errSuccess);
+    // THROW_IF_FAILED(fTrue);
+    // THROW_IF_FAILED(fTRUE);
+    // THROW_IF_FAILED(boolCastClass);
+    // THROW_IF_FAILED(noBoolCastClass);
+    // THROW_IF_FAILED(errSuccess);
 
-    //THROW_IF_WIN32_BOOL_FALSE(fTrue);
-    //THROW_IF_WIN32_BOOL_FALSE(noBoolCastClass);
-    //THROW_IF_WIN32_BOOL_FALSE(hrOK);
-    //THROW_IF_WIN32_BOOL_FALSE(errSuccess);
+    // THROW_IF_WIN32_BOOL_FALSE(fTrue);
+    // THROW_IF_WIN32_BOOL_FALSE(noBoolCastClass);
+    // THROW_IF_WIN32_BOOL_FALSE(hrOK);
+    // THROW_IF_WIN32_BOOL_FALSE(errSuccess);
 
-    //THROW_HR_IF(errSuccess, false);
-    //THROW_HR_IF(errSuccess, true);
-    //THROW_HR_IF(hrOK, noBoolCastClass);
-    //THROW_HR_IF(hrOK, hrOK);
-    //THROW_HR_IF(hrOK, errSuccess);
+    // THROW_HR_IF(errSuccess, false);
+    // THROW_HR_IF(errSuccess, true);
+    // THROW_HR_IF(hrOK, noBoolCastClass);
+    // THROW_HR_IF(hrOK, hrOK);
+    // THROW_HR_IF(hrOK, errSuccess);
 
-    //FAIL_FAST_IF(noBoolCastClass);
-    //FAIL_FAST_IF(hrOK);
-    //FAIL_FAST_IF(errSuccess);
+    // FAIL_FAST_IF(noBoolCastClass);
+    // FAIL_FAST_IF(hrOK);
+    // FAIL_FAST_IF(errSuccess);
 
-    //FAIL_FAST_IMMEDIATE_IF_FAILED(fTrue);
-    //FAIL_FAST_IMMEDIATE_IF_FAILED(fTRUE);
-    //FAIL_FAST_IMMEDIATE_IF_FAILED(boolCastClass);
-    //FAIL_FAST_IMMEDIATE_IF_FAILED(noBoolCastClass);
-    //FAIL_FAST_IMMEDIATE_IF_FAILED(errSuccess);
+    // FAIL_FAST_IMMEDIATE_IF_FAILED(fTrue);
+    // FAIL_FAST_IMMEDIATE_IF_FAILED(fTRUE);
+    // FAIL_FAST_IMMEDIATE_IF_FAILED(boolCastClass);
+    // FAIL_FAST_IMMEDIATE_IF_FAILED(noBoolCastClass);
+    // FAIL_FAST_IMMEDIATE_IF_FAILED(errSuccess);
 
-    //FAIL_FAST_IMMEDIATE_IF(noBoolCastClass);
-    //FAIL_FAST_IMMEDIATE_IF(hrOK);
-    //FAIL_FAST_IMMEDIATE_IF(errSuccess);
+    // FAIL_FAST_IMMEDIATE_IF(noBoolCastClass);
+    // FAIL_FAST_IMMEDIATE_IF(hrOK);
+    // FAIL_FAST_IMMEDIATE_IF(errSuccess);
 }
 
 TEST_CASE("WindowsInternalTests::UniqueHandle", "[resource][unique_any]")
@@ -1019,11 +2201,13 @@ TEST_CASE("WindowsInternalTests::UniqueHandle", "[resource][unique_any]")
         REQUIRE_SUCCEEDED(witest::GetTempFileName(tempFileName));
 
 #if (_WIN32_WINNT >= _WIN32_WINNT_WIN8)
-        CREATEFILE2_EXTENDED_PARAMETERS params = { sizeof(params) };
+        CREATEFILE2_EXTENDED_PARAMETERS params = {sizeof(params)};
         params.dwFileAttributes = FILE_ATTRIBUTE_TEMPORARY;
-        wil::unique_hfile spValidHandle(::CreateFile2(tempFileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_DELETE, CREATE_ALWAYS, &params));
+        wil::unique_hfile spValidHandle(
+            ::CreateFile2(tempFileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_DELETE, CREATE_ALWAYS, &params));
 #else
-        wil::unique_hfile spValidHandle(::CreateFileW(tempFileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_DELETE, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, nullptr));
+        wil::unique_hfile spValidHandle(::CreateFileW(
+            tempFileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_DELETE, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, nullptr));
 #endif
 
         ::DeleteFileW(tempFileName);
@@ -1080,11 +2264,12 @@ TEST_CASE("WindowsInternalTests::UniqueHandle", "[resource][unique_any]")
         REQUIRE_SUCCEEDED(witest::GetTempFileName(tempFileName2));
 
 #if (_WIN32_WINNT >= _WIN32_WINNT_WIN8)
-        CREATEFILE2_EXTENDED_PARAMETERS params2 = { sizeof(params2) };
+        CREATEFILE2_EXTENDED_PARAMETERS params2 = {sizeof(params2)};
         params2.dwFileAttributes = FILE_ATTRIBUTE_TEMPORARY;
         *(&spMoveHandle) = ::CreateFile2(tempFileName2, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_DELETE, CREATE_ALWAYS, &params2);
 #else
-        *(&spMoveHandle) = ::CreateFileW(tempFileName2, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_DELETE, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, nullptr);
+        *(&spMoveHandle) = ::CreateFileW(
+            tempFileName2, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_DELETE, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY, nullptr);
 #endif
 
         ::DeleteFileW(tempFileName2);
@@ -1097,7 +2282,7 @@ TEST_CASE("WindowsInternalTests::UniqueHandle", "[resource][unique_any]")
     }
 
     auto hFirst = ::CreateEventEx(nullptr, nullptr, CREATE_EVENT_INITIAL_SET, 0);
-    auto hSecond= ::CreateEventEx(nullptr, nullptr, CREATE_EVENT_INITIAL_SET, 0);
+    auto hSecond = ::CreateEventEx(nullptr, nullptr, CREATE_EVENT_INITIAL_SET, 0);
 
     wil::unique_handle spLeft(hFirst);
     wil::unique_handle spRight(hSecond);
@@ -1245,7 +2430,7 @@ TEST_CASE("WindowsInternalTests::SharedHandle", "[resource][shared_any]")
     // put
     sp1.reset(::CreateEventEx(nullptr, nullptr, CREATE_EVENT_INITIAL_SET, 0));
     REQUIRE(sp1);
-    sp1.put();   // frees the pointer...
+    sp1.put(); // frees the pointer...
     REQUIRE_FALSE(sp1);
     sp2 = sp1;
     REQUIRE_FALSE(sp2);
@@ -1256,7 +2441,7 @@ TEST_CASE("WindowsInternalTests::SharedHandle", "[resource][shared_any]")
     // address
     sp1.reset(::CreateEventEx(nullptr, nullptr, CREATE_EVENT_INITIAL_SET, 0));
     REQUIRE(sp1);
-    &sp1;   // frees the pointer...
+    &sp1; // frees the pointer...
     REQUIRE_FALSE(sp1);
     sp2 = sp1;
     REQUIRE_FALSE(sp2);
@@ -1560,7 +2745,6 @@ TEST_CASE("WindowsInternalTests::HandleWrappers", "[resource][unique_any]")
     wil::unique_mutex_nothrow testMutexNoExcept;
     REQUIRE(SUCCEEDED(testMutexNoExcept.create(nullptr)));
 
-
     SemaphoreTestCommon<wil::unique_semaphore_nothrow>();
     SemaphoreTestCommon<wil::unique_semaphore_failfast>();
     SemaphoreRaiiTests<wil::unique_semaphore_nothrow>();
@@ -1619,7 +2803,9 @@ TEST_CASE("WindowsInternalTests::HandleWrappers", "[resource][unique_any]")
     {
         auto verify = MakeSecureDeleterMallocSpy();
         REQUIRE_SUCCEEDED(::CoRegisterMallocSpy(verify.Get()));
-        auto removeSpy = wil::scope_exit([&] { ::CoRevokeMallocSpy(); });
+        auto removeSpy = wil::scope_exit([&] {
+            ::CoRevokeMallocSpy();
+        });
 
         auto unique_cotaskmem_string_secure_failfast1 = wil::make_cotaskmem_string_secure_failfast(L"Foo");
         REQUIRE(wcscmp(L"Foo", unique_cotaskmem_string_secure_failfast1.get()) == 0);
@@ -1696,7 +2882,9 @@ TEST_CASE("WindowsInternalTests::HandleWrappers", "[resource][unique_any]")
     {
         auto verify = MakeSecureDeleterMallocSpy();
         REQUIRE_SUCCEEDED(::CoRegisterMallocSpy(verify.Get()));
-        auto removeSpy = wil::scope_exit([&] { ::CoRevokeMallocSpy(); });
+        auto removeSpy = wil::scope_exit([&] {
+            ::CoRevokeMallocSpy();
+        });
 
         auto unique_hlocal_string_secure_failfast1 = wil::make_hlocal_string_secure_failfast(L"Foo");
         REQUIRE(wcscmp(L"Foo", unique_hlocal_string_secure_failfast1.get()) == 0);
@@ -1785,7 +2973,8 @@ TEST_CASE("WindowsInternalTests::HandleWrappers", "[resource][unique_any]")
 
     auto testString2 = wil::make_cotaskmem_string(L"Bar");
     {
-        auto cleanupMemory = wil::SecureZeroMemory_scope_exit(testString2.get(), wcslen(testString2.get()) * sizeof(testString2.get()[0]));
+        auto cleanupMemory =
+            wil::SecureZeroMemory_scope_exit(testString2.get(), wcslen(testString2.get()) * sizeof(testString2.get()[0]));
     }
     REQUIRE(0 == testString2.get()[0]);
 #endif
@@ -1894,17 +3083,17 @@ TEST_CASE("WindowsInternalTests::GDIWrappers", "[resource]")
 }
 #endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
 
-void TestOutHandle(_Out_ HANDLE *pHandle)
+void TestOutHandle(_Out_ HANDLE* pHandle)
 {
     *pHandle = nullptr;
 }
 
-void TestOutAlloc(_Out_ int **ppInt)
+void TestOutAlloc(_Out_ int** ppInt)
 {
     *ppInt = new int(5);
 }
 
-void TestCoTask(_Outptr_result_buffer_(*charCount) PWSTR *ppsz, size_t *charCount)
+void TestCoTask(_Outptr_result_buffer_(*charCount) PWSTR* ppsz, size_t* charCount)
 {
     *charCount = 0;
     PWSTR psz = static_cast<PWSTR>(::CoTaskMemAlloc(10));
@@ -1916,12 +3105,12 @@ void TestCoTask(_Outptr_result_buffer_(*charCount) PWSTR *ppsz, size_t *charCoun
     *ppsz = psz;
 }
 
-void TestVoid(_Out_ void **ppv)
+void TestVoid(_Out_ void** ppv)
 {
     *ppv = nullptr;
 }
 
-void TestByte(_Out_ BYTE **ppByte)
+void TestByte(_Out_ BYTE** ppByte)
 {
     *ppByte = nullptr;
 }
@@ -1968,8 +3157,12 @@ TEST_CASE("WindowsInternalTests::WistdTests", "[resource][wistd]")
     struct Nothing
     {
         int n;
-        Nothing(int param) : n(param) {}
-        void Method() {}
+        Nothing(int param) : n(param)
+        {
+        }
+        void Method()
+        {
+        }
     };
 
     auto spff = wil::make_unique_failfast<Nothing>(3);
@@ -2009,11 +3202,10 @@ TEST_CASE("WindowsInternalTests::WistdTests", "[resource][wistd]")
     object_counter_state state;
     count = 0;
     {
-        object_counter c{ state };
+        object_counter c{state};
         REQUIRE(state.instance_count() == 1);
 
-        wistd::function<void(int)> fn = [&count, c](int param)
-        {
+        wistd::function<void(int)> fn = [&count, c](int param) {
             count += param;
         };
         REQUIRE(state.instance_count() == 2);
@@ -2027,10 +3219,9 @@ TEST_CASE("WindowsInternalTests::WistdTests", "[resource][wistd]")
     {
         wistd::function<void(int)> fn;
         {
-            object_counter c{ state };
+            object_counter c{state};
             REQUIRE(state.instance_count() == 1);
-            fn = [&count, c](int param)
-            {
+            fn = [&count, c](int param) {
                 count += param;
             };
             REQUIRE(state.instance_count() == 2);
@@ -2043,17 +3234,26 @@ TEST_CASE("WindowsInternalTests::WistdTests", "[resource][wistd]")
     {
         // Size Check -- the current implementation allows for 10 pointers to be passed through the lambda
         int a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12;
-        (void)a11; (void)a12;
+        (void)a11;
+        (void)a12;
 
-        wistd::function<void()> fn = [&a1, &a2, &a3, &a4, &a5, &a6, &a7, &a8, &a9, &a10]()
-        {
-            (void)a1; (void)a2; (void)a3; (void)a4; (void)a5; (void)a6; (void)a7; (void)a8; (void)a9; (void)a10;
+        wistd::function<void()> fn = [&a1, &a2, &a3, &a4, &a5, &a6, &a7, &a8, &a9, &a10]() {
+            (void)a1;
+            (void)a2;
+            (void)a3;
+            (void)a4;
+            (void)a5;
+            (void)a6;
+            (void)a7;
+            (void)a8;
+            (void)a9;
+            (void)a10;
         };
         auto fnCopy = fn;
 
         // Uncomment to double-check static assert.  Reports:
-        // "The sizeof(wistd::function) has grown too large for the reserved buffer (10 pointers).  Refactor to reduce size of the capture."
-        // wistd::function<void()> fn2 = [&a1, &a2, &a3, &a4, &a5, &a6, &a7, &a8, &a9, &a10, &a11]()
+        // "The sizeof(wistd::function) has grown too large for the reserved buffer (10 pointers).  Refactor to reduce size of the
+        // capture." wistd::function<void()> fn2 = [&a1, &a2, &a3, &a4, &a5, &a6, &a7, &a8, &a9, &a10, &a11]()
         // {
         //     a1; a2; a3; a4; a5; a6; a7; a8; a9; a10; a11;
         // };
@@ -2061,12 +3261,12 @@ TEST_CASE("WindowsInternalTests::WistdTests", "[resource][wistd]")
 }
 
 template <typename test_t, typename lambda_t>
-void NullptrRaiiTests(lambda_t const &fnCreate)
+void NullptrRaiiTests(lambda_t const& fnCreate)
 {
     // nullptr_t construct
-    test_t var1 = nullptr;      // implicit
+    test_t var1 = nullptr; // implicit
     REQUIRE_FALSE(var1);
-    test_t var2(nullptr);       // explicit
+    test_t var2(nullptr); // explicit
     REQUIRE_FALSE(var2);
 
     // nullptr_t assingment
@@ -2083,7 +3283,7 @@ void NullptrRaiiTests(lambda_t const &fnCreate)
 }
 
 template <typename test_t, typename lambda_t>
-void ReleaseRaiiTests(lambda_t const &fnCreate)
+void ReleaseRaiiTests(lambda_t const& fnCreate)
 {
     test_t var1(fnCreate());
     REQUIRE(var1);
@@ -2096,7 +3296,7 @@ void ReleaseRaiiTests(lambda_t const &fnCreate)
 }
 
 template <typename test_t, typename lambda_t>
-void GetRaiiTests(lambda_t const &fnCreate)
+void GetRaiiTests(lambda_t const& fnCreate)
 {
     test_t var1;
     REQUIRE_FALSE(var1);
@@ -2108,15 +3308,15 @@ void GetRaiiTests(lambda_t const &fnCreate)
 }
 
 template <typename test_t, typename lambda_t>
-void SharedRaiiTests(lambda_t const &fnCreate)
+void SharedRaiiTests(lambda_t const& fnCreate)
 {
     // copy construction
     test_t var1(fnCreate());
     REQUIRE(var1);
-    test_t var2 = var1;     // implicit
+    test_t var2 = var1; // implicit
     REQUIRE(var1);
     REQUIRE(var2);
-    test_t var3(var1);      // explicit
+    test_t var3(var1); // explicit
 
     // copy assignment
     test_t var4(fnCreate());
@@ -2127,11 +3327,11 @@ void SharedRaiiTests(lambda_t const &fnCreate)
 
     // r-value construction from unique_ptr
     typename test_t::unique_t unique1(fnCreate());
-    test_t var7(std::move(unique1));    // explicit
+    test_t var7(std::move(unique1)); // explicit
     REQUIRE(var7);
     REQUIRE_FALSE(unique1);
     typename test_t::unique_t unique2(fnCreate());
-    test_t var8 = std::move(unique2);   // implicit
+    test_t var8 = std::move(unique2); // implicit
     REQUIRE(var8);
     REQUIRE_FALSE(unique2);
 
@@ -2150,7 +3350,7 @@ void SharedRaiiTests(lambda_t const &fnCreate)
 }
 
 template <typename test_t, typename lambda_t>
-void WeakRaiiTests(lambda_t const &fnCreate)
+void WeakRaiiTests(lambda_t const& fnCreate)
 {
     typedef typename test_t::shared_t shared_type;
 
@@ -2159,12 +3359,12 @@ void WeakRaiiTests(lambda_t const &fnCreate)
 
     // construct from shared
     shared_type shared1(fnCreate());
-    test_t weak2 = shared1;             // implicit
-    test_t weak3(shared1);              // explicit
+    test_t weak2 = shared1; // implicit
+    test_t weak3(shared1);  // explicit
 
     // construct from weak
-    test_t weak4 = weak2;               // implicit
-    test_t weak5(weak2);                // explicit
+    test_t weak4 = weak2; // implicit
+    test_t weak5(weak2);  // explicit
 
     // assign from weak
     weak2 = weak5;
@@ -2203,29 +3403,29 @@ void WeakRaiiTests(lambda_t const &fnCreate)
 }
 
 template <typename test_t, typename lambda_t>
-void AddressRaiiTests(lambda_t const &fnCreate)
+void AddressRaiiTests(lambda_t const& fnCreate)
 {
     test_t var1(fnCreate());
     REQUIRE(var1);
 
     &var1;
-    REQUIRE_FALSE(var1);                              // the address operator does an auto-release
+    REQUIRE_FALSE(var1); // the address operator does an auto-release
 
     *(&var1) = fnCreate();
     REQUIRE(var1);
 
     var1.put();
-    REQUIRE_FALSE(var1);                              // verify that 'put()' does an auto-release
+    REQUIRE_FALSE(var1); // verify that 'put()' does an auto-release
 
     *var1.put() = fnCreate();
     REQUIRE(var1);
 
     REQUIRE(var1.addressof() != nullptr);
-    REQUIRE(var1);                               // verify that 'addressof()' does not auto-release
+    REQUIRE(var1); // verify that 'addressof()' does not auto-release
 }
 
 template <typename test_t, typename lambda_t>
-void BasicRaiiTests(lambda_t const &fnCreate)
+void BasicRaiiTests(lambda_t const& fnCreate)
 {
     auto invalidHandle = test_t::policy::invalid_value();
 
@@ -2234,17 +3434,17 @@ void BasicRaiiTests(lambda_t const &fnCreate)
     REQUIRE_FALSE(var1);
 
     // construct from a given resource
-    test_t var2(fnCreate());    // r-value
+    test_t var2(fnCreate()); // r-value
     REQUIRE(var2);
-    test_t var3(invalidHandle);      // l-value
+    test_t var3(invalidHandle); // l-value
     REQUIRE_FALSE(var3);
 
     // r-value construct from the same type
-    test_t var4(std::move(var2));                   // explicit
+    test_t var4(std::move(var2)); // explicit
     REQUIRE(var4);
     REQUIRE_FALSE(var2);
     test_t varMove(fnCreate());
-    test_t var4implicit = std::move(varMove);       // implicit
+    test_t var4implicit = std::move(varMove); // implicit
     REQUIRE(var4implicit);
 
     // move assignment
@@ -2264,9 +3464,9 @@ void BasicRaiiTests(lambda_t const &fnCreate)
     // reset
     var4.reset();
     REQUIRE_FALSE(var4);
-    var4.reset(fnCreate());     // r-value
+    var4.reset(fnCreate()); // r-value
     REQUIRE(var4);
-    var4.reset(invalidHandle);       // l-value
+    var4.reset(invalidHandle); // l-value
     REQUIRE_FALSE(var4);
 }
 
@@ -2323,7 +3523,9 @@ void EventTests()
 {
     static_assert(sizeof(wil::unique_event_nothrow) == sizeof(HANDLE), "event_t should be sizeof(HANDLE) to allow for raw array utilization");
 
-    auto fnCreate = []() { return CreateEventEx(nullptr, nullptr, CREATE_EVENT_MANUAL_RESET, 0); };
+    auto fnCreate = []() {
+        return CreateEventEx(nullptr, nullptr, CREATE_EVENT_MANUAL_RESET, 0);
+    };
 
     BasicRaiiTests<wil::unique_event_nothrow>(fnCreate);
     NullptrRaiiTests<wil::unique_event_nothrow>(fnCreate);
@@ -2371,8 +3573,8 @@ void EventTests()
     REQUIRE(event2);
     event3.create(wil::EventOptions::ManualReset);
     REQUIRE(event3);
-    REQUIRE_THROWS(event2.create(wil::EventOptions::ManualReset, L"\\illegal\\chars\\too\\\\many\\\\namespaces") );
-    REQUIRE_THROWS(event3.create(wil::EventOptions::ManualReset, L"\\illegal\\chars\\too\\\\many\\\\namespaces") );
+    REQUIRE_THROWS(event2.create(wil::EventOptions::ManualReset, L"\\illegal\\chars\\too\\\\many\\\\namespaces"));
+    REQUIRE_THROWS(event3.create(wil::EventOptions::ManualReset, L"\\illegal\\chars\\too\\\\many\\\\namespaces"));
 
     wil::unique_event var1(wil::EventOptions::ManualReset);
     REQUIRE_FALSE(wil::event_is_signaled(var1.get()));
@@ -2408,7 +3610,7 @@ void SetPropVariantValue(_In_ int intVal, _Out_ PROPVARIANT* ppropvar)
     ppropvar->vt = VT_INT;
 }
 
-template<typename T>
+template <typename T>
 void TestUniquePropVariant()
 {
     {
@@ -2426,9 +3628,9 @@ void TestUniquePropVariant()
         T spPropVariant2(wistd::move(propVariant));
         REQUIRE(((spPropVariant2.intVal == 12) && (spPropVariant2.vt == VT_INT)));
 
-        //spPropVariant = propVariant;    // deleted function
-        //spPropVariant = wistd::move(propVariant);  // deleted function
-        //spPropVariant.swap(propVariant);  //deleted function
+        // spPropVariant = propVariant;    // deleted function
+        // spPropVariant = wistd::move(propVariant);  // deleted function
+        // spPropVariant.swap(propVariant);  //deleted function
     }
 
     // move constructor
@@ -2441,8 +3643,8 @@ void TestUniquePropVariant()
         REQUIRE(spPropVariant.vt == VT_EMPTY);
         REQUIRE(((spPropVariant2.intVal == 12) && (spPropVariant2.vt == VT_INT)));
 
-        //T spPropVariant3(spPropVariant);     // deleted function
-        //spPropVariant2 = spPropVariant;     // deleted function
+        // T spPropVariant3(spPropVariant);     // deleted function
+        // spPropVariant2 = spPropVariant;     // deleted function
     }
 
     // move operator
@@ -2462,7 +3664,7 @@ void TestUniquePropVariant()
         SetPropVariantValue(12, &spPropVariant);
         T spPropVariant2;
 
-        //spPropVariant2.reset(spPropVariant);    // deleted function
+        // spPropVariant2.reset(spPropVariant);    // deleted function
         spPropVariant.reset(propVariant);
         REQUIRE(spPropVariant.intVal == 22);
         REQUIRE(propVariant.intVal == 22);
@@ -2488,8 +3690,7 @@ void TestUniquePropVariant()
         T spPropVariant;
         SetPropVariantValue(12, &spPropVariant);
 
-        [](PROPVARIANT* propVariant)
-        {
+        [](PROPVARIANT* propVariant) {
             REQUIRE(propVariant->vt == VT_EMPTY);
         }(spPropVariant.reset_and_addressof());
 
@@ -2511,14 +3712,14 @@ TEST_CASE("WindowsInternalTests::ResourceTemplateTests", "[resource]")
     TestUniquePropVariant<unique_prop_variant_no_init>();
 }
 
-inline unsigned long long ToInt64(const FILETIME &ft)
+inline unsigned long long ToInt64(const FILETIME& ft)
 {
     return (static_cast<unsigned long long>(ft.dwHighDateTime) << 32) + ft.dwLowDateTime;
 }
 
 inline FILETIME FromInt64(unsigned long long i64)
 {
-    FILETIME ft = { static_cast<DWORD>(i64), static_cast<DWORD>(i64 >> 32) };
+    FILETIME ft = {static_cast<DWORD>(i64), static_cast<DWORD>(i64 >> 32)};
     return ft;
 }
 
@@ -2542,16 +3743,16 @@ TEST_CASE("WindowsInternalTests::Win32HelperTests", "[win32_helpers]")
 
 TEST_CASE("WindowsInternalTests::RectHelperTests", "[win32_helpers]")
 {
-    RECT rect{ 50, 100, 200, 300 };
-    POINT leftEdgePoint{ 50, 150 };
-    POINT topEdgePoint{ 100, 100 };
-    POINT rightEdgePoint{ 200, 150 };
-    POINT bottomEdgePoint{ 100, 300 };
-    POINT insidePoint{ 150, 150};
+    RECT rect{50, 100, 200, 300};
+    POINT leftEdgePoint{50, 150};
+    POINT topEdgePoint{100, 100};
+    POINT rightEdgePoint{200, 150};
+    POINT bottomEdgePoint{100, 300};
+    POINT insidePoint{150, 150};
 
     RECT emptyRectAtOrigin{};
-    RECT emptyRectNotAtOrigin{ 50, 50, 50, 50 };
-    RECT nonNormalizedRect{ 300, 300, 0, 0 };
+    RECT emptyRectNotAtOrigin{50, 50, 50, 50};
+    RECT nonNormalizedRect{300, 300, 0, 0};
 
     REQUIRE(wil::rect_width(rect) == 150);
     REQUIRE(wil::rect_height(rect) == 200);
@@ -2587,7 +3788,14 @@ TEST_CASE("WindowsInternalTests::InitOnceNonTests")
     // Call, but fail. Should transport the HRESULT back, but mark us as not the winner
     called = false;
     winner = false;
-    REQUIRE(E_FAIL == wil::init_once_nothrow(init, [&] { called = true; return E_FAIL; }, &winner));
+    REQUIRE(
+        E_FAIL == wil::init_once_nothrow(
+                      init,
+                      [&] {
+                          called = true;
+                          return E_FAIL;
+                      },
+                      &winner));
     REQUIRE_FALSE(wil::init_once_initialized(init));
     REQUIRE(called);
     REQUIRE_FALSE(winner);
@@ -2595,7 +3803,13 @@ TEST_CASE("WindowsInternalTests::InitOnceNonTests")
     // Call, succeed. Should mark us as the winner.
     called = false;
     winner = false;
-    REQUIRE_SUCCEEDED(wil::init_once_nothrow(init, [&] { called = true; return S_OK; }, &winner));
+    REQUIRE_SUCCEEDED(wil::init_once_nothrow(
+        init,
+        [&] {
+            called = true;
+            return S_OK;
+        },
+        &winner));
     REQUIRE(wil::init_once_initialized(init));
     REQUIRE(called);
     REQUIRE(winner);
@@ -2603,14 +3817,23 @@ TEST_CASE("WindowsInternalTests::InitOnceNonTests")
     // Call again. Should not actually be invoked and should not be the winner
     called = false;
     winner = false;
-    REQUIRE_SUCCEEDED(wil::init_once_nothrow(init, [&] { called = false; return S_OK; }, &winner));
+    REQUIRE_SUCCEEDED(wil::init_once_nothrow(
+        init,
+        [&] {
+            called = false;
+            return S_OK;
+        },
+        &winner));
     REQUIRE(wil::init_once_initialized(init));
     REQUIRE_FALSE(called);
     REQUIRE_FALSE(winner);
 
     // Call again. Still not invoked, but we don't care if we're the winner
     called = false;
-    REQUIRE_SUCCEEDED(wil::init_once_nothrow(init, [&] { called = false; return S_OK; }));
+    REQUIRE_SUCCEEDED(wil::init_once_nothrow(init, [&] {
+        called = false;
+        return S_OK;
+    }));
     REQUIRE(wil::init_once_initialized(init));
     REQUIRE_FALSE(called);
 
@@ -2621,7 +3844,14 @@ TEST_CASE("WindowsInternalTests::InitOnceNonTests")
 
     // A thrown exception leaves the object un-initialized
     static volatile bool always_true = true; // So that the compiler can't determine that we unconditionally throw below (warning C4702)
-    REQUIRE_THROWS_AS(winner = wil::init_once(init, [&] { called = true; THROW_HR_IF(E_FAIL, always_true); }), wil::ResultException);
+    REQUIRE_THROWS_AS(
+        winner = wil::init_once(
+            init,
+            [&] {
+                called = true;
+                THROW_HR_IF(E_FAIL, always_true);
+            }),
+        wil::ResultException);
     REQUIRE_FALSE(wil::init_once_initialized(init));
     REQUIRE(called);
     REQUIRE_FALSE(winner);
@@ -2629,7 +3859,9 @@ TEST_CASE("WindowsInternalTests::InitOnceNonTests")
     // Success!
     called = false;
     winner = false;
-    REQUIRE_NOTHROW(winner = wil::init_once(init, [&] { called = true; }));
+    REQUIRE_NOTHROW(winner = wil::init_once(init, [&] {
+                        called = true;
+                    }));
     REQUIRE(wil::init_once_initialized(init));
     REQUIRE(called);
     REQUIRE(winner);
@@ -2637,7 +3869,9 @@ TEST_CASE("WindowsInternalTests::InitOnceNonTests")
     // No-op success!
     called = false;
     winner = false;
-    REQUIRE_NOTHROW(winner = wil::init_once(init, [&] { called = true; }));
+    REQUIRE_NOTHROW(winner = wil::init_once(init, [&] {
+                        called = true;
+                    }));
     REQUIRE(wil::init_once_initialized(init));
     REQUIRE_FALSE(called);
     REQUIRE_FALSE(winner);
@@ -2670,7 +3904,13 @@ TEST_CASE("WindowsInternalTests::TestUniquePointerCases", "[resource][unique_any
         REQUIRE(*cotaskmemMemory == static_cast<DWORD>(42));
     }
     {
-        struct S { size_t s; S() : s(42) {} };
+        struct S
+        {
+            size_t s;
+            S() : s(42)
+            {
+            }
+        };
         auto cotaskmemMemory = wil::make_unique_cotaskmem_nothrow<S>();
         REQUIRE(static_cast<bool>(cotaskmemMemory));
         REQUIRE(cotaskmemMemory->s == static_cast<size_t>(42));
@@ -2680,12 +3920,20 @@ TEST_CASE("WindowsInternalTests::TestUniquePointerCases", "[resource][unique_any
         REQUIRE(static_cast<bool>(cotaskmemArrayMemory));
     }
     {
-        struct S { size_t s; S() : s(42) {} };
+        struct S
+        {
+            size_t s;
+            S() : s(42)
+            {
+            }
+        };
         const size_t size = 12;
         auto cotaskmemArrayMemory = wil::make_unique_cotaskmem_nothrow<S[]>(size);
         REQUIRE(static_cast<bool>(cotaskmemArrayMemory));
         bool verified = true;
-        for (auto& elem : wil::make_range(cotaskmemArrayMemory.get(), size)) if (elem.s != 42) verified = false;
+        for (auto& elem : wil::make_range(cotaskmemArrayMemory.get(), size))
+            if (elem.s != 42)
+                verified = false;
         REQUIRE(verified);
     }
 
@@ -2703,7 +3951,13 @@ TEST_CASE("WindowsInternalTests::TestUniquePointerCases", "[resource][unique_any
         REQUIRE(*cotaskmemMemory == static_cast<DWORD>(42));
     }
     {
-        struct S { size_t s; S() : s(42) {} };
+        struct S
+        {
+            size_t s;
+            S() : s(42)
+            {
+            }
+        };
         auto cotaskmemMemory = wil::make_unique_cotaskmem_secure_nothrow<S>();
         REQUIRE(static_cast<bool>(cotaskmemMemory));
         REQUIRE(cotaskmemMemory->s == static_cast<size_t>(42));
@@ -2713,12 +3967,20 @@ TEST_CASE("WindowsInternalTests::TestUniquePointerCases", "[resource][unique_any
         REQUIRE(static_cast<bool>(cotaskmemArrayMemory));
     }
     {
-        struct S { size_t s; S() : s(42) {} };
+        struct S
+        {
+            size_t s;
+            S() : s(42)
+            {
+            }
+        };
         const size_t size = 12;
         auto cotaskmemArrayMemory = wil::make_unique_cotaskmem_secure_nothrow<S[]>(size);
         REQUIRE(static_cast<bool>(cotaskmemArrayMemory));
         bool verified = true;
-        for (auto& elem : wil::make_range(cotaskmemArrayMemory.get(), size)) if (elem.s != 42) verified = false;
+        for (auto& elem : wil::make_range(cotaskmemArrayMemory.get(), size))
+            if (elem.s != 42)
+                verified = false;
         REQUIRE(verified);
     }
 
@@ -2736,7 +3998,13 @@ TEST_CASE("WindowsInternalTests::TestUniquePointerCases", "[resource][unique_any
         REQUIRE(*localMemory == static_cast<DWORD>(42));
     }
     {
-        struct S { size_t s; S() : s(42) {} };
+        struct S
+        {
+            size_t s;
+            S() : s(42)
+            {
+            }
+        };
         auto localMemory = wil::make_unique_hlocal_nothrow<S>();
         REQUIRE(static_cast<bool>(localMemory));
         REQUIRE(localMemory->s == static_cast<size_t>(42));
@@ -2746,12 +4014,20 @@ TEST_CASE("WindowsInternalTests::TestUniquePointerCases", "[resource][unique_any
         REQUIRE(static_cast<bool>(localArrayMemory));
     }
     {
-        struct S { size_t s; S() : s(42) {} };
+        struct S
+        {
+            size_t s;
+            S() : s(42)
+            {
+            }
+        };
         const size_t size = 12;
         auto localArrayMemory = wil::make_unique_hlocal_nothrow<S[]>(size);
         REQUIRE(static_cast<bool>(localArrayMemory));
         bool verified = true;
-        for (auto& elem : wil::make_range(localArrayMemory.get(), size)) if (elem.s != 42) verified = false;
+        for (auto& elem : wil::make_range(localArrayMemory.get(), size))
+            if (elem.s != 42)
+                verified = false;
         REQUIRE(verified);
     }
 
@@ -2769,7 +4045,13 @@ TEST_CASE("WindowsInternalTests::TestUniquePointerCases", "[resource][unique_any
         REQUIRE(*localMemory == static_cast<DWORD>(42));
     }
     {
-        struct S { size_t s; S() : s(42) {} };
+        struct S
+        {
+            size_t s;
+            S() : s(42)
+            {
+            }
+        };
         auto localMemory = wil::make_unique_hlocal_secure_nothrow<S>();
         REQUIRE(static_cast<bool>(localMemory));
         REQUIRE(localMemory->s == static_cast<size_t>(42));
@@ -2779,12 +4061,20 @@ TEST_CASE("WindowsInternalTests::TestUniquePointerCases", "[resource][unique_any
         REQUIRE(static_cast<bool>(localArrayMemory));
     }
     {
-        struct S { size_t s; S() : s(42) {} };
+        struct S
+        {
+            size_t s;
+            S() : s(42)
+            {
+            }
+        };
         const size_t size = 12;
         auto localArrayMemory = wil::make_unique_hlocal_secure_nothrow<S[]>(size);
         REQUIRE(static_cast<bool>(localArrayMemory));
         bool verified = true;
-        for (auto& elem : wil::make_range(localArrayMemory.get(), size)) if (elem.s != 42) verified = false;
+        for (auto& elem : wil::make_range(localArrayMemory.get(), size))
+            if (elem.s != 42)
+                verified = false;
         REQUIRE(verified);
     }
 
@@ -2800,17 +4090,17 @@ TEST_CASE("WindowsInternalTests::TestUniquePointerCases", "[resource][unique_any
     {
         // The following uses are blocked due to a static assert failure
 
-        //struct S { ~S() {} };
+        // struct S { ~S() {} };
 
-        //auto cotaskmemMemory = wil::make_unique_cotaskmem_nothrow<S>();
-        //auto cotaskmemArrayMemory = wil::make_unique_cotaskmem_nothrow<S[]>(1);
-        //auto cotaskmemMemory2 = wil::make_unique_cotaskmem_secure_nothrow<S>();
-        //auto cotaskmemArrayMemory2 = wil::make_unique_cotaskmem_secure_nothrow<S[]>(1);
+        // auto cotaskmemMemory = wil::make_unique_cotaskmem_nothrow<S>();
+        // auto cotaskmemArrayMemory = wil::make_unique_cotaskmem_nothrow<S[]>(1);
+        // auto cotaskmemMemory2 = wil::make_unique_cotaskmem_secure_nothrow<S>();
+        // auto cotaskmemArrayMemory2 = wil::make_unique_cotaskmem_secure_nothrow<S[]>(1);
 
-        //auto localMemory = wil::make_unique_hlocal_nothrow<S>();
-        //auto localArrayMemory = wil::make_unique_hlocal_nothrow<S[]>(1);
-        //auto localMemory2 = wil::make_unique_hlocal_secure_nothrow<S>();
-        //auto localArrayMemory2 = wil::make_unique_hlocal_secure_nothrow<S[]>(1);
+        // auto localMemory = wil::make_unique_hlocal_nothrow<S>();
+        // auto localArrayMemory = wil::make_unique_hlocal_nothrow<S[]>(1);
+        // auto localMemory2 = wil::make_unique_hlocal_secure_nothrow<S>();
+        // auto localArrayMemory2 = wil::make_unique_hlocal_secure_nothrow<S[]>(1);
     }
 }
 #endif
@@ -2867,15 +4157,23 @@ void GetHANDLEArray(_Out_ size_t* count, _Outptr_result_buffer_(*count) HANDLE**
 
 interface __declspec(uuid("EDCA4ADC-DF46-442A-A69D-FDFD8BC37B31")) IFakeObject : public IUnknown
 {
-   STDMETHOD_(void, DoStuff)() = 0;
+    STDMETHOD_(void, DoStuff)() = 0;
 };
 
-class __declspec(empty_bases) ArrayTestObject : witest::AllocatedObject,
-    public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::RuntimeClassType::ClassicCom>, IFakeObject>
+class __declspec(empty_bases) ArrayTestObject
+    : witest::AllocatedObject,
+      public Microsoft::WRL::RuntimeClass<Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::RuntimeClassType::ClassicCom>, IFakeObject>
 {
 public:
-    HRESULT RuntimeClassInitialize(UINT n) { m_number = n; return S_OK; };
-    STDMETHOD_(void, DoStuff)() {}
+    HRESULT RuntimeClassInitialize(UINT n)
+    {
+        m_number = n;
+        return S_OK;
+    };
+    STDMETHOD_(void, DoStuff)()
+    {
+    }
+
 private:
     UINT m_number{};
 };
@@ -3013,8 +4311,7 @@ TEST_CASE("WindowsInternalTests::TestUniqueArrayCases", "[resource]")
         auto& back = values.back();
         REQUIRE(back == 0);
 
-        [](const wil::unique_cotaskmem_array_ptr<DWORD>& cvalues)
-        {
+        [](const wil::unique_cotaskmem_array_ptr<DWORD>& cvalues) {
             size_t count = 0;
             for (auto it = cvalues.begin(); it != cvalues.end(); ++it)
             {
@@ -3073,22 +4370,24 @@ TEST_CASE("WindowsInternalTests::VerifyMakeAgileCallback", "[wrl]")
     CallbackClient callbackClient;
 
 #ifdef WIL_ENABLE_EXCEPTIONS
-    auto cbAgile = wil::MakeAgileCallback<ITypedEventHandler<IMemoryBufferReference*, IInspectable*>>([](IMemoryBufferReference*, IInspectable*) -> HRESULT
-    {
-        return S_OK;
-    });
+    auto cbAgile = wil::MakeAgileCallback<ITypedEventHandler<IMemoryBufferReference*, IInspectable*>>(
+        [](IMemoryBufferReference*, IInspectable*) -> HRESULT {
+            return S_OK;
+        });
     REQUIRE(wil::is_agile(cbAgile));
 
-    auto cbAgileWithMember = wil::MakeAgileCallback<ITypedEventHandler<IMemoryBufferReference*, IInspectable*>>(&callbackClient, &CallbackClient::On);
+    auto cbAgileWithMember =
+        wil::MakeAgileCallback<ITypedEventHandler<IMemoryBufferReference*, IInspectable*>>(&callbackClient, &CallbackClient::On);
     REQUIRE(wil::is_agile(cbAgileWithMember));
 #endif
-    auto cbAgileNoThrow = wil::MakeAgileCallbackNoThrow<ITypedEventHandler<IMemoryBufferReference*, IInspectable*>>([](IMemoryBufferReference*, IInspectable*) -> HRESULT
-    {
-        return S_OK;
-    });
+    auto cbAgileNoThrow = wil::MakeAgileCallbackNoThrow<ITypedEventHandler<IMemoryBufferReference*, IInspectable*>>(
+        [](IMemoryBufferReference*, IInspectable*) -> HRESULT {
+            return S_OK;
+        });
     REQUIRE(wil::is_agile(cbAgileNoThrow));
 
-    auto cbAgileWithMemberNoThrow = wil::MakeAgileCallbackNoThrow<ITypedEventHandler<IMemoryBufferReference*, IInspectable*>>(&callbackClient, &CallbackClient::On);
+    auto cbAgileWithMemberNoThrow =
+        wil::MakeAgileCallbackNoThrow<ITypedEventHandler<IMemoryBufferReference*, IInspectable*>>(&callbackClient, &CallbackClient::On);
     REQUIRE(wil::is_agile(cbAgileWithMemberNoThrow));
 }
 #endif
@@ -3195,10 +4494,7 @@ struct ThreadPoolWaitTestContext
 };
 
 static void __stdcall ThreadPoolWaitTestCallback(
-    _Inout_ PTP_CALLBACK_INSTANCE /*instance*/,
-    _Inout_opt_ void* context,
-    _Inout_ PTP_WAIT wait,
-    _In_ TP_WAIT_RESULT /*waitResult*/)
+    _Inout_ PTP_CALLBACK_INSTANCE /*instance*/, _Inout_opt_ void* context, _Inout_ PTP_WAIT wait, _In_ TP_WAIT_RESULT /*waitResult*/)
 {
     ThreadPoolWaitTestContext& myContext = *reinterpret_cast<ThreadPoolWaitTestContext*>(context);
     SetThreadpoolWait(wait, myContext.Event.get(), nullptr);
@@ -3262,10 +4558,7 @@ struct ThreadPoolWaitWorkContext
     volatile LONG Counter = 0;
 };
 
-static void __stdcall ThreadPoolWaitWorkCallback(
-    _Inout_ PTP_CALLBACK_INSTANCE /*instance*/,
-    _Inout_opt_ void* context,
-    _Inout_ PTP_WORK /*work*/)
+static void __stdcall ThreadPoolWaitWorkCallback(_Inout_ PTP_CALLBACK_INSTANCE /*instance*/, _Inout_opt_ void* context, _Inout_ PTP_WORK /*work*/)
 {
     ThreadPoolWaitWorkContext& myContext = *reinterpret_cast<ThreadPoolWaitWorkContext*>(context);
     ::InterlockedIncrement(&myContext.Counter);
@@ -3310,10 +4603,7 @@ struct ThreadPoolTimerWorkContext
     wil::unique_event_nothrow Event;
 };
 
-static void __stdcall ThreadPoolTimerWorkCallback(
-    _Inout_ PTP_CALLBACK_INSTANCE /*instance*/,
-    _Inout_opt_ void* context,
-    _Inout_ PTP_TIMER /*timer*/)
+static void __stdcall ThreadPoolTimerWorkCallback(_Inout_ PTP_CALLBACK_INSTANCE /*instance*/, _Inout_opt_ void* context, _Inout_ PTP_TIMER /*timer*/)
 {
     ThreadPoolTimerWorkContext& myContext = *reinterpret_cast<ThreadPoolTimerWorkContext*>(context);
     myContext.Event.SetEvent();
@@ -3321,7 +4611,7 @@ static void __stdcall ThreadPoolTimerWorkCallback(
 }
 
 template <typename TimerResourceT, typename DueTimeT, typename SetThreadpoolTimerT>
-void ThreadPoolTimerWorkHelper(SetThreadpoolTimerT const &setThreadpoolTimerFn, bool requireExactCallbackCount)
+void ThreadPoolTimerWorkHelper(SetThreadpoolTimerT const& setThreadpoolTimerFn, bool requireExactCallbackCount)
 {
     ThreadPoolTimerWorkContext myContext;
     REQUIRE_SUCCEEDED(myContext.Event.create());
@@ -3337,7 +4627,7 @@ void ThreadPoolTimerWorkHelper(SetThreadpoolTimerT const &setThreadpoolTimerFn, 
         myContext.Event.ResetEvent();
         const auto allowedWindow = 0;
         LONGLONG dueTime = -5 * 10000I64; // 5ms
-        setThreadpoolTimerFn(timer.get(), reinterpret_cast<DueTimeT *>(&dueTime), 0, allowedWindow);
+        setThreadpoolTimerFn(timer.get(), reinterpret_cast<DueTimeT*>(&dueTime), 0, allowedWindow);
 
         // Wait until 'myContext.Counter' increments by 1.
         REQUIRE(myContext.Event.wait(500));
@@ -3354,7 +4644,7 @@ void ThreadPoolTimerWorkHelper(SetThreadpoolTimerT const &setThreadpoolTimerFn, 
     myContext.Event.ResetEvent();
     const auto allowedWindow = 0;
     LONGLONG dueTime = -5 * 10000I64; // 5ms
-    setThreadpoolTimerFn(timer.get(), reinterpret_cast<DueTimeT *>(&dueTime), 0, allowedWindow);
+    setThreadpoolTimerFn(timer.get(), reinterpret_cast<DueTimeT*>(&dueTime), 0, allowedWindow);
 
     if (requireExactCallbackCount)
     {
@@ -3385,10 +4675,7 @@ TEST_CASE("WindowsInternalTests::ThreadPoolTimerTest", "[resource][unique_thread
 }
 
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) && (_WIN32_WINNT >= _WIN32_WINNT_WIN8)
-static void __stdcall SlimEventTrollCallback(
-    _Inout_ PTP_CALLBACK_INSTANCE /*instance*/,
-    _Inout_opt_ void* context,
-    _Inout_ PTP_TIMER /*timer*/)
+static void __stdcall SlimEventTrollCallback(_Inout_ PTP_CALLBACK_INSTANCE /*instance*/, _Inout_opt_ void* context, _Inout_ PTP_TIMER /*timer*/)
 {
     auto event = reinterpret_cast<wil::slim_event*>(context);
 
@@ -3397,10 +4684,7 @@ static void __stdcall SlimEventTrollCallback(
     WakeByAddressAll(event);
 }
 
-static void __stdcall SlimEventFriendlyCallback(
-    _Inout_ PTP_CALLBACK_INSTANCE /*instance*/,
-    _Inout_opt_ void* context,
-    _Inout_ PTP_TIMER /*timer*/)
+static void __stdcall SlimEventFriendlyCallback(_Inout_ PTP_CALLBACK_INSTANCE /*instance*/, _Inout_opt_ void* context, _Inout_ PTP_TIMER /*timer*/)
 {
     auto event = reinterpret_cast<wil::slim_event*>(context);
     event->SetEvent();
@@ -3427,7 +4711,8 @@ TEST_CASE("WindowsInternalTests::SlimEventTests", "[resource][slim_event]")
         wil::unique_threadpool_timer friendlyTimer(CreateThreadpoolTimer(SlimEventFriendlyCallback, &event, nullptr));
         REQUIRE(friendlyTimer);
 
-        FILETIME friendlyDueTime = wil::filetime::from_int64(UINT64(-100 * wil::filetime_duration::one_millisecond)); // 100ms (relative to now)
+        FILETIME friendlyDueTime =
+            wil::filetime::from_int64(UINT64(-100 * wil::filetime_duration::one_millisecond)); // 100ms (relative to now)
         SetThreadpoolTimer(friendlyTimer.get(), &friendlyDueTime, /*period(ms)*/ 0, /*window(ms)*/ 0);
 
         // Now that the 'friendlyTimer' is queued, we should succeed.
@@ -3454,7 +4739,6 @@ TEST_CASE("WindowsInternalTests::SlimEventTests", "[resource][slim_event]")
         manualResetEvent.ResetEvent();
         REQUIRE_FALSE(manualResetEvent.wait(/*timeout(ms)*/ 10));
     }
-
 }
 #endif // WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) && (_WIN32_WINNT >= _WIN32_WINNT_WIN8)
 
@@ -3462,20 +4746,24 @@ struct ConditionVariableCSCallbackContext
 {
     wil::condition_variable event;
     wil::critical_section lock;
-    auto acquire() { return lock.lock(); }
+    auto acquire()
+    {
+        return lock.lock();
+    }
 };
 
 struct ConditionVariableSRWCallbackContext
 {
     wil::condition_variable event;
     wil::srwlock lock;
-    auto acquire() { return lock.lock_exclusive(); }
+    auto acquire()
+    {
+        return lock.lock_exclusive();
+    }
 };
 
 template <typename T>
-static void __stdcall ConditionVariableCallback(
-    _Inout_ PTP_CALLBACK_INSTANCE /*Instance*/,
-    _In_ void* Context)
+static void __stdcall ConditionVariableCallback(_Inout_ PTP_CALLBACK_INSTANCE /*Instance*/, _In_ void* Context)
 {
     auto callbackContext = reinterpret_cast<T*>(Context);
 
@@ -3535,15 +4823,30 @@ TEST_CASE("WindowsInternalTests::ReturnWithExpectedTests", "[result_macros]")
     wil::g_pfnResultLoggingCallback = ResultMacrosLoggingCallback;
 
     // Succeeded
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_IF_FAILED_WITH_EXPECTED(MDEC(hrOKRef()), E_UNEXPECTED); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
+        RETURN_IF_FAILED_WITH_EXPECTED(MDEC(hrOKRef()), E_UNEXPECTED);
+        return S_OK;
+    });
 
     // Expected
-    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] { RETURN_IF_FAILED_WITH_EXPECTED(E_FAIL, E_FAIL); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(E_UNEXPECTED, [] { RETURN_IF_FAILED_WITH_EXPECTED(E_UNEXPECTED, E_FAIL, E_UNEXPECTED, E_POINTER, E_INVALIDARG); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] {
+        RETURN_IF_FAILED_WITH_EXPECTED(E_FAIL, E_FAIL);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(E_UNEXPECTED, [] {
+        RETURN_IF_FAILED_WITH_EXPECTED(E_UNEXPECTED, E_FAIL, E_UNEXPECTED, E_POINTER, E_INVALIDARG);
+        return S_OK;
+    });
 
     // Unexpected
-    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] { RETURN_IF_FAILED_WITH_EXPECTED(E_FAIL, E_UNEXPECTED); return S_OK; });
-    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] { RETURN_IF_FAILED_WITH_EXPECTED(E_FAIL, E_UNEXPECTED, E_POINTER, E_INVALIDARG); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] {
+        RETURN_IF_FAILED_WITH_EXPECTED(E_FAIL, E_UNEXPECTED);
+        return S_OK;
+    });
+    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] {
+        RETURN_IF_FAILED_WITH_EXPECTED(E_FAIL, E_UNEXPECTED, E_POINTER, E_INVALIDARG);
+        return S_OK;
+    });
 }
 
 TEST_CASE("WindowsInternalTests::LogWithExpectedTests", "[result_macros]")
@@ -3551,20 +4854,30 @@ TEST_CASE("WindowsInternalTests::LogWithExpectedTests", "[result_macros]")
     wil::g_pfnResultLoggingCallback = ResultMacrosLoggingCallback;
 
     // Succeeded
-    REQUIRE_LOG(S_OK, [] { REQUIRE(S_OK == LOG_IF_FAILED_WITH_EXPECTED(MDEC(hrOKRef()), E_FAIL, E_INVALIDARG)); });
+    REQUIRE_LOG(S_OK, [] {
+        REQUIRE(S_OK == LOG_IF_FAILED_WITH_EXPECTED(MDEC(hrOKRef()), E_FAIL, E_INVALIDARG));
+    });
 
     // Expected
-    REQUIRE_LOG(S_OK, [] { REQUIRE(E_UNEXPECTED == LOG_IF_FAILED_WITH_EXPECTED(E_UNEXPECTED, E_UNEXPECTED, E_INVALIDARG)); });
-    REQUIRE_LOG(S_OK, [] { REQUIRE(E_UNEXPECTED == LOG_IF_FAILED_WITH_EXPECTED(E_UNEXPECTED, E_FAIL, E_UNEXPECTED, E_POINTER, E_INVALIDARG)); });
+    REQUIRE_LOG(S_OK, [] {
+        REQUIRE(E_UNEXPECTED == LOG_IF_FAILED_WITH_EXPECTED(E_UNEXPECTED, E_UNEXPECTED, E_INVALIDARG));
+    });
+    REQUIRE_LOG(S_OK, [] {
+        REQUIRE(E_UNEXPECTED == LOG_IF_FAILED_WITH_EXPECTED(E_UNEXPECTED, E_FAIL, E_UNEXPECTED, E_POINTER, E_INVALIDARG));
+    });
 
     // Unexpected
-    REQUIRE_LOG(E_FAIL, [] { REQUIRE(E_FAIL == LOG_IF_FAILED_WITH_EXPECTED(E_FAIL, E_UNEXPECTED)); });
-    REQUIRE_LOG(E_FAIL, [] { REQUIRE(E_FAIL == LOG_IF_FAILED_WITH_EXPECTED(E_FAIL, E_UNEXPECTED, E_POINTER, E_INVALIDARG)); });
+    REQUIRE_LOG(E_FAIL, [] {
+        REQUIRE(E_FAIL == LOG_IF_FAILED_WITH_EXPECTED(E_FAIL, E_UNEXPECTED));
+    });
+    REQUIRE_LOG(E_FAIL, [] {
+        REQUIRE(E_FAIL == LOG_IF_FAILED_WITH_EXPECTED(E_FAIL, E_UNEXPECTED, E_POINTER, E_INVALIDARG));
+    });
 }
 
 // Verifies that the shutdown-aware objects respect the alignment
 // of the wrapped object.
-template<template<typename> class Wrapper>
+template <template <typename> class Wrapper>
 void VerifyAlignment()
 {
     // Some of the wrappers require a method called ProcessShutdown(), so we'll give it one.
@@ -3572,7 +4885,9 @@ void VerifyAlignment()
     {
         // Use SLIST_HEADER as our poster child alignment-sensitive data type.
         SLIST_HEADER value;
-        void ProcessShutdown() { }
+        void ProcessShutdown()
+        {
+        }
     };
     static_assert(alignof(alignment_sensitive_struct) != alignof(char), "Need to choose a better alignment-sensitive type");
 
@@ -3618,20 +4933,42 @@ TEST_CASE("WindowsInternalTests::ModuleReference", "[wrl]")
             return count;
         }
         // Dummy implementations of everything else (never called).
-        STDMETHOD_(const Microsoft::WRL::Details::CreatorMap**, GetFirstEntryPointer)() const { return nullptr; }
-        STDMETHOD_(const Microsoft::WRL::Details::CreatorMap**, GetMidEntryPointer)() const { return nullptr; }
-        STDMETHOD_(const Microsoft::WRL::Details::CreatorMap**, GetLastEntryPointer)() const { return nullptr; }
-        STDMETHOD_(SRWLOCK*, GetLock)() const { return nullptr; }
-        STDMETHOD(RegisterWinRTObject)(const wchar_t*, const wchar_t**, _Inout_ RO_REGISTRATION_COOKIE*, unsigned int) { return E_NOTIMPL; }
-        STDMETHOD(UnregisterWinRTObject)(const wchar_t*, _In_ RO_REGISTRATION_COOKIE) { return E_NOTIMPL; }
-        STDMETHOD(RegisterCOMObject)(const wchar_t*, _In_ IID*, _In_ IClassFactory**, _Inout_ DWORD*, unsigned int) { return E_NOTIMPL; }
-        STDMETHOD(UnregisterCOMObject)(const wchar_t*, _Inout_ DWORD*, unsigned int) { return E_NOTIMPL; }
-
+        STDMETHOD_(const Microsoft::WRL::Details::CreatorMap**, GetFirstEntryPointer)() const
+        {
+            return nullptr;
+        }
+        STDMETHOD_(const Microsoft::WRL::Details::CreatorMap**, GetMidEntryPointer)() const
+        {
+            return nullptr;
+        }
+        STDMETHOD_(const Microsoft::WRL::Details::CreatorMap**, GetLastEntryPointer)() const
+        {
+            return nullptr;
+        }
+        STDMETHOD_(SRWLOCK*, GetLock)() const
+        {
+            return nullptr;
+        }
+        STDMETHOD(RegisterWinRTObject)(const wchar_t*, const wchar_t**, _Inout_ RO_REGISTRATION_COOKIE*, unsigned int)
+        {
+            return E_NOTIMPL;
+        }
+        STDMETHOD(UnregisterWinRTObject)(const wchar_t*, _In_ RO_REGISTRATION_COOKIE)
+        {
+            return E_NOTIMPL;
+        }
+        STDMETHOD(RegisterCOMObject)(const wchar_t*, _In_ IID*, _In_ IClassFactory**, _Inout_ DWORD*, unsigned int)
+        {
+            return E_NOTIMPL;
+        }
+        STDMETHOD(UnregisterCOMObject)(const wchar_t*, _Inout_ DWORD*, unsigned int)
+        {
+            return E_NOTIMPL;
+        }
     };
     FakeModuleBase fake;
 
-    auto peek_module_ref_count = []()
-    {
+    auto peek_module_ref_count = []() {
         return ::Microsoft::WRL::GetModuleBase()->GetObjectCount();
     };
 
@@ -3663,14 +5000,13 @@ TEST_CASE("WindowsInternalTests::ModuleReference", "[wrl]")
 }
 #endif
 
-#if defined(WIL_ENABLE_EXCEPTIONS) && (defined(NTDDI_WIN10_CO) ? \
-    WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM | WINAPI_PARTITION_GAMES) : \
-    WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM | WINAPI_PARTITION_GAMES))
+#if defined(WIL_ENABLE_EXCEPTIONS) && \
+    (defined(NTDDI_WIN10_CO) ? WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP | WINAPI_PARTITION_SYSTEM | WINAPI_PARTITION_GAMES) \
+                             : WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM | WINAPI_PARTITION_GAMES))
 TEST_CASE("WindowsInternalTests::VerifyModuleReferencesForThread", "[win32_helpers]")
 {
     bool success = true;
-    std::thread([&]
-    {
+    std::thread([&] {
         auto moduleRef = wil::get_module_reference_for_thread();
         moduleRef.reset(); // results in exiting the thread
         // should never get here
