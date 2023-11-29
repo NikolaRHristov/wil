@@ -177,6 +177,10 @@ TypenameMacros: [
   STDMETHOD,
   STDAPI_,
 ]
+
+WhitespaceSensitiveMacros: [
+  __WI_CLANG_DISABLE_WARNING,
+]
 ---
 Language: CSharp
 AlignAfterOpenBracket: AlwaysBreak

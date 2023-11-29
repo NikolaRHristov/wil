@@ -2450,7 +2450,7 @@ namespace details
     //      upon count of errors from a particular type, etc)
     __WI_PUSH_WARNINGS
 #if __clang_major__ >= 13
-    __WI_CLANG_DISABLE_WARNING(-Wunused - but - set - variable) // s_hrErrorLast used for debugging. We intentionally only assign to it
+    __WI_CLANG_DISABLE_WARNING(-Wunused-but-set-variable) // s_hrErrorLast used for debugging. We intentionally only assign to it
 #endif
     __declspec(noinline) inline int RecordException(HRESULT hr) WI_NOEXCEPT
     {
