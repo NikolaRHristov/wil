@@ -111,8 +111,9 @@ void TestErrorCallbacks()
 
         wil::ThreadFailureCache cacheNested;
 
-        LOG_HR(E_FAIL);
-        unsigned long errorLine = __LINE__;
+        // clang-format off
+        LOG_HR(E_FAIL); unsigned long errorLine = __LINE__;
+        // clang-format on
         LOG_HR(E_FAIL);
         LOG_HR(E_FAIL);
         REQUIRE(cache.GetFailure()->hr == E_FAIL);
@@ -417,1582 +418,467 @@ HRESULT TranslateException(TLambda&& lambda)
 
 TEST_CASE("WindowsInternalTests::ResultMacros", "[result_macros]")
 {
+    // clang-format off
     auto restoreLoggingCallback = witest::AssignTemporaryValue(&wil::g_pfnResultLoggingCallback, ResultMacrosLoggingCallback);
 #ifdef WIL_ENABLE_EXCEPTIONS
     auto restoreExceptionCallback = witest::AssignTemporaryValue(&wil::g_pfnResultFromCaughtException, TestResultCaughtFromException);
 #endif
 
-    REQUIRE_RETURNS(S_OK, [] {
-        RETURN_HR(MDEC(hrOKRef()));
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        RETURN_HR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__);
-    });
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        FAIL_FAST_HR(MDEC(hrOKRef()));
-    });
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        FAIL_FAST_HR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__);
-    });
+    REQUIRE_RETURNS(S_OK, [] { RETURN_HR(MDEC(hrOKRef())); });
+    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__); });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_HR(MDEC(hrOKRef())); });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_HR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS(E_FAIL, [] {
-        RETURN_HR(E_FAIL);
-    });
-    REQUIRE_RETURNS_MSG(E_FAIL, [] {
-        RETURN_HR_MSG(E_FAIL, "msg: %d", __LINE__);
-    });
-    REQUIRE_THROWS_RESULT(E_FAIL, [] {
-        THROW_HR(E_FAIL);
-    });
-    REQUIRE_THROWS_MSG(E_FAIL, [] {
-        THROW_HR_MSG(E_FAIL, "msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(E_FAIL, [] {
-        LOG_HR(E_FAIL);
-    });
-    REQUIRE_LOG_MSG(E_FAIL, [] {
-        LOG_HR_MSG(E_FAIL, "msg: %d", __LINE__);
-    });
-    REQUIRE_FAILFAST(E_FAIL, [] {
-        FAIL_FAST_HR(E_FAIL);
-    });
-    REQUIRE_FAILFAST_MSG(E_FAIL, [] {
-        FAIL_FAST_HR_MSG(E_FAIL, "msg: %d", __LINE__);
-    });
+    REQUIRE_RETURNS(E_FAIL, [] { RETURN_HR(E_FAIL); });
+    REQUIRE_RETURNS_MSG(E_FAIL, [] { RETURN_HR_MSG(E_FAIL, "msg: %d", __LINE__); });
+    REQUIRE_THROWS_RESULT(E_FAIL, [] { THROW_HR(E_FAIL); });
+    REQUIRE_THROWS_MSG(E_FAIL, [] { THROW_HR_MSG(E_FAIL, "msg: %d", __LINE__); });
+    REQUIRE_LOG(E_FAIL, [] { LOG_HR(E_FAIL); });
+    REQUIRE_LOG_MSG(E_FAIL, [] { LOG_HR_MSG(E_FAIL, "msg: %d", __LINE__); });
+    REQUIRE_FAILFAST(E_FAIL, [] { FAIL_FAST_HR(E_FAIL); });
+    REQUIRE_FAILFAST_MSG(E_FAIL, [] { FAIL_FAST_HR_MSG(E_FAIL, "msg: %d", __LINE__); });
 
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        ::SetLastError(0);
-        FAIL_FAST_LAST_ERROR();
-    });
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        ::SetLastError(0);
-        FAIL_FAST_LAST_ERROR_MSG("msg: %d", __LINE__);
-    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { ::SetLastError(0); FAIL_FAST_LAST_ERROR(); });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { ::SetLastError(0); FAIL_FAST_LAST_ERROR_MSG("msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS(E_AD, [] {
-        SetAD();
-        RETURN_LAST_ERROR();
-    });
-    REQUIRE_RETURNS_MSG(E_AD, [] {
-        SetAD();
-        RETURN_LAST_ERROR_MSG("msg: %d", __LINE__);
-    });
-    REQUIRE_THROWS_RESULT(E_AD, [] {
-        SetAD();
-        THROW_LAST_ERROR();
-    });
-    REQUIRE_THROWS_MSG(E_AD, [] {
-        SetAD();
-        THROW_LAST_ERROR_MSG("msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(E_AD, [] {
-        SetAD();
-        LOG_LAST_ERROR();
-    });
-    REQUIRE_LOG_MSG(E_AD, [] {
-        SetAD();
-        LOG_LAST_ERROR_MSG("msg: %d", __LINE__);
-    });
-    REQUIRE_FAILFAST(E_AD, [] {
-        SetAD();
-        FAIL_FAST_LAST_ERROR();
-    });
-    REQUIRE_FAILFAST_MSG(E_AD, [] {
-        SetAD();
-        FAIL_FAST_LAST_ERROR_MSG("msg: %d", __LINE__);
-    });
+    REQUIRE_RETURNS(E_AD, [] { SetAD(); RETURN_LAST_ERROR(); });
+    REQUIRE_RETURNS_MSG(E_AD, [] { SetAD(); RETURN_LAST_ERROR_MSG("msg: %d", __LINE__); });
+    REQUIRE_THROWS_RESULT(E_AD, [] { SetAD(); THROW_LAST_ERROR(); });
+    REQUIRE_THROWS_MSG(E_AD, [] { SetAD(); THROW_LAST_ERROR_MSG("msg: %d", __LINE__); });
+    REQUIRE_LOG(E_AD, [] { SetAD(); LOG_LAST_ERROR(); });
+    REQUIRE_LOG_MSG(E_AD, [] { SetAD(); LOG_LAST_ERROR_MSG("msg: %d", __LINE__); });
+    REQUIRE_FAILFAST(E_AD, [] { SetAD(); FAIL_FAST_LAST_ERROR(); });
+    REQUIRE_FAILFAST_MSG(E_AD, [] { SetAD(); FAIL_FAST_LAST_ERROR_MSG("msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS(S_OK, [] {
-        RETURN_WIN32(MDEC(errSuccessRef()));
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        RETURN_WIN32_MSG(MDEC(errSuccessRef()), "msg: %d", __LINE__);
-    });
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        FAIL_FAST_WIN32(MDEC(errSuccessRef()));
-    });
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        FAIL_FAST_WIN32_MSG(MDEC(errSuccessRef()), "msg: %d", __LINE__);
-    });
+    REQUIRE_RETURNS(S_OK, [] { RETURN_WIN32(MDEC(errSuccessRef())); });
+    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_WIN32_MSG(MDEC(errSuccessRef()), "msg: %d", __LINE__); });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_WIN32(MDEC(errSuccessRef())); });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_WIN32_MSG(MDEC(errSuccessRef()), "msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS(E_AD, [] {
-        RETURN_WIN32(ERROR_ACCESS_DENIED);
-    });
-    REQUIRE_RETURNS_MSG(E_AD, [] {
-        RETURN_WIN32_MSG(ERROR_ACCESS_DENIED, "msg: %d", __LINE__);
-    });
-    REQUIRE_THROWS_RESULT(E_AD, [] {
-        THROW_WIN32(ERROR_ACCESS_DENIED);
-    });
-    REQUIRE_THROWS_MSG(E_AD, [] {
-        THROW_WIN32_MSG(ERROR_ACCESS_DENIED, "msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(E_AD, [] {
-        LOG_WIN32(ERROR_ACCESS_DENIED);
-    });
-    REQUIRE_LOG_MSG(E_AD, [] {
-        LOG_WIN32_MSG(ERROR_ACCESS_DENIED, "msg: %d", __LINE__);
-    });
-    REQUIRE_FAILFAST(E_AD, [] {
-        FAIL_FAST_WIN32(ERROR_ACCESS_DENIED);
-    });
-    REQUIRE_FAILFAST_MSG(E_AD, [] {
-        FAIL_FAST_WIN32_MSG(ERROR_ACCESS_DENIED, "msg: %d", __LINE__);
-    });
+    REQUIRE_RETURNS(E_AD, [] { RETURN_WIN32(ERROR_ACCESS_DENIED); });
+    REQUIRE_RETURNS_MSG(E_AD, [] { RETURN_WIN32_MSG(ERROR_ACCESS_DENIED, "msg: %d", __LINE__); });
+    REQUIRE_THROWS_RESULT(E_AD, [] { THROW_WIN32(ERROR_ACCESS_DENIED); });
+    REQUIRE_THROWS_MSG(E_AD, [] { THROW_WIN32_MSG(ERROR_ACCESS_DENIED, "msg: %d", __LINE__); });
+    REQUIRE_LOG(E_AD, [] { LOG_WIN32(ERROR_ACCESS_DENIED); });
+    REQUIRE_LOG_MSG(E_AD, [] { LOG_WIN32_MSG(ERROR_ACCESS_DENIED, "msg: %d", __LINE__); });
+    REQUIRE_FAILFAST(E_AD, [] { FAIL_FAST_WIN32(ERROR_ACCESS_DENIED); });
+    REQUIRE_FAILFAST_MSG(E_AD, [] { FAIL_FAST_WIN32_MSG(ERROR_ACCESS_DENIED, "msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS(S_OK, [] {
-        RETURN_IF_FAILED(MDEC(hrOKRef()));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        RETURN_IF_FAILED_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        RETURN_IF_FAILED_EXPECTED(MDEC(hrOKRef()));
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(S_OK, [] {
-        REQUIRE(S_OK == THROW_IF_FAILED(MDEC(hrOKRef())));
-    });
-    REQUIRE_THROWS_MSG(S_OK, [] {
-        REQUIRE(S_OK == THROW_IF_FAILED_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_LOG(S_OK, [] {
-        REQUIRE(S_OK == LOG_IF_FAILED(MDEC(hrOKRef())));
-    });
-    REQUIRE_LOG_MSG(S_OK, [] {
-        REQUIRE(S_OK == LOG_IF_FAILED_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(S_OK, [] {
-        REQUIRE(S_OK == FAIL_FAST_IF_FAILED(MDEC(hrOKRef())));
-    });
-    REQUIRE_FAILFAST_MSG(S_OK, [] {
-        REQUIRE(S_OK == FAIL_FAST_IF_FAILED_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__));
-    });
+    REQUIRE_RETURNS(S_OK, [] { RETURN_IF_FAILED(MDEC(hrOKRef())); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_IF_FAILED_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_IF_FAILED_EXPECTED(MDEC(hrOKRef())); return S_OK; });
+    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(S_OK == THROW_IF_FAILED(MDEC(hrOKRef()))); });
+    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(S_OK == THROW_IF_FAILED_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__)); });
+    REQUIRE_LOG(S_OK, [] { REQUIRE(S_OK == LOG_IF_FAILED(MDEC(hrOKRef()))); });
+    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(S_OK == LOG_IF_FAILED_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(S_OK == FAIL_FAST_IF_FAILED(MDEC(hrOKRef()))); });
+    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(S_OK == FAIL_FAST_IF_FAILED_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__)); });
 
-    REQUIRE_RETURNS(E_FAIL, [] {
-        RETURN_IF_FAILED(E_FAIL);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(E_FAIL, [] {
-        RETURN_IF_FAILED_MSG(E_FAIL, "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] {
-        RETURN_IF_FAILED_EXPECTED(E_FAIL);
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(E_FAIL, [] {
-        THROW_IF_FAILED(E_FAIL);
-    });
-    REQUIRE_THROWS_MSG(E_FAIL, [] {
-        THROW_IF_FAILED_MSG(E_FAIL, "msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(E_FAIL, [] {
-        REQUIRE(E_FAIL == LOG_IF_FAILED(E_FAIL));
-    });
-    REQUIRE_LOG_MSG(E_FAIL, [] {
-        REQUIRE(E_FAIL == LOG_IF_FAILED_MSG(E_FAIL, "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(E_FAIL, [] {
-        FAIL_FAST_IF_FAILED(E_FAIL);
-    });
-    REQUIRE_FAILFAST_MSG(E_FAIL, [] {
-        FAIL_FAST_IF_FAILED_MSG(E_FAIL, "msg: %d", __LINE__);
-    });
+    REQUIRE_RETURNS(E_FAIL, [] { RETURN_IF_FAILED(E_FAIL); return S_OK; });
+    REQUIRE_RETURNS_MSG(E_FAIL, [] { RETURN_IF_FAILED_MSG(E_FAIL, "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] { RETURN_IF_FAILED_EXPECTED(E_FAIL); return S_OK; });
+    REQUIRE_THROWS_RESULT(E_FAIL, [] { THROW_IF_FAILED(E_FAIL); });
+    REQUIRE_THROWS_MSG(E_FAIL, [] { THROW_IF_FAILED_MSG(E_FAIL, "msg: %d", __LINE__); });
+    REQUIRE_LOG(E_FAIL, [] { REQUIRE(E_FAIL == LOG_IF_FAILED(E_FAIL)); });
+    REQUIRE_LOG_MSG(E_FAIL, [] { REQUIRE(E_FAIL == LOG_IF_FAILED_MSG(E_FAIL, "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(E_FAIL, [] { FAIL_FAST_IF_FAILED(E_FAIL); });
+    REQUIRE_FAILFAST_MSG(E_FAIL, [] { FAIL_FAST_IF_FAILED_MSG(E_FAIL, "msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS(S_OK, [] {
-        RETURN_IF_WIN32_BOOL_FALSE(MDEC(fTRUERef()));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        RETURN_IF_WIN32_BOOL_FALSE_MSG(MDEC(fTRUERef()), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        RETURN_IF_WIN32_BOOL_FALSE_EXPECTED(MDEC(fTRUERef()));
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(S_OK, [] {
-        REQUIRE(fTRUE == THROW_IF_WIN32_BOOL_FALSE(MDEC(fTRUERef())));
-    });
-    REQUIRE_THROWS_MSG(S_OK, [] {
-        REQUIRE(fTRUE == THROW_IF_WIN32_BOOL_FALSE_MSG(MDEC(fTRUERef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_LOG(S_OK, [] {
-        REQUIRE(fTRUE == LOG_IF_WIN32_BOOL_FALSE(MDEC(fTRUERef())));
-    });
-    REQUIRE_LOG_MSG(S_OK, [] {
-        REQUIRE(fTRUE == LOG_IF_WIN32_BOOL_FALSE_MSG(MDEC(fTRUERef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(S_OK, [] {
-        REQUIRE(fTRUE == FAIL_FAST_IF_WIN32_BOOL_FALSE(MDEC(fTRUERef())));
-    });
-    REQUIRE_FAILFAST_MSG(S_OK, [] {
-        REQUIRE(fTRUE == FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(MDEC(fTRUERef()), "msg: %d", __LINE__));
-    });
+    REQUIRE_RETURNS(S_OK, [] { RETURN_IF_WIN32_BOOL_FALSE(MDEC(fTRUERef())); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_IF_WIN32_BOOL_FALSE_MSG(MDEC(fTRUERef()), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_IF_WIN32_BOOL_FALSE_EXPECTED(MDEC(fTRUERef())); return S_OK; });
+    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(fTRUE == THROW_IF_WIN32_BOOL_FALSE(MDEC(fTRUERef()))); });
+    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(fTRUE == THROW_IF_WIN32_BOOL_FALSE_MSG(MDEC(fTRUERef()), "msg: %d", __LINE__)); });
+    REQUIRE_LOG(S_OK, [] { REQUIRE(fTRUE == LOG_IF_WIN32_BOOL_FALSE(MDEC(fTRUERef()))); });
+    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(fTRUE == LOG_IF_WIN32_BOOL_FALSE_MSG(MDEC(fTRUERef()), "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(fTRUE == FAIL_FAST_IF_WIN32_BOOL_FALSE(MDEC(fTRUERef()))); });
+    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(fTRUE == FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(MDEC(fTRUERef()), "msg: %d", __LINE__)); });
 
-    REQUIRE_RETURNS(E_AD, [] {
-        SetAD();
-        RETURN_IF_WIN32_BOOL_FALSE(fFALSE);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(E_AD, [] {
-        SetAD();
-        RETURN_IF_WIN32_BOOL_FALSE_MSG(fFALSE, "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(E_AD, [] {
-        SetAD();
-        RETURN_IF_WIN32_BOOL_FALSE_EXPECTED(fFALSE);
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(E_AD, [] {
-        SetAD();
-        THROW_IF_WIN32_BOOL_FALSE(fFALSE);
-    });
-    REQUIRE_THROWS_MSG(E_AD, [] {
-        SetAD();
-        THROW_IF_WIN32_BOOL_FALSE_MSG(fFALSE, "msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(E_AD, [] {
-        SetAD();
-        REQUIRE(fFALSE == LOG_IF_WIN32_BOOL_FALSE(fFALSE));
-    });
-    REQUIRE_LOG_MSG(E_AD, [] {
-        SetAD();
-        REQUIRE(fFALSE == LOG_IF_WIN32_BOOL_FALSE_MSG(fFALSE, "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(E_AD, [] {
-        SetAD();
-        FAIL_FAST_IF_WIN32_BOOL_FALSE(fFALSE);
-    });
-    REQUIRE_FAILFAST_MSG(E_AD, [] {
-        SetAD();
-        FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(fFALSE, "msg: %d", __LINE__);
-    });
+    REQUIRE_RETURNS(E_AD, [] { SetAD(); RETURN_IF_WIN32_BOOL_FALSE(fFALSE); return S_OK; });
+    REQUIRE_RETURNS_MSG(E_AD, [] { SetAD(); RETURN_IF_WIN32_BOOL_FALSE_MSG(fFALSE, "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(E_AD, [] { SetAD(); RETURN_IF_WIN32_BOOL_FALSE_EXPECTED(fFALSE); return S_OK; });
+    REQUIRE_THROWS_RESULT(E_AD, [] { SetAD(); THROW_IF_WIN32_BOOL_FALSE(fFALSE); });
+    REQUIRE_THROWS_MSG(E_AD, [] { SetAD(); THROW_IF_WIN32_BOOL_FALSE_MSG(fFALSE, "msg: %d", __LINE__); });
+    REQUIRE_LOG(E_AD, [] { SetAD(); REQUIRE(fFALSE == LOG_IF_WIN32_BOOL_FALSE(fFALSE)); });
+    REQUIRE_LOG_MSG(E_AD, [] { SetAD(); REQUIRE(fFALSE == LOG_IF_WIN32_BOOL_FALSE_MSG(fFALSE, "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(E_AD, [] { SetAD(); FAIL_FAST_IF_WIN32_BOOL_FALSE(fFALSE); });
+    REQUIRE_FAILFAST_MSG(E_AD, [] { SetAD(); FAIL_FAST_IF_WIN32_BOOL_FALSE_MSG(fFALSE, "msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS(S_OK, [] {
-        RETURN_IF_WIN32_ERROR(MDEC(hrOKRef()));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        RETURN_IF_WIN32_ERROR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        RETURN_IF_WIN32_ERROR_EXPECTED(MDEC(hrOKRef()));
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(S_OK, [] {
-        REQUIRE(S_OK == THROW_IF_WIN32_ERROR(MDEC(hrOKRef())));
-    });
-    REQUIRE_THROWS_MSG(S_OK, [] {
-        REQUIRE(S_OK == THROW_IF_WIN32_ERROR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_LOG(S_OK, [] {
-        REQUIRE(S_OK == LOG_IF_WIN32_ERROR(MDEC(hrOKRef())));
-    });
-    REQUIRE_LOG_MSG(S_OK, [] {
-        REQUIRE(S_OK == LOG_IF_WIN32_ERROR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(S_OK, [] {
-        REQUIRE(S_OK == FAIL_FAST_IF_WIN32_ERROR(MDEC(hrOKRef())));
-    });
-    REQUIRE_FAILFAST_MSG(S_OK, [] {
-        REQUIRE(S_OK == FAIL_FAST_IF_WIN32_ERROR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__));
-    });
+    REQUIRE_RETURNS(S_OK, [] { RETURN_IF_WIN32_ERROR(MDEC(hrOKRef())); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_IF_WIN32_ERROR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_IF_WIN32_ERROR_EXPECTED(MDEC(hrOKRef())); return S_OK; });
+    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(S_OK == THROW_IF_WIN32_ERROR(MDEC(hrOKRef()))); });
+    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(S_OK == THROW_IF_WIN32_ERROR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__)); });
+    REQUIRE_LOG(S_OK, [] { REQUIRE(S_OK == LOG_IF_WIN32_ERROR(MDEC(hrOKRef()))); });
+    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(S_OK == LOG_IF_WIN32_ERROR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(S_OK == FAIL_FAST_IF_WIN32_ERROR(MDEC(hrOKRef()))); });
+    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(S_OK == FAIL_FAST_IF_WIN32_ERROR_MSG(MDEC(hrOKRef()), "msg: %d", __LINE__)); });
 
-    REQUIRE_RETURNS(E_hrOutOfPaper, [] {
-        RETURN_IF_WIN32_ERROR(ERROR_OUT_OF_PAPER);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(E_hrOutOfPaper, [] {
-        RETURN_IF_WIN32_ERROR_MSG(ERROR_OUT_OF_PAPER, "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(E_hrOutOfPaper, [] {
-        RETURN_IF_WIN32_ERROR_EXPECTED(ERROR_OUT_OF_PAPER);
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(E_hrOutOfPaper, [] {
-        THROW_IF_WIN32_ERROR(ERROR_OUT_OF_PAPER);
-    });
-    REQUIRE_THROWS_MSG(E_hrOutOfPaper, [] {
-        THROW_IF_WIN32_ERROR_MSG(ERROR_OUT_OF_PAPER, "msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(E_hrOutOfPaper, [] {
-        REQUIRE(ERROR_OUT_OF_PAPER == LOG_IF_WIN32_ERROR(ERROR_OUT_OF_PAPER));
-    });
-    REQUIRE_LOG_MSG(E_hrOutOfPaper, [] {
-        REQUIRE(ERROR_OUT_OF_PAPER == LOG_IF_WIN32_ERROR_MSG(ERROR_OUT_OF_PAPER, "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(E_hrOutOfPaper, [] {
-        FAIL_FAST_IF_WIN32_ERROR(ERROR_OUT_OF_PAPER);
-    });
-    REQUIRE_FAILFAST_MSG(E_hrOutOfPaper, [] {
-        FAIL_FAST_IF_WIN32_ERROR_MSG(ERROR_OUT_OF_PAPER, "msg: %d", __LINE__);
-    });
+    REQUIRE_RETURNS(E_hrOutOfPaper, [] { RETURN_IF_WIN32_ERROR(ERROR_OUT_OF_PAPER); return S_OK; });
+    REQUIRE_RETURNS_MSG(E_hrOutOfPaper, [] { RETURN_IF_WIN32_ERROR_MSG(ERROR_OUT_OF_PAPER, "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(E_hrOutOfPaper, [] { RETURN_IF_WIN32_ERROR_EXPECTED(ERROR_OUT_OF_PAPER); return S_OK; });
+    REQUIRE_THROWS_RESULT(E_hrOutOfPaper, [] { THROW_IF_WIN32_ERROR(ERROR_OUT_OF_PAPER); });
+    REQUIRE_THROWS_MSG(E_hrOutOfPaper, [] { THROW_IF_WIN32_ERROR_MSG(ERROR_OUT_OF_PAPER, "msg: %d", __LINE__); });
+    REQUIRE_LOG(E_hrOutOfPaper, [] { REQUIRE(ERROR_OUT_OF_PAPER == LOG_IF_WIN32_ERROR(ERROR_OUT_OF_PAPER)); });
+    REQUIRE_LOG_MSG(E_hrOutOfPaper, [] { REQUIRE(ERROR_OUT_OF_PAPER == LOG_IF_WIN32_ERROR_MSG(ERROR_OUT_OF_PAPER, "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(E_hrOutOfPaper, [] { FAIL_FAST_IF_WIN32_ERROR(ERROR_OUT_OF_PAPER); });
+    REQUIRE_FAILFAST_MSG(E_hrOutOfPaper, [] { FAIL_FAST_IF_WIN32_ERROR_MSG(ERROR_OUT_OF_PAPER, "msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS(S_hrNtOkay, [] {
-        RETURN_NTSTATUS(MDEC(ntOKRef()));
-    });
-    REQUIRE_RETURNS_MSG(S_hrNtOkay, [] {
-        RETURN_NTSTATUS_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__);
-    });
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        FAIL_FAST_NTSTATUS(MDEC(ntOKRef()));
-    });
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        FAIL_FAST_NTSTATUS_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__);
-    });
+    REQUIRE_RETURNS(S_hrNtOkay, [] { RETURN_NTSTATUS(MDEC(ntOKRef())); });
+    REQUIRE_RETURNS_MSG(S_hrNtOkay, [] { RETURN_NTSTATUS_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__); });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_NTSTATUS(MDEC(ntOKRef())); });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_NTSTATUS_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS(E_hrNtAssertionFailure, [] {
-        RETURN_NTSTATUS(STATUS_ASSERTION_FAILURE);
-    });
-    REQUIRE_RETURNS_MSG(E_hrNtAssertionFailure, [] {
-        RETURN_NTSTATUS_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__);
-    });
-    REQUIRE_THROWS_RESULT(E_hrNtAssertionFailure, [] {
-        THROW_NTSTATUS(STATUS_ASSERTION_FAILURE);
-    });
-    REQUIRE_THROWS_MSG(E_hrNtAssertionFailure, [] {
-        THROW_NTSTATUS_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(E_hrNtAssertionFailure, [] {
-        LOG_NTSTATUS(STATUS_ASSERTION_FAILURE);
-    });
-    REQUIRE_LOG_MSG(E_hrNtAssertionFailure, [] {
-        LOG_NTSTATUS_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__);
-    });
-    REQUIRE_FAILFAST(E_hrNtAssertionFailure, [] {
-        FAIL_FAST_NTSTATUS(STATUS_ASSERTION_FAILURE);
-    });
-    REQUIRE_FAILFAST_MSG(E_hrNtAssertionFailure, [] {
-        FAIL_FAST_NTSTATUS_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__);
-    });
+    REQUIRE_RETURNS(E_hrNtAssertionFailure, [] { RETURN_NTSTATUS(STATUS_ASSERTION_FAILURE); });
+    REQUIRE_RETURNS_MSG(E_hrNtAssertionFailure, [] { RETURN_NTSTATUS_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__); });
+    REQUIRE_THROWS_RESULT(E_hrNtAssertionFailure, [] { THROW_NTSTATUS(STATUS_ASSERTION_FAILURE); });
+    REQUIRE_THROWS_MSG(E_hrNtAssertionFailure, [] { THROW_NTSTATUS_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__); });
+    REQUIRE_LOG(E_hrNtAssertionFailure, [] { LOG_NTSTATUS(STATUS_ASSERTION_FAILURE); });
+    REQUIRE_LOG_MSG(E_hrNtAssertionFailure, [] { LOG_NTSTATUS_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__); });
+    REQUIRE_FAILFAST(E_hrNtAssertionFailure, [] { FAIL_FAST_NTSTATUS(STATUS_ASSERTION_FAILURE); });
+    REQUIRE_FAILFAST_MSG(E_hrNtAssertionFailure, [] { FAIL_FAST_NTSTATUS_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        RETURN_IF_NTSTATUS_FAILED_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        RETURN_IF_NTSTATUS_FAILED_EXPECTED(MDEC(ntOKRef()));
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(S_OK, [] {
-        REQUIRE(STATUS_WAIT_0 == THROW_IF_NTSTATUS_FAILED(MDEC(ntOKRef())));
-    });
-    REQUIRE_THROWS_MSG(S_OK, [] {
-        REQUIRE(STATUS_WAIT_0 == THROW_IF_NTSTATUS_FAILED_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_LOG(S_OK, [] {
-        REQUIRE(STATUS_WAIT_0 == LOG_IF_NTSTATUS_FAILED(MDEC(ntOKRef())));
-    });
-    REQUIRE_LOG_MSG(S_OK, [] {
-        REQUIRE(STATUS_WAIT_0 == LOG_IF_NTSTATUS_FAILED_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(S_OK, [] {
-        REQUIRE(STATUS_WAIT_0 == FAIL_FAST_IF_NTSTATUS_FAILED(MDEC(ntOKRef())));
-    });
-    REQUIRE_FAILFAST_MSG(S_OK, [] {
-        REQUIRE(STATUS_WAIT_0 == FAIL_FAST_IF_NTSTATUS_FAILED_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__));
-    });
+    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_IF_NTSTATUS_FAILED_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_IF_NTSTATUS_FAILED_EXPECTED(MDEC(ntOKRef())); return S_OK; });
+    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(STATUS_WAIT_0 == THROW_IF_NTSTATUS_FAILED(MDEC(ntOKRef()))); });
+    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(STATUS_WAIT_0 == THROW_IF_NTSTATUS_FAILED_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__)); });
+    REQUIRE_LOG(S_OK, [] { REQUIRE(STATUS_WAIT_0 == LOG_IF_NTSTATUS_FAILED(MDEC(ntOKRef()))); });
+    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(STATUS_WAIT_0 == LOG_IF_NTSTATUS_FAILED_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(STATUS_WAIT_0 == FAIL_FAST_IF_NTSTATUS_FAILED(MDEC(ntOKRef()))); });
+    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(STATUS_WAIT_0 == FAIL_FAST_IF_NTSTATUS_FAILED_MSG(MDEC(ntOKRef()), "msg: %d", __LINE__)); });
 
-    REQUIRE_RETURNS(E_hrNtAssertionFailure, [] {
-        RETURN_IF_NTSTATUS_FAILED(STATUS_ASSERTION_FAILURE);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(E_hrNtAssertionFailure, [] {
-        RETURN_IF_NTSTATUS_FAILED_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(E_hrNtAssertionFailure, [] {
-        RETURN_IF_NTSTATUS_FAILED_EXPECTED(STATUS_ASSERTION_FAILURE);
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(E_hrNtAssertionFailure, [] {
-        THROW_IF_NTSTATUS_FAILED(STATUS_ASSERTION_FAILURE);
-    });
-    REQUIRE_THROWS_MSG(E_hrNtAssertionFailure, [] {
-        THROW_IF_NTSTATUS_FAILED_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(E_hrNtAssertionFailure, [] {
-        REQUIRE(STATUS_ASSERTION_FAILURE == static_cast<DWORD>(LOG_IF_NTSTATUS_FAILED(STATUS_ASSERTION_FAILURE)));
-    });
-    REQUIRE_LOG_MSG(E_hrNtAssertionFailure, [] {
-        REQUIRE(STATUS_ASSERTION_FAILURE == static_cast<DWORD>(LOG_IF_NTSTATUS_FAILED_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__)));
-    });
-    REQUIRE_FAILFAST(E_hrNtAssertionFailure, [] {
-        FAIL_FAST_IF_NTSTATUS_FAILED(STATUS_ASSERTION_FAILURE);
-    });
-    REQUIRE_FAILFAST_MSG(E_hrNtAssertionFailure, [] {
-        FAIL_FAST_IF_NTSTATUS_FAILED_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__);
-    });
+    REQUIRE_RETURNS(E_hrNtAssertionFailure, [] { RETURN_IF_NTSTATUS_FAILED(STATUS_ASSERTION_FAILURE); return S_OK; });
+    REQUIRE_RETURNS_MSG(E_hrNtAssertionFailure, [] { RETURN_IF_NTSTATUS_FAILED_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(E_hrNtAssertionFailure, [] { RETURN_IF_NTSTATUS_FAILED_EXPECTED(STATUS_ASSERTION_FAILURE); return S_OK; });
+    REQUIRE_THROWS_RESULT(E_hrNtAssertionFailure, [] { THROW_IF_NTSTATUS_FAILED(STATUS_ASSERTION_FAILURE); });
+    REQUIRE_THROWS_MSG(E_hrNtAssertionFailure, [] { THROW_IF_NTSTATUS_FAILED_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__); });
+    REQUIRE_LOG(E_hrNtAssertionFailure, [] { REQUIRE(STATUS_ASSERTION_FAILURE == static_cast<DWORD>(LOG_IF_NTSTATUS_FAILED(STATUS_ASSERTION_FAILURE))); });
+    REQUIRE_LOG_MSG(E_hrNtAssertionFailure, [] { REQUIRE(STATUS_ASSERTION_FAILURE == static_cast<DWORD>(LOG_IF_NTSTATUS_FAILED_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__))); });
+    REQUIRE_FAILFAST(E_hrNtAssertionFailure, [] { FAIL_FAST_IF_NTSTATUS_FAILED(STATUS_ASSERTION_FAILURE); });
+    REQUIRE_FAILFAST_MSG(E_hrNtAssertionFailure, [] { FAIL_FAST_IF_NTSTATUS_FAILED_MSG(STATUS_ASSERTION_FAILURE, "msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS(E_OUTOFMEMORY, [] {
-        RETURN_IF_NTSTATUS_FAILED(STATUS_NO_MEMORY);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(E_OUTOFMEMORY, [] {
-        RETURN_IF_NTSTATUS_FAILED_MSG(STATUS_NO_MEMORY, "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(E_OUTOFMEMORY, [] {
-        RETURN_IF_NTSTATUS_FAILED_EXPECTED(STATUS_NO_MEMORY);
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(E_OUTOFMEMORY, [] {
-        THROW_IF_NTSTATUS_FAILED(STATUS_NO_MEMORY);
-    });
-    REQUIRE_THROWS_MSG(E_OUTOFMEMORY, [] {
-        THROW_IF_NTSTATUS_FAILED_MSG(STATUS_NO_MEMORY, "msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(E_OUTOFMEMORY, [] {
-        REQUIRE(STATUS_NO_MEMORY == static_cast<DWORD>(LOG_IF_NTSTATUS_FAILED(STATUS_NO_MEMORY)));
-    });
-    REQUIRE_LOG_MSG(E_OUTOFMEMORY, [] {
-        REQUIRE(STATUS_NO_MEMORY == static_cast<DWORD>(LOG_IF_NTSTATUS_FAILED_MSG(STATUS_NO_MEMORY, "msg: %d", __LINE__)));
-    });
-    REQUIRE_FAILFAST(E_OUTOFMEMORY, [] {
-        FAIL_FAST_IF_NTSTATUS_FAILED(STATUS_NO_MEMORY);
-    });
-    REQUIRE_FAILFAST_MSG(E_OUTOFMEMORY, [] {
-        FAIL_FAST_IF_NTSTATUS_FAILED_MSG(STATUS_NO_MEMORY, "msg: %d", __LINE__);
-    });
+    REQUIRE_RETURNS(E_OUTOFMEMORY, [] { RETURN_IF_NTSTATUS_FAILED(STATUS_NO_MEMORY); return S_OK; });
+    REQUIRE_RETURNS_MSG(E_OUTOFMEMORY, [] { RETURN_IF_NTSTATUS_FAILED_MSG(STATUS_NO_MEMORY, "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(E_OUTOFMEMORY, [] { RETURN_IF_NTSTATUS_FAILED_EXPECTED(STATUS_NO_MEMORY); return S_OK; });
+    REQUIRE_THROWS_RESULT(E_OUTOFMEMORY, [] { THROW_IF_NTSTATUS_FAILED(STATUS_NO_MEMORY); });
+    REQUIRE_THROWS_MSG(E_OUTOFMEMORY, [] { THROW_IF_NTSTATUS_FAILED_MSG(STATUS_NO_MEMORY, "msg: %d", __LINE__); });
+    REQUIRE_LOG(E_OUTOFMEMORY, [] { REQUIRE(STATUS_NO_MEMORY == static_cast<DWORD>(LOG_IF_NTSTATUS_FAILED(STATUS_NO_MEMORY))); });
+    REQUIRE_LOG_MSG(E_OUTOFMEMORY, [] { REQUIRE(STATUS_NO_MEMORY == static_cast<DWORD>(LOG_IF_NTSTATUS_FAILED_MSG(STATUS_NO_MEMORY, "msg: %d", __LINE__))); });
+    REQUIRE_FAILFAST(E_OUTOFMEMORY, [] { FAIL_FAST_IF_NTSTATUS_FAILED(STATUS_NO_MEMORY); });
+    REQUIRE_FAILFAST_MSG(E_OUTOFMEMORY, [] { FAIL_FAST_IF_NTSTATUS_FAILED_MSG(STATUS_NO_MEMORY, "msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS(S_OK, [] {
-        RETURN_IF_NULL_ALLOC(MDEC(pValidRef()));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        RETURN_IF_NULL_ALLOC_MSG(MDEC(pValidRef()), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        RETURN_IF_NULL_ALLOC_EXPECTED(MDEC(pValidRef()));
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(S_OK, [] {
-        REQUIRE(pValid == THROW_IF_NULL_ALLOC(MDEC(pValidRef())));
-    });
-    REQUIRE_THROWS_MSG(S_OK, [] {
-        REQUIRE(pValid == THROW_IF_NULL_ALLOC_MSG(MDEC(pValidRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_LOG(S_OK, [] {
-        REQUIRE(pValid == LOG_IF_NULL_ALLOC(MDEC(pValidRef())));
-    });
-    REQUIRE_LOG_MSG(S_OK, [] {
-        REQUIRE(pValid == LOG_IF_NULL_ALLOC_MSG(MDEC(pValidRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(S_OK, [] {
-        REQUIRE(pValid == FAIL_FAST_IF_NULL_ALLOC(MDEC(pValidRef())));
-    });
-    REQUIRE_FAILFAST_MSG(S_OK, [] {
-        REQUIRE(pValid == FAIL_FAST_IF_NULL_ALLOC_MSG(MDEC(pValidRef()), "msg: %d", __LINE__));
-    });
+    REQUIRE_RETURNS(S_OK, [] { RETURN_IF_NULL_ALLOC(MDEC(pValidRef())); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_IF_NULL_ALLOC_MSG(MDEC(pValidRef()), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_IF_NULL_ALLOC_EXPECTED(MDEC(pValidRef())); return S_OK; });
+    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(pValid == THROW_IF_NULL_ALLOC(MDEC(pValidRef()))); });
+    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(pValid == THROW_IF_NULL_ALLOC_MSG(MDEC(pValidRef()), "msg: %d", __LINE__)); });
+    REQUIRE_LOG(S_OK, [] { REQUIRE(pValid == LOG_IF_NULL_ALLOC(MDEC(pValidRef()))); });
+    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(pValid == LOG_IF_NULL_ALLOC_MSG(MDEC(pValidRef()), "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(pValid == FAIL_FAST_IF_NULL_ALLOC(MDEC(pValidRef()))); });
+    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(pValid == FAIL_FAST_IF_NULL_ALLOC_MSG(MDEC(pValidRef()), "msg: %d", __LINE__)); });
 
-    REQUIRE_RETURNS(E_OUTOFMEMORY, [] {
-        RETURN_IF_NULL_ALLOC(pNull);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(E_OUTOFMEMORY, [] {
-        RETURN_IF_NULL_ALLOC_MSG(pNull, "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(E_OUTOFMEMORY, [] {
-        RETURN_IF_NULL_ALLOC_EXPECTED(pNull);
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(E_OUTOFMEMORY, [] {
-        THROW_IF_NULL_ALLOC(pNull);
-    });
-    REQUIRE_THROWS_MSG(E_OUTOFMEMORY, [] {
-        THROW_IF_NULL_ALLOC_MSG(pNull, "msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(E_OUTOFMEMORY, [] {
-        REQUIRE(pNull == LOG_IF_NULL_ALLOC(pNull));
-    });
-    REQUIRE_LOG_MSG(E_OUTOFMEMORY, [] {
-        REQUIRE(pNull == LOG_IF_NULL_ALLOC_MSG(pNull, "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(E_OUTOFMEMORY, [] {
-        FAIL_FAST_IF_NULL_ALLOC(pNull);
-    });
-    REQUIRE_FAILFAST_MSG(E_OUTOFMEMORY, [] {
-        FAIL_FAST_IF_NULL_ALLOC_MSG(pNull, "msg: %d", __LINE__);
-    });
+    REQUIRE_RETURNS(E_OUTOFMEMORY, [] { RETURN_IF_NULL_ALLOC(pNull); return S_OK; });
+    REQUIRE_RETURNS_MSG(E_OUTOFMEMORY, [] { RETURN_IF_NULL_ALLOC_MSG(pNull, "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(E_OUTOFMEMORY, [] { RETURN_IF_NULL_ALLOC_EXPECTED(pNull); return S_OK; });
+    REQUIRE_THROWS_RESULT(E_OUTOFMEMORY, [] { THROW_IF_NULL_ALLOC(pNull); });
+    REQUIRE_THROWS_MSG(E_OUTOFMEMORY, [] { THROW_IF_NULL_ALLOC_MSG(pNull, "msg: %d", __LINE__); });
+    REQUIRE_LOG(E_OUTOFMEMORY, [] { REQUIRE(pNull == LOG_IF_NULL_ALLOC(pNull)); });
+    REQUIRE_LOG_MSG(E_OUTOFMEMORY, [] { REQUIRE(pNull == LOG_IF_NULL_ALLOC_MSG(pNull, "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(E_OUTOFMEMORY, [] { FAIL_FAST_IF_NULL_ALLOC(pNull); });
+    REQUIRE_FAILFAST_MSG(E_OUTOFMEMORY, [] { FAIL_FAST_IF_NULL_ALLOC_MSG(pNull, "msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS(S_OK, [] {
-        RETURN_HR_IF(MDEC(S_OK), MDEC(fTrueRef()));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        RETURN_HR_IF_MSG(MDEC(S_OK), MDEC(fTrueRef()), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        RETURN_HR_IF_EXPECTED(MDEC(S_OK), MDEC(fTrueRef()));
-        return S_OK;
-    });
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        FAIL_FAST_HR_IF(MDEC(S_OK), MDEC(fTrueRef()));
-    });
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        FAIL_FAST_HR_IF_MSG(MDEC(S_OK), MDEC(fTrueRef()), "msg: %d", __LINE__);
-    });
-    REQUIRE_RETURNS(E_FAIL, [] {
-        RETURN_HR_IF(E_FAIL, fTrue);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(E_FAIL, [] {
-        RETURN_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] {
-        RETURN_HR_IF_EXPECTED(E_FAIL, fTrue);
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(E_FAIL, [] {
-        THROW_HR_IF(E_FAIL, fTrue);
-    });
-    REQUIRE_THROWS_MSG(E_FAIL, [] {
-        THROW_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(E_FAIL, [] {
-        REQUIRE(fTrue == LOG_HR_IF(E_FAIL, fTrue));
-    });
-    REQUIRE_LOG_MSG(E_FAIL, [] {
-        REQUIRE(fTrue == LOG_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(E_FAIL, [] {
-        FAIL_FAST_HR_IF(E_FAIL, fTrue);
-    });
-    REQUIRE_FAILFAST_MSG(E_FAIL, [] {
-        FAIL_FAST_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__);
-    });
+    REQUIRE_RETURNS(S_OK, [] { RETURN_HR_IF(MDEC(S_OK), MDEC(fTrueRef())); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_IF_MSG(MDEC(S_OK), MDEC(fTrueRef()), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_HR_IF_EXPECTED(MDEC(S_OK), MDEC(fTrueRef())); return S_OK; });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_HR_IF(MDEC(S_OK), MDEC(fTrueRef())); });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_HR_IF_MSG(MDEC(S_OK), MDEC(fTrueRef()), "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(E_FAIL, [] { RETURN_HR_IF(E_FAIL, fTrue); return S_OK; });
+    REQUIRE_RETURNS_MSG(E_FAIL, [] { RETURN_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] { RETURN_HR_IF_EXPECTED(E_FAIL, fTrue); return S_OK; });
+    REQUIRE_THROWS_RESULT(E_FAIL, [] { THROW_HR_IF(E_FAIL, fTrue); });
+    REQUIRE_THROWS_MSG(E_FAIL, [] { THROW_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__); });
+    REQUIRE_LOG(E_FAIL, [] { REQUIRE(fTrue == LOG_HR_IF(E_FAIL, fTrue)); });
+    REQUIRE_LOG_MSG(E_FAIL, [] { REQUIRE(fTrue == LOG_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(E_FAIL, [] { FAIL_FAST_HR_IF(E_FAIL, fTrue); });
+    REQUIRE_FAILFAST_MSG(E_FAIL, [] { FAIL_FAST_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS(S_OK, [] {
-        RETURN_HR_IF(MDEC(S_OK), MDEC(fTrueRef()));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        RETURN_HR_IF_MSG(MDEC(S_OK), MDEC(fTrueRef()), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        RETURN_HR_IF_EXPECTED(MDEC(S_OK), MDEC(fTrueRef()));
-        return S_OK;
-    });
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        FAIL_FAST_HR_IF(MDEC(S_OK), MDEC(fTrueRef()));
-    });
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        FAIL_FAST_HR_IF_MSG(MDEC(S_OK), MDEC(fTrueRef()), "msg: %d", __LINE__);
-    });
-    REQUIRE_RETURNS(E_FAIL, [] {
-        RETURN_HR_IF(E_FAIL, fTrue);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(E_FAIL, [] {
-        RETURN_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] {
-        RETURN_HR_IF_EXPECTED(E_FAIL, fTrue);
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(E_FAIL, [] {
-        THROW_HR_IF(E_FAIL, fTrue);
-    });
-    REQUIRE_THROWS_MSG(E_FAIL, [] {
-        THROW_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(E_FAIL, [] {
-        REQUIRE(fTrue == LOG_HR_IF(E_FAIL, fTrue));
-    });
-    REQUIRE_LOG_MSG(E_FAIL, [] {
-        REQUIRE(fTrue == LOG_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(E_FAIL, [] {
-        FAIL_FAST_HR_IF(E_FAIL, fTrue);
-    });
-    REQUIRE_FAILFAST_MSG(E_FAIL, [] {
-        FAIL_FAST_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__);
-    });
+    REQUIRE_RETURNS(S_OK, [] { RETURN_HR_IF(MDEC(S_OK), MDEC(fTrueRef())); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_IF_MSG(MDEC(S_OK), MDEC(fTrueRef()), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_HR_IF_EXPECTED(MDEC(S_OK), MDEC(fTrueRef())); return S_OK; });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_HR_IF(MDEC(S_OK), MDEC(fTrueRef())); });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_HR_IF_MSG(MDEC(S_OK), MDEC(fTrueRef()), "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(E_FAIL, [] { RETURN_HR_IF(E_FAIL, fTrue); return S_OK; });
+    REQUIRE_RETURNS_MSG(E_FAIL, [] { RETURN_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] { RETURN_HR_IF_EXPECTED(E_FAIL, fTrue); return S_OK; });
+    REQUIRE_THROWS_RESULT(E_FAIL, [] { THROW_HR_IF(E_FAIL, fTrue); });
+    REQUIRE_THROWS_MSG(E_FAIL, [] { THROW_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__); });
+    REQUIRE_LOG(E_FAIL, [] { REQUIRE(fTrue == LOG_HR_IF(E_FAIL, fTrue)); });
+    REQUIRE_LOG_MSG(E_FAIL, [] { REQUIRE(fTrue == LOG_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(E_FAIL, [] { FAIL_FAST_HR_IF(E_FAIL, fTrue); });
+    REQUIRE_FAILFAST_MSG(E_FAIL, [] { FAIL_FAST_HR_IF_MSG(E_FAIL, fTrue, "msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS(S_OK, [] {
-        RETURN_HR_IF(MDEC(S_OK), MDEC(fFalseRef()));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        RETURN_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        RETURN_HR_IF_EXPECTED(MDEC(S_OK), MDEC(fFalseRef()));
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(S_OK, [] {
-        REQUIRE(fFalse == THROW_HR_IF(MDEC(S_OK), MDEC(fFalseRef())));
-    });
-    REQUIRE_THROWS_MSG(S_OK, [] {
-        REQUIRE(fFalse == THROW_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_LOG(S_OK, [] {
-        REQUIRE(fFalse == LOG_HR_IF(MDEC(S_OK), MDEC(fFalseRef())));
-    });
-    REQUIRE_LOG_MSG(S_OK, [] {
-        REQUIRE(fFalse == LOG_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(S_OK, [] {
-        REQUIRE(fFalse == FAIL_FAST_HR_IF(MDEC(S_OK), MDEC(fFalseRef())));
-    });
-    REQUIRE_FAILFAST_MSG(S_OK, [] {
-        REQUIRE(fFalse == FAIL_FAST_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_RETURNS(S_OK, [] {
-        RETURN_HR_IF(E_FAIL, MDEC(fFalseRef()));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        RETURN_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        RETURN_HR_IF_EXPECTED(E_FAIL, MDEC(fFalseRef()));
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(S_OK, [] {
-        REQUIRE(fFalse == THROW_HR_IF(E_FAIL, MDEC(fFalseRef())));
-    });
-    REQUIRE_THROWS_MSG(S_OK, [] {
-        REQUIRE(fFalse == THROW_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_LOG(S_OK, [] {
-        REQUIRE(fFalse == LOG_HR_IF(E_FAIL, MDEC(fFalseRef())));
-    });
-    REQUIRE_LOG_MSG(S_OK, [] {
-        REQUIRE(fFalse == LOG_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(S_OK, [] {
-        REQUIRE(fFalse == FAIL_FAST_HR_IF(E_FAIL, MDEC(fFalseRef())));
-    });
-    REQUIRE_FAILFAST_MSG(S_OK, [] {
-        REQUIRE(fFalse == FAIL_FAST_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__));
-    });
+    REQUIRE_RETURNS(S_OK, [] { RETURN_HR_IF(MDEC(S_OK), MDEC(fFalseRef())); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_HR_IF_EXPECTED(MDEC(S_OK), MDEC(fFalseRef())); return S_OK; });
+    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(fFalse == THROW_HR_IF(MDEC(S_OK), MDEC(fFalseRef()))); });
+    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(fFalse == THROW_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__)); });
+    REQUIRE_LOG(S_OK, [] { REQUIRE(fFalse == LOG_HR_IF(MDEC(S_OK), MDEC(fFalseRef()))); });
+    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(fFalse == LOG_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_HR_IF(MDEC(S_OK), MDEC(fFalseRef()))); });
+    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__)); });
+    REQUIRE_RETURNS(S_OK, [] { RETURN_HR_IF(E_FAIL, MDEC(fFalseRef())); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_HR_IF_EXPECTED(E_FAIL, MDEC(fFalseRef())); return S_OK; });
+    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(fFalse == THROW_HR_IF(E_FAIL, MDEC(fFalseRef()))); });
+    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(fFalse == THROW_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__)); });
+    REQUIRE_LOG(S_OK, [] { REQUIRE(fFalse == LOG_HR_IF(E_FAIL, MDEC(fFalseRef()))); });
+    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(fFalse == LOG_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_HR_IF(E_FAIL, MDEC(fFalseRef()))); });
+    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__)); });
 
-    REQUIRE_RETURNS(S_OK, [] {
-        RETURN_HR_IF(MDEC(S_OK), MDEC(fFalseRef()));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        RETURN_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        RETURN_HR_IF_EXPECTED(MDEC(S_OK), MDEC(fFalseRef()));
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(S_OK, [] {
-        REQUIRE(fFalse == THROW_HR_IF(MDEC(S_OK), MDEC(fFalseRef())));
-    });
-    REQUIRE_THROWS_MSG(S_OK, [] {
-        REQUIRE(fFalse == THROW_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_LOG(S_OK, [] {
-        REQUIRE(fFalse == LOG_HR_IF(MDEC(S_OK), MDEC(fFalseRef())));
-    });
-    REQUIRE_LOG_MSG(S_OK, [] {
-        REQUIRE(fFalse == LOG_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(S_OK, [] {
-        REQUIRE(fFalse == FAIL_FAST_HR_IF(MDEC(S_OK), MDEC(fFalseRef())));
-    });
-    REQUIRE_FAILFAST_MSG(S_OK, [] {
-        REQUIRE(fFalse == FAIL_FAST_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_RETURNS(S_OK, [] {
-        RETURN_HR_IF(E_FAIL, MDEC(fFalseRef()));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        RETURN_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        RETURN_HR_IF_EXPECTED(E_FAIL, MDEC(fFalseRef()));
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(S_OK, [] {
-        REQUIRE(fFalse == THROW_HR_IF(E_FAIL, MDEC(fFalseRef())));
-    });
-    REQUIRE_THROWS_MSG(S_OK, [] {
-        REQUIRE(fFalse == THROW_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_LOG(S_OK, [] {
-        REQUIRE(fFalse == LOG_HR_IF(E_FAIL, MDEC(fFalseRef())));
-    });
-    REQUIRE_LOG_MSG(S_OK, [] {
-        REQUIRE(fFalse == LOG_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(S_OK, [] {
-        REQUIRE(fFalse == FAIL_FAST_HR_IF(E_FAIL, MDEC(fFalseRef())));
-    });
-    REQUIRE_FAILFAST_MSG(S_OK, [] {
-        REQUIRE(fFalse == FAIL_FAST_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__));
-    });
+    REQUIRE_RETURNS(S_OK, [] { RETURN_HR_IF(MDEC(S_OK), MDEC(fFalseRef())); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_HR_IF_EXPECTED(MDEC(S_OK), MDEC(fFalseRef())); return S_OK; });
+    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(fFalse == THROW_HR_IF(MDEC(S_OK), MDEC(fFalseRef()))); });
+    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(fFalse == THROW_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__)); });
+    REQUIRE_LOG(S_OK, [] { REQUIRE(fFalse == LOG_HR_IF(MDEC(S_OK), MDEC(fFalseRef()))); });
+    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(fFalse == LOG_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_HR_IF(MDEC(S_OK), MDEC(fFalseRef()))); });
+    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_HR_IF_MSG(MDEC(S_OK), MDEC(fFalseRef()), "msg: %d", __LINE__)); });
+    REQUIRE_RETURNS(S_OK, [] { RETURN_HR_IF(E_FAIL, MDEC(fFalseRef())); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_HR_IF_EXPECTED(E_FAIL, MDEC(fFalseRef())); return S_OK; });
+    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(fFalse == THROW_HR_IF(E_FAIL, MDEC(fFalseRef()))); });
+    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(fFalse == THROW_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__)); });
+    REQUIRE_LOG(S_OK, [] { REQUIRE(fFalse == LOG_HR_IF(E_FAIL, MDEC(fFalseRef()))); });
+    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(fFalse == LOG_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_HR_IF(E_FAIL, MDEC(fFalseRef()))); });
+    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_HR_IF_MSG(E_FAIL, MDEC(fFalseRef()), "msg: %d", __LINE__)); });
 
-    REQUIRE_RETURNS(S_OK, [] {
-        RETURN_HR_IF_NULL(S_OK, pNull);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        RETURN_HR_IF_NULL_MSG(S_OK, pNull, "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        RETURN_HR_IF_NULL_EXPECTED(S_OK, pNull);
-        return S_OK;
-    });
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        FAIL_FAST_HR_IF_NULL(S_OK, pNull);
-    });
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        FAIL_FAST_HR_IF_NULL_MSG(S_OK, pNull, "msg: %d", __LINE__);
-    });
-    REQUIRE_RETURNS(E_FAIL, [] {
-        RETURN_HR_IF_NULL(E_FAIL, pNull);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(E_FAIL, [] {
-        RETURN_HR_IF_NULL_MSG(E_FAIL, pNull, "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] {
-        RETURN_HR_IF_NULL_EXPECTED(E_FAIL, pNull);
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(E_FAIL, [] {
-        THROW_HR_IF_NULL(E_FAIL, pNull);
-    });
-    REQUIRE_THROWS_MSG(E_FAIL, [] {
-        THROW_HR_IF_NULL_MSG(E_FAIL, pNull, "msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(E_FAIL, [] {
-        REQUIRE(pNull == LOG_HR_IF_NULL(E_FAIL, pNull));
-    });
-    REQUIRE_LOG_MSG(E_FAIL, [] {
-        REQUIRE(pNull == LOG_HR_IF_NULL_MSG(E_FAIL, pNull, "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(E_FAIL, [] {
-        FAIL_FAST_HR_IF_NULL(E_FAIL, pNull);
-    });
-    REQUIRE_FAILFAST_MSG(E_FAIL, [] {
-        FAIL_FAST_HR_IF_NULL_MSG(E_FAIL, pNull, "msg: %d", __LINE__);
-    });
+    REQUIRE_RETURNS(S_OK, [] { RETURN_HR_IF_NULL(S_OK, pNull); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_IF_NULL_MSG(S_OK, pNull, "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_HR_IF_NULL_EXPECTED(S_OK, pNull); return S_OK; });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_HR_IF_NULL(S_OK, pNull); });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_HR_IF_NULL_MSG(S_OK, pNull, "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(E_FAIL, [] { RETURN_HR_IF_NULL(E_FAIL, pNull); return S_OK; });
+    REQUIRE_RETURNS_MSG(E_FAIL, [] { RETURN_HR_IF_NULL_MSG(E_FAIL, pNull, "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] { RETURN_HR_IF_NULL_EXPECTED(E_FAIL, pNull); return S_OK; });
+    REQUIRE_THROWS_RESULT(E_FAIL, [] { THROW_HR_IF_NULL(E_FAIL, pNull); });
+    REQUIRE_THROWS_MSG(E_FAIL, [] { THROW_HR_IF_NULL_MSG(E_FAIL, pNull, "msg: %d", __LINE__); });
+    REQUIRE_LOG(E_FAIL, [] { REQUIRE(pNull == LOG_HR_IF_NULL(E_FAIL, pNull)); });
+    REQUIRE_LOG_MSG(E_FAIL, [] { REQUIRE(pNull == LOG_HR_IF_NULL_MSG(E_FAIL, pNull, "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(E_FAIL, [] { FAIL_FAST_HR_IF_NULL(E_FAIL, pNull); });
+    REQUIRE_FAILFAST_MSG(E_FAIL, [] { FAIL_FAST_HR_IF_NULL_MSG(E_FAIL, pNull, "msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS(S_OK, [] {
-        RETURN_HR_IF_NULL(MDEC(S_OK), MDEC(pValidRef()));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        RETURN_HR_IF_NULL_MSG(MDEC(S_OK), MDEC(pValidRef()), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        RETURN_HR_IF_NULL_EXPECTED(MDEC(S_OK), MDEC(pValidRef()));
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(S_OK, [] {
-        REQUIRE(pValid == THROW_HR_IF_NULL(MDEC(S_OK), MDEC(pValidRef())));
-    });
-    REQUIRE_THROWS_MSG(S_OK, [] {
-        REQUIRE(pValid == THROW_HR_IF_NULL_MSG(MDEC(S_OK), MDEC(pValidRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_LOG(S_OK, [] {
-        REQUIRE(pValid == LOG_HR_IF_NULL(MDEC(S_OK), MDEC(pValidRef())));
-    });
-    REQUIRE_LOG_MSG(S_OK, [] {
-        REQUIRE(pValid == LOG_HR_IF_NULL_MSG(MDEC(S_OK), MDEC(pValidRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(S_OK, [] {
-        REQUIRE(pValid == FAIL_FAST_HR_IF_NULL(MDEC(S_OK), MDEC(pValidRef())));
-    });
-    REQUIRE_FAILFAST_MSG(S_OK, [] {
-        REQUIRE(pValid == FAIL_FAST_HR_IF_NULL_MSG(MDEC(S_OK), MDEC(pValidRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_RETURNS(S_OK, [] {
-        RETURN_HR_IF_NULL(E_FAIL, MDEC(pValidRef()));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        RETURN_HR_IF_NULL_MSG(E_FAIL, MDEC(pValidRef()), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        RETURN_HR_IF_NULL_EXPECTED(E_FAIL, MDEC(pValidRef()));
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(S_OK, [] {
-        REQUIRE(pValid == THROW_HR_IF_NULL(E_FAIL, MDEC(pValidRef())));
-    });
-    REQUIRE_THROWS_MSG(S_OK, [] {
-        REQUIRE(pValid == THROW_HR_IF_NULL_MSG(E_FAIL, MDEC(pValidRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_LOG(S_OK, [] {
-        REQUIRE(pValid == LOG_HR_IF_NULL(E_FAIL, MDEC(pValidRef())));
-    });
-    REQUIRE_LOG_MSG(S_OK, [] {
-        REQUIRE(pValid == LOG_HR_IF_NULL_MSG(E_FAIL, MDEC(pValidRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(S_OK, [] {
-        REQUIRE(pValid == FAIL_FAST_HR_IF_NULL(E_FAIL, MDEC(pValidRef())));
-    });
-    REQUIRE_FAILFAST_MSG(S_OK, [] {
-        REQUIRE(pValid == FAIL_FAST_HR_IF_NULL_MSG(E_FAIL, MDEC(pValidRef()), "msg: %d", __LINE__));
-    });
+    REQUIRE_RETURNS(S_OK, [] { RETURN_HR_IF_NULL(MDEC(S_OK), MDEC(pValidRef())); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_IF_NULL_MSG(MDEC(S_OK), MDEC(pValidRef()), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_HR_IF_NULL_EXPECTED(MDEC(S_OK), MDEC(pValidRef())); return S_OK; });
+    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(pValid == THROW_HR_IF_NULL(MDEC(S_OK), MDEC(pValidRef()))); });
+    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(pValid == THROW_HR_IF_NULL_MSG(MDEC(S_OK), MDEC(pValidRef()), "msg: %d", __LINE__)); });
+    REQUIRE_LOG(S_OK, [] { REQUIRE(pValid == LOG_HR_IF_NULL(MDEC(S_OK), MDEC(pValidRef()))); });
+    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(pValid == LOG_HR_IF_NULL_MSG(MDEC(S_OK), MDEC(pValidRef()), "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(pValid == FAIL_FAST_HR_IF_NULL(MDEC(S_OK), MDEC(pValidRef()))); });
+    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(pValid == FAIL_FAST_HR_IF_NULL_MSG(MDEC(S_OK), MDEC(pValidRef()), "msg: %d", __LINE__)); });
+    REQUIRE_RETURNS(S_OK, [] { RETURN_HR_IF_NULL(E_FAIL, MDEC(pValidRef())); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_HR_IF_NULL_MSG(E_FAIL, MDEC(pValidRef()), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_HR_IF_NULL_EXPECTED(E_FAIL, MDEC(pValidRef())); return S_OK; });
+    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(pValid == THROW_HR_IF_NULL(E_FAIL, MDEC(pValidRef()))); });
+    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(pValid == THROW_HR_IF_NULL_MSG(E_FAIL, MDEC(pValidRef()), "msg: %d", __LINE__)); });
+    REQUIRE_LOG(S_OK, [] { REQUIRE(pValid == LOG_HR_IF_NULL(E_FAIL, MDEC(pValidRef()))); });
+    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(pValid == LOG_HR_IF_NULL_MSG(E_FAIL, MDEC(pValidRef()), "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(pValid == FAIL_FAST_HR_IF_NULL(E_FAIL, MDEC(pValidRef()))); });
+    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(pValid == FAIL_FAST_HR_IF_NULL_MSG(E_FAIL, MDEC(pValidRef()), "msg: %d", __LINE__)); });
 
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        ::SetLastError(0);
-        FAIL_FAST_LAST_ERROR_IF(fTrue);
-    });
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        ::SetLastError(0);
-        FAIL_FAST_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__);
-    });
-    REQUIRE_RETURNS(E_AD, [] {
-        SetAD();
-        RETURN_LAST_ERROR_IF(fTrue);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(E_AD, [] {
-        SetAD();
-        RETURN_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(E_AD, [] {
-        SetAD();
-        RETURN_LAST_ERROR_IF_EXPECTED(fTrue);
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(E_AD, [] {
-        SetAD();
-        THROW_LAST_ERROR_IF(fTrue);
-    });
-    REQUIRE_THROWS_MSG(E_AD, [] {
-        SetAD();
-        THROW_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(E_AD, [] {
-        SetAD();
-        REQUIRE(fTrue == LOG_LAST_ERROR_IF(fTrue));
-    });
-    REQUIRE_LOG_MSG(E_AD, [] {
-        SetAD();
-        REQUIRE(fTrue == LOG_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(E_AD, [] {
-        SetAD();
-        FAIL_FAST_LAST_ERROR_IF(fTrue);
-    });
-    REQUIRE_FAILFAST_MSG(E_AD, [] {
-        SetAD();
-        FAIL_FAST_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__);
-    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { ::SetLastError(0); FAIL_FAST_LAST_ERROR_IF(fTrue); });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { ::SetLastError(0); FAIL_FAST_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(E_AD, [] { SetAD(); RETURN_LAST_ERROR_IF(fTrue); return S_OK; });
+    REQUIRE_RETURNS_MSG(E_AD, [] { SetAD(); RETURN_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(E_AD, [] { SetAD(); RETURN_LAST_ERROR_IF_EXPECTED(fTrue); return S_OK; });
+    REQUIRE_THROWS_RESULT(E_AD, [] { SetAD(); THROW_LAST_ERROR_IF(fTrue); });
+    REQUIRE_THROWS_MSG(E_AD, [] { SetAD(); THROW_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__); });
+    REQUIRE_LOG(E_AD, [] { SetAD(); REQUIRE(fTrue == LOG_LAST_ERROR_IF(fTrue)); });
+    REQUIRE_LOG_MSG(E_AD, [] { SetAD(); REQUIRE(fTrue == LOG_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(E_AD, [] { SetAD(); FAIL_FAST_LAST_ERROR_IF(fTrue); });
+    REQUIRE_FAILFAST_MSG(E_AD, [] { SetAD(); FAIL_FAST_LAST_ERROR_IF_MSG(fTrue, "msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS(S_OK, [] {
-        RETURN_LAST_ERROR_IF(MDEC(fFalseRef()));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        RETURN_LAST_ERROR_IF_MSG(MDEC(fFalseRef()), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        RETURN_LAST_ERROR_IF_EXPECTED(MDEC(fFalseRef()));
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(S_OK, [] {
-        REQUIRE(fFalse == THROW_LAST_ERROR_IF(MDEC(fFalseRef())));
-    });
-    REQUIRE_THROWS_MSG(S_OK, [] {
-        REQUIRE(fFalse == THROW_LAST_ERROR_IF_MSG(MDEC(fFalseRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_LOG(S_OK, [] {
-        REQUIRE(fFalse == LOG_LAST_ERROR_IF(MDEC(fFalseRef())));
-    });
-    REQUIRE_LOG_MSG(S_OK, [] {
-        REQUIRE(fFalse == LOG_LAST_ERROR_IF_MSG(MDEC(fFalseRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(S_OK, [] {
-        REQUIRE(fFalse == FAIL_FAST_LAST_ERROR_IF(MDEC(fFalseRef())));
-    });
-    REQUIRE_FAILFAST_MSG(S_OK, [] {
-        REQUIRE(fFalse == FAIL_FAST_LAST_ERROR_IF_MSG(MDEC(fFalseRef()), "msg: %d", __LINE__));
-    });
+    REQUIRE_RETURNS(S_OK, [] { RETURN_LAST_ERROR_IF(MDEC(fFalseRef())); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_LAST_ERROR_IF_MSG(MDEC(fFalseRef()), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_LAST_ERROR_IF_EXPECTED(MDEC(fFalseRef())); return S_OK; });
+    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(fFalse == THROW_LAST_ERROR_IF(MDEC(fFalseRef()))); });
+    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(fFalse == THROW_LAST_ERROR_IF_MSG(MDEC(fFalseRef()), "msg: %d", __LINE__)); });
+    REQUIRE_LOG(S_OK, [] { REQUIRE(fFalse == LOG_LAST_ERROR_IF(MDEC(fFalseRef()))); });
+    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(fFalse == LOG_LAST_ERROR_IF_MSG(MDEC(fFalseRef()), "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_LAST_ERROR_IF(MDEC(fFalseRef()))); });
+    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_LAST_ERROR_IF_MSG(MDEC(fFalseRef()), "msg: %d", __LINE__)); });
 
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        ::SetLastError(0);
-        FAIL_FAST_LAST_ERROR_IF_NULL(pNull);
-    });
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        ::SetLastError(0);
-        FAIL_FAST_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__);
-    });
-    REQUIRE_RETURNS(E_AD, [] {
-        SetAD();
-        RETURN_LAST_ERROR_IF_NULL(pNull);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(E_AD, [] {
-        SetAD();
-        RETURN_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(E_AD, [] {
-        SetAD();
-        RETURN_LAST_ERROR_IF_NULL_EXPECTED(pNull);
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(E_AD, [] {
-        SetAD();
-        THROW_LAST_ERROR_IF_NULL(pNull);
-    });
-    REQUIRE_THROWS_MSG(E_AD, [] {
-        SetAD();
-        THROW_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(E_AD, [] {
-        SetAD();
-        REQUIRE(pNull == LOG_LAST_ERROR_IF_NULL(pNull));
-    });
-    REQUIRE_LOG_MSG(E_AD, [] {
-        SetAD();
-        REQUIRE(pNull == LOG_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(E_AD, [] {
-        SetAD();
-        FAIL_FAST_LAST_ERROR_IF_NULL(pNull);
-    });
-    REQUIRE_FAILFAST_MSG(E_AD, [] {
-        SetAD();
-        FAIL_FAST_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__);
-    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { ::SetLastError(0); FAIL_FAST_LAST_ERROR_IF_NULL(pNull); });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { ::SetLastError(0); FAIL_FAST_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__); });
+    REQUIRE_RETURNS(E_AD, [] { SetAD(); RETURN_LAST_ERROR_IF_NULL(pNull); return S_OK; });
+    REQUIRE_RETURNS_MSG(E_AD, [] { SetAD(); RETURN_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(E_AD, [] { SetAD(); RETURN_LAST_ERROR_IF_NULL_EXPECTED(pNull); return S_OK; });
+    REQUIRE_THROWS_RESULT(E_AD, [] { SetAD(); THROW_LAST_ERROR_IF_NULL(pNull); });
+    REQUIRE_THROWS_MSG(E_AD, [] { SetAD(); THROW_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__); });
+    REQUIRE_LOG(E_AD, [] { SetAD(); REQUIRE(pNull == LOG_LAST_ERROR_IF_NULL(pNull)); });
+    REQUIRE_LOG_MSG(E_AD, [] { SetAD(); REQUIRE(pNull == LOG_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(E_AD, [] { SetAD(); FAIL_FAST_LAST_ERROR_IF_NULL(pNull); });
+    REQUIRE_FAILFAST_MSG(E_AD, [] { SetAD(); FAIL_FAST_LAST_ERROR_IF_NULL_MSG(pNull, "msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS(S_OK, [] {
-        RETURN_LAST_ERROR_IF_NULL(MDEC(pValidRef()));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        RETURN_LAST_ERROR_IF_NULL_MSG(MDEC(pValidRef()), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        RETURN_LAST_ERROR_IF_NULL_EXPECTED(MDEC(pValidRef()));
-        return S_OK;
-    });
-    REQUIRE_THROWS_RESULT(S_OK, [] {
-        REQUIRE(pNull != THROW_LAST_ERROR_IF_NULL(MDEC(pValidRef())));
-    });
-    REQUIRE_THROWS_MSG(S_OK, [] {
-        REQUIRE(pNull != THROW_LAST_ERROR_IF_NULL_MSG(MDEC(pValidRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_LOG(S_OK, [] {
-        REQUIRE(pNull != LOG_LAST_ERROR_IF_NULL(MDEC(pValidRef())));
-    });
-    REQUIRE_LOG_MSG(S_OK, [] {
-        REQUIRE(pNull != LOG_LAST_ERROR_IF_NULL_MSG(MDEC(pValidRef()), "msg: %d", __LINE__));
-    });
-    REQUIRE_FAILFAST(S_OK, [] {
-        REQUIRE(pNull != FAIL_FAST_LAST_ERROR_IF_NULL(MDEC(pValidRef())));
-    });
-    REQUIRE_FAILFAST_MSG(S_OK, [] {
-        REQUIRE(pNull != FAIL_FAST_LAST_ERROR_IF_NULL_MSG(MDEC(pValidRef()), "msg: %d", __LINE__));
-    });
+    REQUIRE_RETURNS(S_OK, [] { RETURN_LAST_ERROR_IF_NULL(MDEC(pValidRef())); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { RETURN_LAST_ERROR_IF_NULL_MSG(MDEC(pValidRef()), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { RETURN_LAST_ERROR_IF_NULL_EXPECTED(MDEC(pValidRef())); return S_OK; });
+    REQUIRE_THROWS_RESULT(S_OK, [] { REQUIRE(pNull != THROW_LAST_ERROR_IF_NULL(MDEC(pValidRef()))); });
+    REQUIRE_THROWS_MSG(S_OK, [] { REQUIRE(pNull != THROW_LAST_ERROR_IF_NULL_MSG(MDEC(pValidRef()), "msg: %d", __LINE__)); });
+    REQUIRE_LOG(S_OK, [] { REQUIRE(pNull != LOG_LAST_ERROR_IF_NULL(MDEC(pValidRef()))); });
+    REQUIRE_LOG_MSG(S_OK, [] { REQUIRE(pNull != LOG_LAST_ERROR_IF_NULL_MSG(MDEC(pValidRef()), "msg: %d", __LINE__)); });
+    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(pNull != FAIL_FAST_LAST_ERROR_IF_NULL(MDEC(pValidRef()))); });
+    REQUIRE_FAILFAST_MSG(S_OK, [] { REQUIRE(pNull != FAIL_FAST_LAST_ERROR_IF_NULL_MSG(MDEC(pValidRef()), "msg: %d", __LINE__)); });
 
-    REQUIRE_LOG(S_OK, [] {
-        REQUIRE(true == SUCCEEDED_LOG(MDEC(S_OK)));
-    });
-    REQUIRE_LOG(E_FAIL, [] {
-        REQUIRE(false == SUCCEEDED_LOG(E_FAIL));
-    });
-    REQUIRE_LOG(S_OK, [] {
-        REQUIRE(false == FAILED_LOG(MDEC(S_OK)));
-    });
-    REQUIRE_LOG(E_FAIL, [] {
-        REQUIRE(true == FAILED_LOG(E_FAIL));
-    });
+    REQUIRE_LOG(S_OK, [] { REQUIRE(true == SUCCEEDED_LOG(MDEC(S_OK))); });
+    REQUIRE_LOG(E_FAIL, [] { REQUIRE(false == SUCCEEDED_LOG(E_FAIL)); });
+    REQUIRE_LOG(S_OK, [] { REQUIRE(false == FAILED_LOG(MDEC(S_OK))); });
+    REQUIRE_LOG(E_FAIL, [] { REQUIRE(true == FAILED_LOG(E_FAIL)); });
 
-    REQUIRE_LOG(ERROR_SUCCESS, [] {
-        REQUIRE(true == SUCCEEDED_WIN32_LOG(MDEC(ERROR_SUCCESS)));
-    });
-    REQUIRE_LOG(HRESULT_FROM_WIN32(ERROR_ACCESS_DENIED), [] {
-        REQUIRE(false == SUCCEEDED_WIN32_LOG(ERROR_ACCESS_DENIED));
-    });
-    REQUIRE_LOG(ERROR_SUCCESS, [] {
-        REQUIRE(false == FAILED_WIN32_LOG(MDEC(ERROR_SUCCESS)));
-    });
-    REQUIRE_LOG(HRESULT_FROM_WIN32(ERROR_ACCESS_DENIED), [] {
-        REQUIRE(true == FAILED_WIN32_LOG(ERROR_ACCESS_DENIED));
-    });
+    REQUIRE_LOG(ERROR_SUCCESS, [] { REQUIRE(true == SUCCEEDED_WIN32_LOG(MDEC(ERROR_SUCCESS))); });
+    REQUIRE_LOG(HRESULT_FROM_WIN32(ERROR_ACCESS_DENIED), [] { REQUIRE(false == SUCCEEDED_WIN32_LOG(ERROR_ACCESS_DENIED)); });
+    REQUIRE_LOG(ERROR_SUCCESS, [] { REQUIRE(false == FAILED_WIN32_LOG(MDEC(ERROR_SUCCESS))); });
+    REQUIRE_LOG(HRESULT_FROM_WIN32(ERROR_ACCESS_DENIED), [] { REQUIRE(true == FAILED_WIN32_LOG(ERROR_ACCESS_DENIED)); });
 
-    REQUIRE_LOG(ntOK, [] {
-        REQUIRE(true == SUCCEEDED_NTSTATUS_LOG(MDEC(ntOK)));
-    });
-    REQUIRE_LOG(wil::details::NtStatusToHr(ntFAIL), [] {
-        REQUIRE(false == SUCCEEDED_NTSTATUS_LOG(ntFAIL));
-    });
-    REQUIRE_LOG(ntOK, [] {
-        REQUIRE(false == FAILED_NTSTATUS_LOG(MDEC(ntOK)));
-    });
-    REQUIRE_LOG(wil::details::NtStatusToHr(ntFAIL), [] {
-        REQUIRE(true == FAILED_NTSTATUS_LOG(ntFAIL));
-    });
+    REQUIRE_LOG(ntOK, [] { REQUIRE(true == SUCCEEDED_NTSTATUS_LOG(MDEC(ntOK))); });
+    REQUIRE_LOG(wil::details::NtStatusToHr(ntFAIL), [] { REQUIRE(false == SUCCEEDED_NTSTATUS_LOG(ntFAIL)); });
+    REQUIRE_LOG(ntOK, [] { REQUIRE(false == FAILED_NTSTATUS_LOG(MDEC(ntOK))); });
+    REQUIRE_LOG(wil::details::NtStatusToHr(ntFAIL), [] { REQUIRE(true == FAILED_NTSTATUS_LOG(ntFAIL)); });
 
     // FAIL_FAST_IMMEDIATE* directly invokes __fastfail, which we can't catch, so disabled for now
     // REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_IMMEDIATE(); });
     // REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_IMMEDIATE_IF_FAILED(E_FAIL); });
-    REQUIRE_FAILFAST(S_OK, [] {
-        REQUIRE(S_OK == FAIL_FAST_IMMEDIATE_IF_FAILED(MDEC(S_OK)));
-    });
+    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(S_OK == FAIL_FAST_IMMEDIATE_IF_FAILED(MDEC(S_OK))); });
     // REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_IMMEDIATE_IF(fTrue); });
-    REQUIRE_FAILFAST(S_OK, [] {
-        REQUIRE(fFalse == FAIL_FAST_IMMEDIATE_IF(MDEC(fFalseRef())));
-    });
+    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(fFalse == FAIL_FAST_IMMEDIATE_IF(MDEC(fFalseRef()))); });
     // REQUIRE_FAILFAST_UNSPECIFIED([] { FAIL_FAST_IMMEDIATE_IF_NULL(pNull); });
-    REQUIRE_FAILFAST(S_OK, [] {
-        REQUIRE(pValid == FAIL_FAST_IMMEDIATE_IF_NULL(MDEC(pValidRef())));
-    });
+    REQUIRE_FAILFAST(S_OK, [] { REQUIRE(pValid == FAIL_FAST_IMMEDIATE_IF_NULL(MDEC(pValidRef()))); });
 
 #ifdef WIL_ENABLE_EXCEPTIONS
-    REQUIRE_RETURNS(S_OK, [] {
-        try
-        {
-            THROW_IF_FAILED(hrOK);
-        }
-        CATCH_RETURN();
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        try
-        {
-            THROW_IF_FAILED(hrOK);
-        }
-        CATCH_RETURN_MSG("msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        try
-        {
-            THROW_IF_FAILED(hrOK);
-        }
-        CATCH_RETURN_EXPECTED();
-        return S_OK;
-    });
-    REQUIRE_LOG(S_OK, [] {
-        try
-        {
-            THROW_IF_FAILED(hrOK);
-        }
-        CATCH_LOG();
-    });
-    REQUIRE_LOG_MSG(S_OK, [] {
-        try
-        {
-            THROW_IF_FAILED(hrOK);
-        }
-        CATCH_LOG_MSG("msg: %d", __LINE__);
-    });
-    REQUIRE_FAILFAST(S_OK, [] {
-        try
-        {
-            THROW_IF_FAILED(hrOK);
-        }
-        CATCH_FAIL_FAST();
-    });
-    REQUIRE_FAILFAST_MSG(S_OK, [] {
-        try
-        {
-            THROW_IF_FAILED(hrOK);
-        }
-        CATCH_FAIL_FAST_MSG("msg: %d", __LINE__);
-    });
-    REQUIRE_THROWS_RESULT(S_OK, [] {
-        try
-        {
-            THROW_IF_FAILED(hrOK);
-        }
-        CATCH_THROW_NORMALIZED();
-    });
-    REQUIRE_THROWS_MSG(S_OK, [] {
-        try
-        {
-            THROW_IF_FAILED(hrOK);
-        }
-        CATCH_THROW_NORMALIZED_MSG("msg: %d", __LINE__);
-    });
+    REQUIRE_RETURNS(S_OK, [] { try { THROW_IF_FAILED(hrOK); } CATCH_RETURN(); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { try { THROW_IF_FAILED(hrOK); } CATCH_RETURN_MSG("msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { try { THROW_IF_FAILED(hrOK); } CATCH_RETURN_EXPECTED(); return S_OK; });
+    REQUIRE_LOG(S_OK, [] { try { THROW_IF_FAILED(hrOK); } CATCH_LOG(); });
+    REQUIRE_LOG_MSG(S_OK, [] { try { THROW_IF_FAILED(hrOK); } CATCH_LOG_MSG("msg: %d", __LINE__); });
+    REQUIRE_FAILFAST(S_OK, [] { try { THROW_IF_FAILED(hrOK); } CATCH_FAIL_FAST(); });
+    REQUIRE_FAILFAST_MSG(S_OK, [] { try { THROW_IF_FAILED(hrOK); } CATCH_FAIL_FAST_MSG("msg: %d", __LINE__); });
+    REQUIRE_THROWS_RESULT(S_OK, [] { try { THROW_IF_FAILED(hrOK); } CATCH_THROW_NORMALIZED(); });
+    REQUIRE_THROWS_MSG(S_OK, [] { try { THROW_IF_FAILED(hrOK); } CATCH_THROW_NORMALIZED_MSG("msg: %d", __LINE__); });
 
-    REQUIRE_RETURNS(E_FAIL, [] {
-        try
-        {
-            THROW_IF_FAILED(hrFAIL);
-        }
-        CATCH_RETURN();
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(E_FAIL, [] {
-        try
-        {
-            THROW_IF_FAILED(hrFAIL);
-        }
-        CATCH_RETURN_MSG("msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] {
-        try
-        {
-            THROW_IF_FAILED(hrFAIL);
-        }
-        CATCH_RETURN_EXPECTED();
-        return S_OK;
-    });
-    REQUIRE_LOG(E_FAIL, [] {
-        try
-        {
-            THROW_IF_FAILED(hrFAIL);
-        }
-        CATCH_LOG();
-    });
-    REQUIRE_LOG_MSG(E_FAIL, [] {
-        try
-        {
-            THROW_IF_FAILED(hrFAIL);
-        }
-        CATCH_LOG_MSG("msg: %d", __LINE__);
-    });
-    REQUIRE_FAILFAST(E_FAIL, [] {
-        try
-        {
-            THROW_IF_FAILED(hrFAIL);
-        }
-        CATCH_FAIL_FAST();
-    });
-    REQUIRE_FAILFAST_MSG(E_FAIL, [] {
-        try
-        {
-            THROW_IF_FAILED(hrFAIL);
-        }
-        CATCH_FAIL_FAST_MSG("msg: %d", __LINE__);
-    });
-    REQUIRE_THROWS_RESULT(E_FAIL, [] {
-        try
-        {
-            THROW_IF_FAILED(hrFAIL);
-        }
-        CATCH_THROW_NORMALIZED();
-    });
-    REQUIRE_THROWS_MSG(E_FAIL, [] {
-        try
-        {
-            THROW_IF_FAILED(hrFAIL);
-        }
-        CATCH_THROW_NORMALIZED_MSG("msg: %d", __LINE__);
-    });
+    REQUIRE_RETURNS(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_RETURN(); return S_OK; });
+    REQUIRE_RETURNS_MSG(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_RETURN_MSG("msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_RETURN_EXPECTED(); return S_OK; });
+    REQUIRE_LOG(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_LOG(); });
+    REQUIRE_LOG_MSG(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_LOG_MSG("msg: %d", __LINE__); });
+    REQUIRE_FAILFAST(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_FAIL_FAST(); });
+    REQUIRE_FAILFAST_MSG(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_FAIL_FAST_MSG("msg: %d", __LINE__); });
+    REQUIRE_THROWS_RESULT(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_THROW_NORMALIZED(); });
+    REQUIRE_THROWS_MSG(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_THROW_NORMALIZED_MSG("msg: %d", __LINE__); });
 
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        try
-        {
-            if (FAILED(hrFAIL))
-            {
-                throw E_FAIL;
-            }
-        }
-        CATCH_FAIL_FAST();
-    });
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        try
-        {
-            if (FAILED(hrFAIL))
-            {
-                throw E_FAIL;
-            }
-        }
-        CATCH_FAIL_FAST_MSG("msg: %d", __LINE__);
-    });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { try { if (FAILED(hrFAIL)) { throw E_FAIL; } } CATCH_FAIL_FAST(); });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { try { if (FAILED(hrFAIL)) { throw E_FAIL; } } CATCH_FAIL_FAST_MSG("msg: %d", __LINE__); });
 
-    REQUIRE_THROWS_RESULT(E_AD, [] {
-        THROW_EXCEPTION(MDEC(DerivedAccessDeniedException()));
-    });
-    REQUIRE_THROWS_MSG(E_AD, [] {
-        THROW_EXCEPTION_MSG(MDEC(DerivedAccessDeniedException()), "msg: %d", __LINE__);
-    });
+    REQUIRE_THROWS_RESULT(E_AD, [] { THROW_EXCEPTION(MDEC(DerivedAccessDeniedException())); });
+    REQUIRE_THROWS_MSG(E_AD, [] { THROW_EXCEPTION_MSG(MDEC(DerivedAccessDeniedException()), "msg: %d", __LINE__); });
 
-    REQUIRE_LOG(E_AD, [] {
-        try
-        {
-            throw AlternateAccessDeniedException();
-        }
-        CATCH_LOG();
-    });
-    REQUIRE_THROWS_RESULT(E_AD, [] {
-        try
-        {
-            throw AlternateAccessDeniedException();
-        }
-        CATCH_THROW_NORMALIZED();
-    });
+    REQUIRE_LOG(E_AD, [] { try { throw AlternateAccessDeniedException(); } CATCH_LOG(); });
+    REQUIRE_THROWS_RESULT(E_AD, [] { try { throw AlternateAccessDeniedException(); } CATCH_THROW_NORMALIZED(); });
 
-    REQUIRE_RETURNS(S_OK, [] {
-        return wil::ResultFromException([] {
-            THROW_IF_FAILED(hrOK);
-        });
-    });
-    REQUIRE_RETURNS(E_FAIL, [] {
-        return wil::ResultFromException([] {
-            THROW_IF_FAILED(hrFAIL);
-        });
-    });
-    REQUIRE(E_AD == wil::ResultFromException([] {
-                throw AlternateAccessDeniedException();
-            }));
+    REQUIRE_RETURNS(S_OK, [] { return wil::ResultFromException([] { THROW_IF_FAILED(hrOK); }); });
+    REQUIRE_RETURNS(E_FAIL, [] { return wil::ResultFromException([] { THROW_IF_FAILED(hrFAIL); }); });
+    REQUIRE(E_AD == wil::ResultFromException([] { throw AlternateAccessDeniedException(); }));
 
-    try
-    {
-        THROW_HR(E_FAIL);
-    }
-    catch (...)
-    {
-        REQUIRE(E_FAIL == wil::ResultFromCaughtException());
-    };
+    try { THROW_HR(E_FAIL); }
+    catch (...) { REQUIRE(E_FAIL == wil::ResultFromCaughtException()); };
 #endif
 
 #ifdef WIL_ENABLE_EXCEPTIONS
-    REQUIRE_LOG(E_FAIL, [] {
-        try
-        {
-            THROW_IF_FAILED(hrFAIL);
-        }
-        CATCH_LOG();
-    });
+    REQUIRE_LOG(E_FAIL, [] { try { THROW_IF_FAILED(hrFAIL); } CATCH_LOG(); });
 #endif
 
-    REQUIRE_RETURNS(E_OUTOFMEMORY, [] {
-        std::unique_ptr<int> pInt;
-        RETURN_IF_NULL_ALLOC(MDEC(pInt));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(E_OUTOFMEMORY, [] {
-        std::unique_ptr<int> pInt;
-        RETURN_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(E_OUTOFMEMORY, [] {
-        std::unique_ptr<int> pInt;
-        RETURN_IF_NULL_ALLOC_EXPECTED(MDEC(pInt));
-        return S_OK;
-    });
-    REQUIRE_RETURNS(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        RETURN_IF_NULL_ALLOC(MDEC(pInt));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        RETURN_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        RETURN_IF_NULL_ALLOC_EXPECTED(MDEC(pInt));
-        return S_OK;
-    });
+    REQUIRE_RETURNS(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; RETURN_IF_NULL_ALLOC(MDEC(pInt)); return S_OK; });
+    REQUIRE_RETURNS_MSG(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; RETURN_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; RETURN_IF_NULL_ALLOC_EXPECTED(MDEC(pInt)); return S_OK; });
+    REQUIRE_RETURNS(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); RETURN_IF_NULL_ALLOC(MDEC(pInt)); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); RETURN_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); RETURN_IF_NULL_ALLOC_EXPECTED(MDEC(pInt)); return S_OK; });
 
-    REQUIRE_RETURNS(E_OUTOFMEMORY, [] {
-        std::unique_ptr<int> pInt;
-        RETURN_HR_IF_NULL(E_OUTOFMEMORY, MDEC(pInt));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(E_OUTOFMEMORY, [] {
-        std::unique_ptr<int> pInt;
-        RETURN_HR_IF_NULL_MSG(E_OUTOFMEMORY, pInt, "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(E_OUTOFMEMORY, [] {
-        std::unique_ptr<int> pInt;
-        RETURN_HR_IF_NULL_EXPECTED(E_OUTOFMEMORY, MDEC(pInt));
-        return S_OK;
-    });
-    REQUIRE_RETURNS(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        RETURN_HR_IF_NULL(E_OUTOFMEMORY, MDEC(pInt));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        RETURN_HR_IF_NULL_MSG(E_OUTOFMEMORY, MDEC(pInt), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        RETURN_HR_IF_NULL_EXPECTED(E_OUTOFMEMORY, MDEC(pInt));
-        return S_OK;
-    });
+    REQUIRE_RETURNS(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; RETURN_HR_IF_NULL(E_OUTOFMEMORY, MDEC(pInt)); return S_OK; });
+    REQUIRE_RETURNS_MSG(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; RETURN_HR_IF_NULL_MSG(E_OUTOFMEMORY, pInt, "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; RETURN_HR_IF_NULL_EXPECTED(E_OUTOFMEMORY, MDEC(pInt)); return S_OK; });
+    REQUIRE_RETURNS(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); RETURN_HR_IF_NULL(E_OUTOFMEMORY, MDEC(pInt)); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); RETURN_HR_IF_NULL_MSG(E_OUTOFMEMORY, MDEC(pInt), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); RETURN_HR_IF_NULL_EXPECTED(E_OUTOFMEMORY, MDEC(pInt)); return S_OK; });
 
-    REQUIRE_RETURNS(E_AD, [] {
-        std::unique_ptr<int> pInt;
-        SetAD();
-        RETURN_LAST_ERROR_IF_NULL(MDEC(pInt));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(E_AD, [] {
-        std::unique_ptr<int> pInt;
-        SetAD();
-        RETURN_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(E_AD, [] {
-        std::unique_ptr<int> pInt;
-        SetAD();
-        RETURN_LAST_ERROR_IF_NULL_EXPECTED(MDEC(pInt));
-        return S_OK;
-    });
-    REQUIRE_RETURNS(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        SetAD();
-        RETURN_LAST_ERROR_IF_NULL(MDEC(pInt));
-        return S_OK;
-    });
-    REQUIRE_RETURNS_MSG(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        SetAD();
-        RETURN_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__);
-        return S_OK;
-    });
-    REQUIRE_RETURNS_EXPECTED(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        SetAD();
-        RETURN_LAST_ERROR_IF_NULL_EXPECTED(MDEC(pInt));
-        return S_OK;
-    });
+    REQUIRE_RETURNS(E_AD, [] { std::unique_ptr<int> pInt; SetAD(); RETURN_LAST_ERROR_IF_NULL(MDEC(pInt)); return S_OK; });
+    REQUIRE_RETURNS_MSG(E_AD, [] { std::unique_ptr<int> pInt; SetAD(); RETURN_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(E_AD, [] { std::unique_ptr<int> pInt; SetAD(); RETURN_LAST_ERROR_IF_NULL_EXPECTED(MDEC(pInt)); return S_OK; });
+    REQUIRE_RETURNS(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); SetAD(); RETURN_LAST_ERROR_IF_NULL(MDEC(pInt)); return S_OK; });
+    REQUIRE_RETURNS_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); SetAD(); RETURN_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__); return S_OK; });
+    REQUIRE_RETURNS_EXPECTED(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); SetAD(); RETURN_LAST_ERROR_IF_NULL_EXPECTED(MDEC(pInt)); return S_OK; });
 
-    REQUIRE_THROWS_RESULT(E_OUTOFMEMORY, [] {
-        std::unique_ptr<int> pInt;
-        THROW_IF_NULL_ALLOC(MDEC(pInt));
-    });
-    REQUIRE_THROWS_MSG(E_OUTOFMEMORY, [] {
-        std::unique_ptr<int> pInt;
-        THROW_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(E_OUTOFMEMORY, [] {
-        std::unique_ptr<int> pInt;
-        LOG_IF_NULL_ALLOC(MDEC(pInt));
-    });
-    REQUIRE_LOG_MSG(E_OUTOFMEMORY, [] {
-        std::unique_ptr<int> pInt;
-        LOG_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__);
-    });
-    REQUIRE_FAILFAST(E_OUTOFMEMORY, [] {
-        std::unique_ptr<int> pInt;
-        FAIL_FAST_IF_NULL_ALLOC(MDEC(pInt));
-    });
-    REQUIRE_FAILFAST_MSG(E_OUTOFMEMORY, [] {
-        std::unique_ptr<int> pInt;
-        FAIL_FAST_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__);
-    });
-    REQUIRE_THROWS_RESULT(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        THROW_IF_NULL_ALLOC(MDEC(pInt));
-    });
-    REQUIRE_THROWS_MSG(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        THROW_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        LOG_IF_NULL_ALLOC(MDEC(pInt));
-    });
-    REQUIRE_LOG_MSG(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        LOG_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__);
-    });
-    REQUIRE_FAILFAST(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        FAIL_FAST_IF_NULL_ALLOC(MDEC(pInt));
-    });
-    REQUIRE_FAILFAST_MSG(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        FAIL_FAST_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__);
-    });
+    REQUIRE_THROWS_RESULT(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; THROW_IF_NULL_ALLOC(MDEC(pInt)); });
+    REQUIRE_THROWS_MSG(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; THROW_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__); });
+    REQUIRE_LOG(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; LOG_IF_NULL_ALLOC(MDEC(pInt)); });
+    REQUIRE_LOG_MSG(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; LOG_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__); });
+    REQUIRE_FAILFAST(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; FAIL_FAST_IF_NULL_ALLOC(MDEC(pInt)); });
+    REQUIRE_FAILFAST_MSG(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; FAIL_FAST_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__); });
+    REQUIRE_THROWS_RESULT(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); THROW_IF_NULL_ALLOC(MDEC(pInt)); });
+    REQUIRE_THROWS_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); THROW_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__); });
+    REQUIRE_LOG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); LOG_IF_NULL_ALLOC(MDEC(pInt)); });
+    REQUIRE_LOG_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); LOG_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__); });
+    REQUIRE_FAILFAST(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); FAIL_FAST_IF_NULL_ALLOC(MDEC(pInt)); });
+    REQUIRE_FAILFAST_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); FAIL_FAST_IF_NULL_ALLOC_MSG(MDEC(pInt), "msg: %d", __LINE__); });
 
-    REQUIRE_LOG(E_OUTOFMEMORY, [] {
-        std::unique_ptr<int> pInt;
-        LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(pInt));
-    });
-    REQUIRE_LOG_MSG(E_OUTOFMEMORY, [] {
-        std::unique_ptr<int> pInt;
-        LOG_HR_IF_NULL_MSG(MDEC(E_OUTOFMEMORY), MDEC(pInt), "msg: %d", __LINE__);
-    });
-    REQUIRE_FAILFAST(E_FAIL, [] {
-        std::unique_ptr<int> pInt;
-        FAIL_FAST_HR_IF_NULL(MDEC(E_FAIL), MDEC(pInt));
-    });
-    REQUIRE_FAILFAST_MSG(E_FAIL, [] {
-        std::unique_ptr<int> pInt;
-        FAIL_FAST_HR_IF_NULL_MSG(MDEC(E_FAIL), MDEC(pInt), "msg: %d", __LINE__);
-    });
-    REQUIRE_THROWS_RESULT(E_OUTOFMEMORY, [] {
-        std::unique_ptr<int> pInt;
-        THROW_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(pInt));
-    });
-    REQUIRE_THROWS_MSG(E_OUTOFMEMORY, [] {
-        std::unique_ptr<int> pInt;
-        THROW_HR_IF_NULL_MSG(MDEC(E_OUTOFMEMORY), MDEC(pInt), "msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(pInt));
-    });
-    REQUIRE_LOG_MSG(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        LOG_HR_IF_NULL_MSG(MDEC(E_OUTOFMEMORY), MDEC(pInt), "msg: %d", __LINE__);
-    });
-    REQUIRE_FAILFAST(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        FAIL_FAST_HR_IF_NULL(MDEC(E_FAIL), MDEC(pInt));
-    });
-    REQUIRE_FAILFAST_MSG(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        FAIL_FAST_HR_IF_NULL_MSG(MDEC(E_FAIL), MDEC(pInt), "msg: %d", __LINE__);
-    });
-    REQUIRE_THROWS_RESULT(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        THROW_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(pInt));
-    });
-    REQUIRE_THROWS_MSG(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        THROW_HR_IF_NULL_MSG(MDEC(E_OUTOFMEMORY), MDEC(pInt), "msg: %d", __LINE__);
-    });
+    REQUIRE_LOG(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(pInt)); });
+    REQUIRE_LOG_MSG(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; LOG_HR_IF_NULL_MSG(MDEC(E_OUTOFMEMORY), MDEC(pInt), "msg: %d", __LINE__); });
+    REQUIRE_FAILFAST(E_FAIL, [] { std::unique_ptr<int> pInt; FAIL_FAST_HR_IF_NULL(MDEC(E_FAIL), MDEC(pInt)); });
+    REQUIRE_FAILFAST_MSG(E_FAIL, [] { std::unique_ptr<int> pInt; FAIL_FAST_HR_IF_NULL_MSG(MDEC(E_FAIL), MDEC(pInt), "msg: %d", __LINE__); });
+    REQUIRE_THROWS_RESULT(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; THROW_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(pInt)); });
+    REQUIRE_THROWS_MSG(E_OUTOFMEMORY, [] { std::unique_ptr<int> pInt; THROW_HR_IF_NULL_MSG(MDEC(E_OUTOFMEMORY), MDEC(pInt), "msg: %d", __LINE__); });
+    REQUIRE_LOG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(pInt)); });
+    REQUIRE_LOG_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); LOG_HR_IF_NULL_MSG(MDEC(E_OUTOFMEMORY), MDEC(pInt), "msg: %d", __LINE__); });
+    REQUIRE_FAILFAST(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); FAIL_FAST_HR_IF_NULL(MDEC(E_FAIL), MDEC(pInt)); });
+    REQUIRE_FAILFAST_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); FAIL_FAST_HR_IF_NULL_MSG(MDEC(E_FAIL), MDEC(pInt), "msg: %d", __LINE__); });
+    REQUIRE_THROWS_RESULT(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); THROW_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(pInt)); });
+    REQUIRE_THROWS_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); THROW_HR_IF_NULL_MSG(MDEC(E_OUTOFMEMORY), MDEC(pInt), "msg: %d", __LINE__); });
 
-    REQUIRE_LOG(E_AD, [] {
-        std::unique_ptr<int> pInt;
-        SetAD();
-        LOG_LAST_ERROR_IF_NULL(MDEC(pInt));
-    });
-    REQUIRE_LOG_MSG(E_AD, [] {
-        std::unique_ptr<int> pInt;
-        SetAD();
-        LOG_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__);
-    });
-    REQUIRE_FAILFAST(E_AD, [] {
-        std::unique_ptr<int> pInt;
-        SetAD();
-        FAIL_FAST_LAST_ERROR_IF_NULL(pInt);
-    });
-    REQUIRE_FAILFAST_MSG(E_AD, [] {
-        std::unique_ptr<int> pInt;
-        SetAD();
-        FAIL_FAST_LAST_ERROR_IF_NULL_MSG(pInt, "msg: %d", __LINE__);
-    });
-    REQUIRE_THROWS_RESULT(E_AD, [] {
-        std::unique_ptr<int> pInt;
-        SetAD();
-        THROW_LAST_ERROR_IF_NULL(MDEC(pInt));
-    });
-    REQUIRE_THROWS_MSG(E_AD, [] {
-        std::unique_ptr<int> pInt;
-        SetAD();
-        THROW_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__);
-    });
-    REQUIRE_LOG(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        LOG_LAST_ERROR_IF_NULL(MDEC(pInt));
-    });
-    REQUIRE_LOG_MSG(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        LOG_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__);
-    });
-    REQUIRE_FAILFAST(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        FAIL_FAST_LAST_ERROR_IF_NULL(pInt);
-    });
-    REQUIRE_FAILFAST_MSG(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        FAIL_FAST_LAST_ERROR_IF_NULL_MSG(pInt, "msg: %d", __LINE__);
-    });
-    REQUIRE_THROWS_RESULT(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        THROW_LAST_ERROR_IF_NULL(MDEC(pInt));
-    });
-    REQUIRE_THROWS_MSG(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        THROW_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__);
-    });
+    REQUIRE_LOG(E_AD, [] {  std::unique_ptr<int> pInt; SetAD(); LOG_LAST_ERROR_IF_NULL(MDEC(pInt)); });
+    REQUIRE_LOG_MSG(E_AD, [] { std::unique_ptr<int> pInt; SetAD(); LOG_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__); });
+    REQUIRE_FAILFAST(E_AD, [] { std::unique_ptr<int> pInt; SetAD(); FAIL_FAST_LAST_ERROR_IF_NULL(pInt); });
+    REQUIRE_FAILFAST_MSG(E_AD, [] { std::unique_ptr<int> pInt; SetAD(); FAIL_FAST_LAST_ERROR_IF_NULL_MSG(pInt, "msg: %d", __LINE__); });
+    REQUIRE_THROWS_RESULT(E_AD, [] { std::unique_ptr<int> pInt; SetAD(); THROW_LAST_ERROR_IF_NULL(MDEC(pInt)); });
+    REQUIRE_THROWS_MSG(E_AD, [] { std::unique_ptr<int> pInt; SetAD(); THROW_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__); });
+    REQUIRE_LOG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); LOG_LAST_ERROR_IF_NULL(MDEC(pInt)); });
+    REQUIRE_LOG_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); LOG_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__); });
+    REQUIRE_FAILFAST(S_OK, [] { std::unique_ptr<int> pInt(new int(5));  FAIL_FAST_LAST_ERROR_IF_NULL(pInt); });
+    REQUIRE_FAILFAST_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5));  FAIL_FAST_LAST_ERROR_IF_NULL_MSG(pInt, "msg: %d", __LINE__); });
+    REQUIRE_THROWS_RESULT(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); THROW_LAST_ERROR_IF_NULL(MDEC(pInt)); });
+    REQUIRE_THROWS_MSG(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); THROW_LAST_ERROR_IF_NULL_MSG(MDEC(pInt), "msg: %d", __LINE__); });
 
     // REQUIRE_FAILFAST_UNSPECIFIED([] { std::unique_ptr<int> pInt; FAIL_FAST_IMMEDIATE_IF_NULL(pNull); });
-    REQUIRE_FAILFAST(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        FAIL_FAST_IMMEDIATE_IF_NULL(MDEC(pValidRef()));
-    });
-    REQUIRE_FAILFAST_UNSPECIFIED([] {
-        std::unique_ptr<int> pInt;
-        FAIL_FAST_IF_NULL(pNull);
-    });
-    REQUIRE_FAILFAST(S_OK, [] {
-        std::unique_ptr<int> pInt(new int(5));
-        FAIL_FAST_IF_NULL(MDEC(pInt));
-    });
+    REQUIRE_FAILFAST(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); FAIL_FAST_IMMEDIATE_IF_NULL(MDEC(pValidRef())); });
+    REQUIRE_FAILFAST_UNSPECIFIED([] { std::unique_ptr<int> pInt; FAIL_FAST_IF_NULL(pNull); });
+    REQUIRE_FAILFAST(S_OK, [] { std::unique_ptr<int> pInt(new int(5)); FAIL_FAST_IF_NULL(MDEC(pInt)); });
 
-    REQUIRE_RETURNS(E_OUTOFMEMORY, [] {
-        Microsoft::WRL::ComPtr<IUnknown> ptr;
-        RETURN_IF_NULL_ALLOC(MDEC(ptr));
-        return S_OK;
-    });
-    REQUIRE_LOG(E_OUTOFMEMORY, [] {
-        Microsoft::WRL::ComPtr<IUnknown> ptr;
-        LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(ptr));
-    });
+    REQUIRE_RETURNS(E_OUTOFMEMORY, [] { Microsoft::WRL::ComPtr<IUnknown> ptr; RETURN_IF_NULL_ALLOC(MDEC(ptr)); return S_OK; });
+    REQUIRE_LOG(E_OUTOFMEMORY, [] { Microsoft::WRL::ComPtr<IUnknown> ptr; LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(ptr)); });
 
-    REQUIRE_RETURNS(E_OUTOFMEMORY, [] {
-        std::shared_ptr<int> ptr;
-        RETURN_IF_NULL_ALLOC(MDEC(ptr));
-        return S_OK;
-    });
-    REQUIRE_LOG(E_OUTOFMEMORY, [] {
-        std::shared_ptr<int> ptr;
-        LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(ptr));
-    });
-    REQUIRE_RETURNS(S_OK, [] {
-        std::shared_ptr<int> ptr(new int(5));
-        RETURN_IF_NULL_ALLOC(MDEC(ptr));
-        return S_OK;
-    });
-    REQUIRE_LOG(S_OK, [] {
-        std::shared_ptr<int> ptr(new int(5));
-        LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(ptr));
-    });
+    REQUIRE_RETURNS(E_OUTOFMEMORY, [] { std::shared_ptr<int> ptr; RETURN_IF_NULL_ALLOC(MDEC(ptr)); return S_OK; });
+    REQUIRE_LOG(E_OUTOFMEMORY, [] { std::shared_ptr<int> ptr; LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(ptr)); });
+    REQUIRE_RETURNS(S_OK, [] { std::shared_ptr<int> ptr(new int(5)); RETURN_IF_NULL_ALLOC(MDEC(ptr)); return S_OK; });
+    REQUIRE_LOG(S_OK, [] { std::shared_ptr<int> ptr(new int(5)); LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(ptr)); });
 
 #ifdef __cplusplus_winrt
-    REQUIRE_RETURNS(E_OUTOFMEMORY, [] {
-        Platform::String ^ str(nullptr);
-        RETURN_IF_NULL_ALLOC(MDEC(str));
-        return S_OK;
-    });
-    REQUIRE_LOG(E_OUTOFMEMORY, [] {
-        Platform::String ^ str(nullptr);
-        LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(str));
-    });
-    REQUIRE_RETURNS(S_OK, [] {
-        Platform::String ^ str(L"a");
-        RETURN_IF_NULL_ALLOC(MDEC(str));
-        return S_OK;
-    });
-    REQUIRE_LOG(S_OK, [] {
-        Platform::String ^ str(L"a");
-        LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(str));
-    });
+    REQUIRE_RETURNS(E_OUTOFMEMORY, [] { Platform::String^ str(nullptr); RETURN_IF_NULL_ALLOC(MDEC(str)); return S_OK; });
+    REQUIRE_LOG(E_OUTOFMEMORY, [] { Platform::String^ str(nullptr); LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(str)); });
+    REQUIRE_RETURNS(S_OK, [] { Platform::String^ str(L"a"); RETURN_IF_NULL_ALLOC(MDEC(str)); return S_OK; });
+    REQUIRE_LOG(S_OK, [] { Platform::String^ str(L"a"); LOG_HR_IF_NULL(MDEC(E_OUTOFMEMORY), MDEC(str)); });
 #endif
+    // clang-format on
 }
 
 #define WRAP_LAMBDA(code) \
@@ -4851,28 +3737,20 @@ TEST_CASE("WindowsInternalTests::ReturnWithExpectedTests", "[result_macros]")
 
 TEST_CASE("WindowsInternalTests::LogWithExpectedTests", "[result_macros]")
 {
+    // clang-format off
     wil::g_pfnResultLoggingCallback = ResultMacrosLoggingCallback;
 
     // Succeeded
-    REQUIRE_LOG(S_OK, [] {
-        REQUIRE(S_OK == LOG_IF_FAILED_WITH_EXPECTED(MDEC(hrOKRef()), E_FAIL, E_INVALIDARG));
-    });
+    REQUIRE_LOG(S_OK, [] { REQUIRE(S_OK == LOG_IF_FAILED_WITH_EXPECTED(MDEC(hrOKRef()), E_FAIL, E_INVALIDARG)); });
 
     // Expected
-    REQUIRE_LOG(S_OK, [] {
-        REQUIRE(E_UNEXPECTED == LOG_IF_FAILED_WITH_EXPECTED(E_UNEXPECTED, E_UNEXPECTED, E_INVALIDARG));
-    });
-    REQUIRE_LOG(S_OK, [] {
-        REQUIRE(E_UNEXPECTED == LOG_IF_FAILED_WITH_EXPECTED(E_UNEXPECTED, E_FAIL, E_UNEXPECTED, E_POINTER, E_INVALIDARG));
-    });
+    REQUIRE_LOG(S_OK, [] { REQUIRE(E_UNEXPECTED == LOG_IF_FAILED_WITH_EXPECTED(E_UNEXPECTED, E_UNEXPECTED, E_INVALIDARG)); });
+    REQUIRE_LOG(S_OK, [] { REQUIRE(E_UNEXPECTED == LOG_IF_FAILED_WITH_EXPECTED(E_UNEXPECTED, E_FAIL, E_UNEXPECTED, E_POINTER, E_INVALIDARG)); });
 
     // Unexpected
-    REQUIRE_LOG(E_FAIL, [] {
-        REQUIRE(E_FAIL == LOG_IF_FAILED_WITH_EXPECTED(E_FAIL, E_UNEXPECTED));
-    });
-    REQUIRE_LOG(E_FAIL, [] {
-        REQUIRE(E_FAIL == LOG_IF_FAILED_WITH_EXPECTED(E_FAIL, E_UNEXPECTED, E_POINTER, E_INVALIDARG));
-    });
+    REQUIRE_LOG(E_FAIL, [] { REQUIRE(E_FAIL == LOG_IF_FAILED_WITH_EXPECTED(E_FAIL, E_UNEXPECTED)); });
+    REQUIRE_LOG(E_FAIL, [] { REQUIRE(E_FAIL == LOG_IF_FAILED_WITH_EXPECTED(E_FAIL, E_UNEXPECTED, E_POINTER, E_INVALIDARG)); });
+    // clang-format on
 }
 
 // Verifies that the shutdown-aware objects respect the alignment
