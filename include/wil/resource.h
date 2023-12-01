@@ -290,8 +290,8 @@ public:
     unique_any_t& operator=(unique_any_t const&) = delete;
 
     // Note that the default constructor really shouldn't be needed (taken care of by the forwarding constructor below), but
-    // the forwarding constructor causes an internal compiler error when the class is used in a C++ array.  Defining the
-    // default constructor independent of the forwarding constructor removes the compiler limitation.
+    // the forwarding constructor causes an internal compiler error when the class is used in a C++ array.  Defining the default
+    // constructor independent of the forwarding constructor removes the compiler limitation.
     unique_any_t() = default;
 
     // forwarding constructor: forwards all 'explicit' and multi-arg constructors to the base class
@@ -811,8 +811,8 @@ details::out_param_t<T> out_param(T& p)
     return details::out_param_t<T>(p);
 }
 
-/** Use to retrieve raw out parameter pointers (with a required cast) into smart pointers that do not support the '&'
-operator. Use only when the smart pointer's &handle is not equal to the output type a function requires, necessitating a cast.
+/** Use to retrieve raw out parameter pointers (with a required cast) into smart pointers that do not support the '&' operator.
+Use only when the smart pointer's &handle is not equal to the output type a function requires, necessitating a cast.
 Example: `wil::out_param_ptr<PSECURITY_DESCRIPTOR*>(securityDescriptor)` */
 template <typename Tcast, typename T>
 details::out_param_ptr_t<Tcast, T> out_param_ptr(T& p)
@@ -1832,8 +1832,8 @@ string_type str_concat_failfast(arguments&&... args)
 #if !defined(__WIL_MIN_KERNEL) && !defined(WIL_KERNEL_MODE)
 namespace details
 {
-    // Wraps StringCchPrintFExW and stores it in an automatically allocated string.  Takes a buffer followed by the same
-    // format arguments that StringCchPrintfExW takes.
+    // Wraps StringCchPrintFExW and stores it in an automatically allocated string.  Takes a buffer followed by the same format
+    // arguments that StringCchPrintfExW takes.
     template <typename string_type>
     HRESULT str_vprintf_nothrow(string_type& result, _Printf_format_string_ PCWSTR pszFormat, va_list& argsVL)
     {
@@ -2235,8 +2235,8 @@ bool operator<=(const shared_any_t<unique_t>& left, const shared_any_t<unique_t>
     return (!(right < left));
 }
 
-// This class provides weak_ptr<> support for shared_any<>, bringing the same weak reference counting and lock() acquire
-// semantics to shared_any.
+// This class provides weak_ptr<> support for shared_any<>, bringing the same weak reference counting and lock() acquire semantics
+// to shared_any.
 
 template <typename SharedT>
 class weak_any
@@ -2344,8 +2344,8 @@ inline typename wistd::enable_if<!wistd::is_array<_Ty>::value, wistd::unique_ptr
     return (wistd::unique_ptr<_Ty>(new (std::nothrow) _Ty(wistd::forward<_Types>(_Args)...)));
 }
 
-/** Provides `std::make_unique()` semantics for array resources allocated in a context that may not throw upon allocation
-failure. See the overload of `wil::make_unique_nothrow()` for non-array types for more details.
+/** Provides `std::make_unique()` semantics for array resources allocated in a context that may not throw upon allocation failure.
+See the overload of `wil::make_unique_nothrow()` for non-array types for more details.
 ~~~
 const size_t size = 42;
 auto foos = wil::make_unique_nothrow<Foo[]>(size); // the default constructor will be called on each Foo object
@@ -4025,8 +4025,8 @@ inline typename wistd::enable_if<!wistd::is_array<T>::value, unique_hlocal_ptr<T
     return sp;
 }
 
-/** Provides `std::make_unique()` semantics for array resources allocated with `LocalAlloc()` in a context that may not throw
-upon allocation failure. See the overload of `wil::make_unique_hlocal_nothrow()` for non-array types for more details.
+/** Provides `std::make_unique()` semantics for array resources allocated with `LocalAlloc()` in a context that may not throw upon
+allocation failure. See the overload of `wil::make_unique_hlocal_nothrow()` for non-array types for more details.
 ~~~
 const size_t size = 42;
 auto foos = wil::make_unique_hlocal_nothrow<Foo[]>(size);
@@ -4272,8 +4272,8 @@ inline typename wistd::enable_if<wistd::is_array<T>::value && wistd::extent<T>::
     return unique_hlocal_secure_ptr<T>(make_unique_hlocal_nothrow<T>(size).release());
 }
 
-/** Provides `std::make_unique()` semantics for secure resources allocated with `LocalAlloc()` in a context that must fail
-fast upon allocation failure. See the overload of `wil::make_unique_hlocal_nothrow()` for non-array types for more details.
+/** Provides `std::make_unique()` semantics for secure resources allocated with `LocalAlloc()` in a context that must fail fast
+upon allocation failure. See the overload of `wil::make_unique_hlocal_nothrow()` for non-array types for more details.
 ~~~
 auto foo = wil::make_unique_hlocal_secure_failfast<Foo>();
 // initialize allocated Foo object as appropriate
@@ -5301,8 +5301,8 @@ inline typename wistd::enable_if<wistd::is_array<T>::value && wistd::extent<T>::
     return sp;
 }
 
-/** Provides `std::make_unique()` semantics for resources allocated with `CoTaskMemAlloc()` in a context that must fail fast
-upon allocation failure. See the overload of `wil::make_unique_cotaskmem_nothrow()` for non-array types for more details.
+/** Provides `std::make_unique()` semantics for resources allocated with `CoTaskMemAlloc()` in a context that must fail fast upon
+allocation failure. See the overload of `wil::make_unique_cotaskmem_nothrow()` for non-array types for more details.
 ~~~
 auto foo = wil::make_unique_cotaskmem_failfast<Foo>();
 // initialize allocated Foo object as appropriate
@@ -5316,8 +5316,8 @@ inline typename wistd::enable_if<!wistd::is_array<T>::value, unique_cotaskmem_pt
     return result;
 }
 
-/** Provides `std::make_unique()` semantics for array resources allocated with `CoTaskMemAlloc()` in a context that must fail
-fast upon allocation failure. See the overload of `wil::make_unique_cotaskmem_nothrow()` for non-array types for more details.
+/** Provides `std::make_unique()` semantics for array resources allocated with `CoTaskMemAlloc()` in a context that must fail fast
+upon allocation failure. See the overload of `wil::make_unique_cotaskmem_nothrow()` for non-array types for more details.
 ~~~
 const size_t size = 42;
 auto foos = wil::make_unique_cotaskmem_failfast<Foo[]>(size);
@@ -5595,8 +5595,8 @@ inline unique_cotaskmem_string_secure make_cotaskmem_string_secure_nothrow(_In_ 
     return unique_cotaskmem_string_secure(make_cotaskmem_string_nothrow(source).release());
 }
 
-/** Copies a given string into secure memory allocated with `CoTaskMemAlloc()` in a context that must fail fast upon
-allocation failure. See the overload of `wil::make_cotaskmem_string_nothrow()` with supplied length for more details.
+/** Copies a given string into secure memory allocated with `CoTaskMemAlloc()` in a context that must fail fast upon allocation
+failure. See the overload of `wil::make_cotaskmem_string_nothrow()` with supplied length for more details.
 ~~~
 auto str = wil::make_cotaskmem_string_secure_failfast(L"a string");
 std::wcout << L"This is " << str.get() << std::endl; // prints "This is a string"

@@ -312,8 +312,8 @@ WI_ODR_PRAGMA("WIL_FreeMemory", "0")
 // Assemble the varying amounts of data into a single macro
 #define __R_INFO_ONLY(CODE) \
     __R_IF_CALLERADDRESS(_ReturnAddress() __R_IF_COMMA) \
-    __R_IF_LINE(__R_LINE_VALUE) \
-    __R_IF_FILE(__R_COMMA __R_FILE_VALUE) __R_IF_FUNCTION(__R_COMMA __FUNCTION__) __R_IF_CODE(__R_COMMA CODE)
+    __R_IF_LINE(__R_LINE_VALUE) __R_IF_FILE(__R_COMMA __R_FILE_VALUE) __R_IF_FUNCTION(__R_COMMA __FUNCTION__) \
+        __R_IF_CODE(__R_COMMA CODE)
 #define __R_INFO(CODE) __R_INFO_ONLY(CODE) __R_IF_TRAIL_COMMA
 #define __R_INFO_NOFILE_ONLY(CODE) \
     __R_IF_CALLERADDRESS(_ReturnAddress() __R_IF_COMMA) \
@@ -321,9 +321,8 @@ WI_ODR_PRAGMA("WIL_FreeMemory", "0")
 #define __R_INFO_NOFILE(CODE) __R_INFO_NOFILE_ONLY(CODE) __R_IF_TRAIL_COMMA
 #define __R_FN_PARAMS_ONLY \
     __R_IF_CALLERADDRESS(void* callerReturnAddress __R_IF_COMMA) \
-    __R_IF_LINE(unsigned int lineNumber) \
-    __R_IF_FILE(__R_COMMA _In_opt_ PCSTR fileName) \
-    __R_IF_FUNCTION(__R_COMMA _In_opt_ PCSTR functionName) __R_IF_CODE(__R_COMMA _In_opt_ PCSTR code)
+    __R_IF_LINE(unsigned int lineNumber) __R_IF_FILE(__R_COMMA _In_opt_ PCSTR fileName) \
+        __R_IF_FUNCTION(__R_COMMA _In_opt_ PCSTR functionName) __R_IF_CODE(__R_COMMA _In_opt_ PCSTR code)
 #define __R_FN_PARAMS __R_FN_PARAMS_ONLY __R_IF_TRAIL_COMMA
 #define __R_FN_CALL_ONLY \
     __R_IF_CALLERADDRESS(callerReturnAddress __R_IF_COMMA) \
@@ -331,15 +330,13 @@ WI_ODR_PRAGMA("WIL_FreeMemory", "0")
 #define __R_FN_CALL __R_FN_CALL_ONLY __R_IF_TRAIL_COMMA
 #define __R_FN_LOCALS \
     __R_IF_NOT_CALLERADDRESS(void* callerReturnAddress = nullptr;) \
-    __R_IF_NOT_LINE(unsigned int lineNumber = 0;) \
-    __R_IF_NOT_FILE(PCSTR fileName = nullptr;) \
-    __R_IF_NOT_FUNCTION(PCSTR functionName = nullptr;) __R_IF_NOT_CODE(PCSTR code = nullptr;)
+    __R_IF_NOT_LINE(unsigned int lineNumber = 0;) __R_IF_NOT_FILE(PCSTR fileName = nullptr;) \
+        __R_IF_NOT_FUNCTION(PCSTR functionName = nullptr;) __R_IF_NOT_CODE(PCSTR code = nullptr;)
 #define __R_FN_LOCALS_RA \
     __R_IF_NOT_CALLERADDRESS(void* callerReturnAddress = nullptr;) \
-    __R_IF_NOT_LINE(unsigned int lineNumber = 0;) \
-    __R_IF_NOT_FILE(PCSTR fileName = nullptr;) \
-    __R_IF_NOT_FUNCTION(PCSTR functionName = nullptr;) \
-    __R_IF_NOT_CODE(PCSTR code = nullptr;) void* returnAddress = _ReturnAddress();
+    __R_IF_NOT_LINE(unsigned int lineNumber = 0;) __R_IF_NOT_FILE(PCSTR fileName = nullptr;) \
+        __R_IF_NOT_FUNCTION(PCSTR functionName = nullptr;) __R_IF_NOT_CODE(PCSTR code = nullptr;) void* returnAddress = \
+            _ReturnAddress();
 #define __R_FN_UNREFERENCED \
     __R_IF_CALLERADDRESS((void)callerReturnAddress;) \
     __R_IF_LINE((void)lineNumber;) __R_IF_FILE((void)fileName;) __R_IF_FUNCTION((void)functionName;) __R_IF_CODE((void)code;)
@@ -510,30 +507,28 @@ WI_ODR_PRAGMA("WIL_FreeMemory", "0")
 // Assemble the varying amounts of data into a single macro
 #define __RFF_INFO_ONLY(CODE) \
     __RFF_IF_CALLERADDRESS(_ReturnAddress() __RFF_IF_COMMA) \
-    __RFF_IF_LINE(__R_LINE_VALUE) \
-    __RFF_IF_FILE(__RFF_COMMA __R_FILE_VALUE) __RFF_IF_FUNCTION(__RFF_COMMA __FUNCTION__) __RFF_IF_CODE(__RFF_COMMA CODE)
+    __RFF_IF_LINE(__R_LINE_VALUE) __RFF_IF_FILE(__RFF_COMMA __R_FILE_VALUE) __RFF_IF_FUNCTION(__RFF_COMMA __FUNCTION__) \
+        __RFF_IF_CODE(__RFF_COMMA CODE)
 #define __RFF_INFO(CODE) __RFF_INFO_ONLY(CODE) __RFF_IF_TRAIL_COMMA
 #define __RFF_INFO_NOFILE_ONLY(CODE) \
     __RFF_IF_CALLERADDRESS(_ReturnAddress() __RFF_IF_COMMA) \
-    __RFF_IF_LINE(__R_LINE_VALUE) \
-    __RFF_IF_FILE(__RFF_COMMA "wil") __RFF_IF_FUNCTION(__RFF_COMMA __FUNCTION__) __RFF_IF_CODE(__RFF_COMMA CODE)
+    __RFF_IF_LINE(__R_LINE_VALUE) __RFF_IF_FILE(__RFF_COMMA "wil") __RFF_IF_FUNCTION(__RFF_COMMA __FUNCTION__) \
+        __RFF_IF_CODE(__RFF_COMMA CODE)
 #define __RFF_INFO_NOFILE(CODE) __RFF_INFO_NOFILE_ONLY(CODE) __RFF_IF_TRAIL_COMMA
 #define __RFF_FN_PARAMS_ONLY \
     __RFF_IF_CALLERADDRESS(void* callerReturnAddress __RFF_IF_COMMA) \
-    __RFF_IF_LINE(unsigned int lineNumber) \
-    __RFF_IF_FILE(__RFF_COMMA _In_opt_ PCSTR fileName) \
-    __RFF_IF_FUNCTION(__RFF_COMMA _In_opt_ PCSTR functionName) __RFF_IF_CODE(__RFF_COMMA _In_opt_ PCSTR code)
+    __RFF_IF_LINE(unsigned int lineNumber) __RFF_IF_FILE(__RFF_COMMA _In_opt_ PCSTR fileName) \
+        __RFF_IF_FUNCTION(__RFF_COMMA _In_opt_ PCSTR functionName) __RFF_IF_CODE(__RFF_COMMA _In_opt_ PCSTR code)
 #define __RFF_FN_PARAMS __RFF_FN_PARAMS_ONLY __RFF_IF_TRAIL_COMMA
 #define __RFF_FN_CALL_ONLY \
     __RFF_IF_CALLERADDRESS(callerReturnAddress __RFF_IF_COMMA) \
-    __RFF_IF_LINE(lineNumber) \
-    __RFF_IF_FILE(__RFF_COMMA fileName) __RFF_IF_FUNCTION(__RFF_COMMA functionName) __RFF_IF_CODE(__RFF_COMMA code)
+    __RFF_IF_LINE(lineNumber) __RFF_IF_FILE(__RFF_COMMA fileName) __RFF_IF_FUNCTION(__RFF_COMMA functionName) \
+        __RFF_IF_CODE(__RFF_COMMA code)
 #define __RFF_FN_CALL __RFF_FN_CALL_ONLY __RFF_IF_TRAIL_COMMA
 #define __RFF_FN_LOCALS \
     __RFF_IF_NOT_CALLERADDRESS(void* callerReturnAddress = nullptr;) \
-    __RFF_IF_NOT_LINE(unsigned int lineNumber = 0;) \
-    __RFF_IF_NOT_FILE(PCSTR fileName = nullptr;) \
-    __RFF_IF_NOT_FUNCTION(PCSTR functionName = nullptr;) __RFF_IF_NOT_CODE(PCSTR code = nullptr;)
+    __RFF_IF_NOT_LINE(unsigned int lineNumber = 0;) __RFF_IF_NOT_FILE(PCSTR fileName = nullptr;) \
+        __RFF_IF_NOT_FUNCTION(PCSTR functionName = nullptr;) __RFF_IF_NOT_CODE(PCSTR code = nullptr;)
 #define __RFF_FN_UNREFERENCED \
     __RFF_IF_CALLERADDRESS(callerReturnAddress;) \
     __RFF_IF_LINE(lineNumber;) __RFF_IF_FILE(fileName;) __RFF_IF_FUNCTION(functionName;) __RFF_IF_CODE(code;)
@@ -3077,8 +3072,8 @@ inline bool ProcessShutdownInProgress()
 /** Use this object to wrap an object that wants to prevent its destructor from being run when the process is shutting down,
 but the hosting DLL doesn't support CRT initializers (such as kernelbase.dll).  The hosting DLL is responsible for calling
 Construct() and Destroy() to manually run the constructor and destructor during DLL load & unload.
-Upon process shutdown a method (ProcessShutdown()) is called that must be implemented on the object, otherwise the destructor
-is called as is typical. */
+Upon process shutdown a method (ProcessShutdown()) is called that must be implemented on the object, otherwise the destructor is
+called as is typical. */
 template <class T>
 class manually_managed_shutdown_aware_object
 {
@@ -3116,8 +3111,8 @@ private:
 };
 
 /** Use this object to wrap an object that wants to prevent its destructor from being run when the process is shutting down.
-Upon process shutdown a method (ProcessShutdown()) is called that must be implemented on the object, otherwise the destructor
-is called as is typical. */
+Upon process shutdown a method (ProcessShutdown()) is called that must be implemented on the object, otherwise the destructor is
+called as is typical. */
 template <class T>
 class shutdown_aware_object
 {
@@ -3503,8 +3498,8 @@ namespace details
     RESULT_NORETURN inline void TerminateAndReportError(_In_opt_ PEXCEPTION_POINTERS)
     {
         // This is an intentional fail-fast that was caught by an exception guard with WIL.  Look back up the callstack to
-        // determine the source of the actual exception being thrown.  The exception guard used by the calling code did not
-        // expect this exception type to be thrown or is specifically requesting fail-fast for this class of exception.
+        // determine the source of the actual exception being thrown.  The exception guard used by the calling code did not expect
+        // this exception type to be thrown or is specifically requesting fail-fast for this class of exception.
 
         FailureInfo failure{};
         WilFailFast(failure);
@@ -4231,8 +4226,8 @@ __forceinline HRESULT ResultFromExceptionDebug(const DiagnosticsInfo& diagnostic
 }
 
 //! A fail-fast based exception guard.
-//! Technically this is an overload of @ref ResultFromExceptionDebug that uses SupportedExceptions::None by default.  Any
-//! uncaught exception that makes it back to this guard would result in a fail-fast at the point the exception is thrown.
+//! Technically this is an overload of @ref ResultFromExceptionDebug that uses SupportedExceptions::None by default.  Any uncaught
+//! exception that makes it back to this guard would result in a fail-fast at the point the exception is thrown.
 template <typename Functor>
 __forceinline void FailFastException(const DiagnosticsInfo& diagnostics, Functor&& functor) WI_NOEXCEPT
 {
@@ -4390,8 +4385,8 @@ namespace details
                 g_pfnResultLoggingCallback(failure, debugString, debugStringSizeChars);
             }
 
-            // The callback only optionally needs to supply the debug string -- if the callback didn't populate it, yet we
-            // still want it for OutputDebugString or exception message, then generate the default string.
+            // The callback only optionally needs to supply the debug string -- if the callback didn't populate it, yet we still
+            // want it for OutputDebugString or exception message, then generate the default string.
             if (debugString[0] == L'\0')
             {
                 GetFailureLogString(debugString, debugStringSizeChars, *failure);
@@ -4405,9 +4400,9 @@ namespace details
         else
         {
             // [deprecated behavior]
-            // This callback was at one point *always* called for all failures, so we continue to call it for failures even
-            // when we don't need to generate the debug string information (when the callback was supplied directly).  We can
-            // avoid this if the caller used the explicit function (through g_resultMessageCallbackSet)
+            // This callback was at one point *always* called for all failures, so we continue to call it for failures even when
+            // we don't need to generate the debug string information (when the callback was supplied directly).  We can avoid
+            // this if the caller used the explicit function (through g_resultMessageCallbackSet)
             if ((g_pfnResultLoggingCallback != nullptr) && !g_resultMessageCallbackSet)
             {
                 g_pfnResultLoggingCallback(failure, nullptr, 0);
@@ -4614,8 +4609,8 @@ namespace details
         {
             // By default WIL will issue a fail fast for unrecognized exception types.  Wil recognizes any std::exception or
             // wil::ResultException based types and Platform::Exception^, so there aren't too many valid exception types which
-            // could cause this.  Those that are valid, should be handled by remapping the exception callback.  Those that are
-            // not valid should be found and fixed (meaningless accidents like 'throw hr;'). The caller may also be requesting
+            // could cause this.  Those that are valid, should be handled by remapping the exception callback.  Those that are not
+            // valid should be found and fixed (meaningless accidents like 'throw hr;'). The caller may also be requesting
             // non-default behavior to fail-fast more frequently (primarily for debugging unknown exceptions).
             ReportFailure_Base<FailureType::FailFast>(__R_FN_CALL_FULL, resultPair, debugString, options);
         }
@@ -4658,8 +4653,8 @@ namespace details
         {
             // By default WIL will issue a fail fast for unrecognized exception types.  Wil recognizes any std::exception or
             // wil::ResultException based types and Platform::Exception^, so there aren't too many valid exception types which
-            // could cause this.  Those that are valid, should be handled by remapping the exception callback.  Those that are
-            // not valid should be found and fixed (meaningless accidents like 'throw hr;'). The caller may also be requesting
+            // could cause this.  Those that are valid, should be handled by remapping the exception callback.  Those that are not
+            // valid should be found and fixed (meaningless accidents like 'throw hr;'). The caller may also be requesting
             // non-default behavior to fail-fast more frequently (primarily for debugging unknown exceptions).
             ReportFailure_Base<FailureType::FailFast>(__R_FN_CALL_FULL, resultPair, debugString, options);
         }
@@ -5115,8 +5110,8 @@ namespace details
     RESULT_NORETURN inline void ReportFailure_CustomExceptionHelper(_Inout_ T& exception, __R_FN_PARAMS_FULL, _In_opt_ PCWSTR message = nullptr)
     {
         // When seeing the error: "cannot convert parameter 1 from 'XXX' to 'wil::ResultException &'"
-        // Custom exceptions must be based upon either ResultException or Platform::Exception^ to be used with
-        // ResultException.h. This compilation error indicates an attempt to throw an incompatible exception type.
+        // Custom exceptions must be based upon either ResultException or Platform::Exception^ to be used with ResultException.h.
+        // This compilation error indicates an attempt to throw an incompatible exception type.
         const HRESULT hr = GetErrorCode(exception);
 
         FailureInfo failure;
@@ -5624,8 +5619,7 @@ namespace details
             {
                 va_list argList;
                 va_start(argList, formatString);
-                __R_CALL_INTERNAL_NOINLINE_METHOD(_Log_GetLastErrorMsg)
-                (__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
+                __R_CALL_INTERNAL_NOINLINE_METHOD(_Log_GetLastErrorMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
             }
             return ret;
         }
@@ -5649,8 +5643,7 @@ namespace details
             {
                 va_list argList;
                 va_start(argList, formatString);
-                __R_CALL_INTERNAL_NOINLINE_METHOD(_Log_GetLastErrorMsg)
-                (__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
+                __R_CALL_INTERNAL_NOINLINE_METHOD(_Log_GetLastErrorMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
             }
             return handle;
         }
@@ -5662,8 +5655,7 @@ namespace details
             {
                 va_list argList;
                 va_start(argList, formatString);
-                __R_CALL_INTERNAL_NOINLINE_METHOD(_Log_GetLastErrorMsg)
-                (__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
+                __R_CALL_INTERNAL_NOINLINE_METHOD(_Log_GetLastErrorMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
             }
             return handle;
         }
@@ -5751,8 +5743,7 @@ namespace details
             {
                 va_list argList;
                 va_start(argList, formatString);
-                __R_CALL_INTERNAL_NOINLINE_METHOD(_Log_GetLastErrorMsg)
-                (__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
+                __R_CALL_INTERNAL_NOINLINE_METHOD(_Log_GetLastErrorMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
             }
             return condition;
         }
@@ -5764,8 +5755,7 @@ namespace details
             {
                 va_list argList;
                 va_start(argList, formatString);
-                __R_CALL_INTERNAL_NOINLINE_METHOD(_Log_GetLastErrorMsg)
-                (__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
+                __R_CALL_INTERNAL_NOINLINE_METHOD(_Log_GetLastErrorMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
             }
             return condition;
         }
@@ -5778,8 +5768,7 @@ namespace details
             {
                 va_list argList;
                 va_start(argList, formatString);
-                __R_CALL_INTERNAL_NOINLINE_METHOD(_Log_GetLastErrorMsg)
-                (__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
+                __R_CALL_INTERNAL_NOINLINE_METHOD(_Log_GetLastErrorMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
             }
             return pointer;
         }
@@ -5792,8 +5781,7 @@ namespace details
             {
                 va_list argList;
                 va_start(argList, formatString);
-                __R_CALL_INTERNAL_NOINLINE_METHOD(_Log_GetLastErrorMsg)
-                (__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
+                __R_CALL_INTERNAL_NOINLINE_METHOD(_Log_GetLastErrorMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
             }
         }
 
@@ -6827,8 +6815,7 @@ namespace details
             wil::details::ReportFailure_Win32Msg<FailureType::Exception>(__R_DIRECT_FN_CALL err, formatString, argList);
         }
 
-        __R_DIRECT_NORET_METHOD(void, Throw_GetLastErrorMsg)
-        (__R_DIRECT_FN_PARAMS _Printf_format_string_ PCSTR formatString, ...)
+        __R_DIRECT_NORET_METHOD(void, Throw_GetLastErrorMsg)(__R_DIRECT_FN_PARAMS _Printf_format_string_ PCSTR formatString, ...)
         {
             va_list argList;
             va_start(argList, formatString);
@@ -6910,8 +6897,7 @@ namespace details
             {
                 va_list argList;
                 va_start(argList, formatString);
-                __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_GetLastErrorMsg)
-                (__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
+                __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_GetLastErrorMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
             }
             return ret;
         }
@@ -6924,8 +6910,7 @@ namespace details
             {
                 va_list argList;
                 va_start(argList, formatString);
-                __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_Win32Msg)
-                (__R_CONDITIONAL_NOINLINE_FN_CALL err, formatString, argList);
+                __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_Win32Msg)(__R_CONDITIONAL_NOINLINE_FN_CALL err, formatString, argList);
             }
             return err;
         }
@@ -6938,8 +6923,7 @@ namespace details
             {
                 va_list argList;
                 va_start(argList, formatString);
-                __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_GetLastErrorMsg)
-                (__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
+                __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_GetLastErrorMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
             }
             return handle;
         }
@@ -6952,8 +6936,7 @@ namespace details
             {
                 va_list argList;
                 va_start(argList, formatString);
-                __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_GetLastErrorMsg)
-                (__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
+                __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_GetLastErrorMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
             }
             return handle;
         }
@@ -7048,8 +7031,7 @@ namespace details
             {
                 va_list argList;
                 va_start(argList, formatString);
-                __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_Win32Msg)
-                (__R_CONDITIONAL_NOINLINE_FN_CALL err, formatString, argList);
+                __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_Win32Msg)(__R_CONDITIONAL_NOINLINE_FN_CALL err, formatString, argList);
             }
             return condition;
         }
@@ -7062,8 +7044,7 @@ namespace details
             {
                 va_list argList;
                 va_start(argList, formatString);
-                __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_GetLastErrorMsg)
-                (__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
+                __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_GetLastErrorMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
             }
             return condition;
         }
@@ -7076,8 +7057,7 @@ namespace details
             {
                 va_list argList;
                 va_start(argList, formatString);
-                __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_GetLastErrorMsg)
-                (__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
+                __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_GetLastErrorMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
             }
             return condition;
         }
@@ -7091,8 +7071,7 @@ namespace details
             {
                 va_list argList;
                 va_start(argList, formatString);
-                __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_GetLastErrorMsg)
-                (__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
+                __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_GetLastErrorMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
             }
             return pointer;
         }
@@ -7106,8 +7085,7 @@ namespace details
             {
                 va_list argList;
                 va_start(argList, formatString);
-                __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_GetLastErrorMsg)
-                (__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
+                __R_CALL_INTERNAL_NOINLINE_METHOD(_Throw_GetLastErrorMsg)(__R_CONDITIONAL_NOINLINE_FN_CALL formatString, argList);
             }
         }
 

@@ -155,8 +155,8 @@ constexpr size_t guid_string_length = 38;
 #pragma region String and identifier comparisons
 // Using CompareStringOrdinal functions:
 //
-// Indentifiers require a locale-less (ordinal), and often case-insensitive, comparison (filenames, registry keys, XML node
-// names, etc). DO NOT use locale-sensitive (lexical) comparisons for resource identifiers (e.g.wcs*() functions in the CRT).
+// Indentifiers require a locale-less (ordinal), and often case-insensitive, comparison (filenames, registry keys, XML node names,
+// etc). DO NOT use locale-sensitive (lexical) comparisons for resource identifiers (e.g.wcs*() functions in the CRT).
 
 #if defined(__WI_DEFINE_STRING_ORDINAL_FUNCTIONS)
 

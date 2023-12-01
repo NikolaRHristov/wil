@@ -904,8 +904,8 @@ public:
 
     bool NotifyFailure(FailureInfo const& failure) WI_NOEXCEPT override
     {
-        // We always report errors to the ETW stream, but we hold-back the telemetry keyword if we've already reported this
-        // error to this particular telemetry provider.
+        // We always report errors to the ETW stream, but we hold-back the telemetry keyword if we've already reported this error
+        // to this particular telemetry provider.
 
         __TRACELOGGING_TEST_HOOK_ACTIVITY_ERROR(failure);
 
@@ -6420,8 +6420,8 @@ namespace details
 
             static const wchar_t* GetClassStringPointer(PCWSTR nameSpaceClass)
             {
-                // Note: Usage of wcsrchr can cause build errors in some components, so we implement a way of getting the
-                // pointer to the 'class' portion of the string ourselves.
+                // Note: Usage of wcsrchr can cause build errors in some components, so we implement a way of getting the pointer
+                // to the 'class' portion of the string ourselves.
                 int retIndex = 0;
                 while (nameSpaceClass[retIndex] != '\0')
                 {

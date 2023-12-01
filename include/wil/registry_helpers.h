@@ -139,10 +139,10 @@ namespace reg
         /**
          * \brief A translation function taking iterators referencing std::wstring objects and returns a corresponding
          * std::vector<wchar_t> to be written to a MULTI_SZ registry value The translation follows the rules for how MULTI_SZ
-         * registry values should be formatted, notably how null characters should be embedded within the returned vector
-         * \tparam InputIt An iterator type that references a container that holds std::wstring objects to translate into a
-         * wchar_t buffer \param first An iterator referencing to the beginning of the target container (like a std::begin
-         * iterator) \param last An iterator referencing one-past-the-end of the target container (like a std::end iterator)
+         * registry values should be formatted, notably how null characters should be embedded within the returned vector \tparam
+         * InputIt An iterator type that references a container that holds std::wstring objects to translate into a wchar_t buffer
+         * \param first An iterator referencing to the beginning of the target container (like a std::begin iterator)
+         * \param last An iterator referencing one-past-the-end of the target container (like a std::end iterator)
          * \return A std::vector<wchar_t> with the raw wchar_t buffer of bytes prepared to write to a MULTI_SZ registry value
          */
         template <class InputIt>
@@ -169,14 +169,13 @@ namespace reg
         }
 
         /**
-         * \brief A translation function taking iterators referencing wchar_t characters and returns extracted individual
-         * std::wstring objects The translation follows the rules for how MULTI_SZ registry value can be formatted, notably
-         * with embedded null characters Note that this conversion avoids returning empty std::wstring objects even though the
-         * input may contain contiguous null wchar_t values \tparam InputIt An iterator type that reference a container that
-         * holds wchar_t characters to translate into individual strings \param first An iterator referencing to the beginning
-         * of the target container (like a std::begin iterator) \param last An iterator referencing one-past-the-end of the
-         * target container (like a std::end iterator) \return A std::vector<std::wstring> of the extracted strings from the
-         * input container of wchar_t characters
+         * \brief A translation function taking iterators referencing wchar_t characters and returns extracted individual std::wstring objects
+         *        The translation follows the rules for how MULTI_SZ registry value can be formatted, notably with embedded null characters
+         *        Note that this conversion avoids returning empty std::wstring objects even though the input may contain contiguous null wchar_t values
+         * \tparam InputIt An iterator type that reference a container that holds wchar_t characters to translate into individual strings
+         * \param first An iterator referencing to the beginning of the target container (like a std::begin iterator)
+         * \param last An iterator referencing one-past-the-end of the target container (like a std::end iterator)
+         * \return A std::vector<std::wstring> of the extracted strings from the input container of wchar_t characters
          */
         template <class InputIt>
         ::std::vector<::std::wstring> get_wstring_vector_from_multistring(const InputIt& first, const InputIt& last)
@@ -237,14 +236,14 @@ namespace reg
          * \brief A translation function taking iterators referencing wchar_t characters and returns extracted individual
          * wil::unique_cotaskmem_string objects The translation follows the rules for how MULTI_SZ registry value can be
          * formatted, notably with embedded null characters Note that this conversion avoids returning empty
-         * wil::unique_cotaskmem_string objects even though the input may contain contiguous null wchar_t values \tparam
-         * InputIt An iterator type that reference a container that holds wchar_t characters to translate into individual
-         * strings \param first An iterator referencing to the beginning of the target container (like a std::begin iterator)
-         * \param last An iterator referencing one-past-the-end of the target container (like a std::end iterator) \param
-         * cotaskmem_array The [out] wil::unique_cotaskmem_array_ptr<wil::unique_cotaskmem_string> to contain the array of
-         * strings A wil::unique_cotaskmem_array_ptr<wil::unique_cotaskmem_string> of the extracted strings from the input
-         * container of wchar_t characters An empty wil::unique_cotaskmem_array_ptr should be translated as out-of-memory as
-         * there should always be at least one wil::unique_cotaskmem_string
+         * wil::unique_cotaskmem_string objects even though the input may contain contiguous null wchar_t values \tparam InputIt
+         * An iterator type that reference a container that holds wchar_t characters to translate into individual strings \param
+         * first An iterator referencing to the beginning of the target container (like a std::begin iterator) \param last An
+         * iterator referencing one-past-the-end of the target container (like a std::end iterator) \param cotaskmem_array The
+         * [out] wil::unique_cotaskmem_array_ptr<wil::unique_cotaskmem_string> to contain the array of strings A
+         * wil::unique_cotaskmem_array_ptr<wil::unique_cotaskmem_string> of the extracted strings from the input container of
+         * wchar_t characters An empty wil::unique_cotaskmem_array_ptr should be translated as out-of-memory as there should
+         * always be at least one wil::unique_cotaskmem_string
          */
         template <class InputIt>
         void get_cotaskmemstring_array_from_multistring_nothrow(

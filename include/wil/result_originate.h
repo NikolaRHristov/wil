@@ -46,8 +46,8 @@ namespace details
             wil::com_ptr_nothrow<IRestrictedErrorInfo> restrictedErrorInformation;
             if (GetRestrictedErrorInfo(&restrictedErrorInformation) == S_OK)
             {
-                // This thread already has an error origination payload.  Don't originate again if it has the same HRESULT
-                // that we are observing right now.
+                // This thread already has an error origination payload.  Don't originate again if it has the same HRESULT that we
+                // are observing right now.
                 wil::unique_bstr descriptionUnused;
                 HRESULT existingHr = failure.hr;
                 wil::unique_bstr restrictedDescriptionUnused;
@@ -77,8 +77,8 @@ namespace details
             }
             else if (restrictedErrorInformation)
             {
-                // GetRestrictedErrorInfo returns ownership of the error information.  If we aren't originating, and an error
-                // was already present, then we need to restore the error information for later observation.
+                // GetRestrictedErrorInfo returns ownership of the error information.  If we aren't originating, and an error was
+                // already present, then we need to restore the error information for later observation.
                 SetRestrictedErrorInfo(restrictedErrorInformation.get());
             }
         }
@@ -86,8 +86,8 @@ namespace details
 
     // This method will check for the presence of stowed exception data on the current thread.  If such data exists, and the
     // HRESULT matches the current failure, then we will call RoFailFastWithErrorContext.  RoFailFastWithErrorContext in this
-    // situation will result in -VASTLY- improved crash bucketing.  It is hard to express just how much better.  In other
-    // cases we just return and the calling method fails fast the same way it always has.
+    // situation will result in -VASTLY- improved crash bucketing.  It is hard to express just how much better.  In other cases we
+    // just return and the calling method fails fast the same way it always has.
     inline void __stdcall FailfastWithContextCallback(wil::FailureInfo const& failure) WI_NOEXCEPT
     {
         wil::com_ptr_nothrow<IRestrictedErrorInfo> restrictedErrorInformation;
@@ -108,8 +108,8 @@ namespace details
             }
             else
             {
-                // The error didn't match the current failure.  Put it back in thread-local storage even though we aren't
-                // failing fast in this method, so it is available in the debugger just-in-case.
+                // The error didn't match the current failure.  Put it back in thread-local storage even though we aren't failing
+                // fast in this method, so it is available in the debugger just-in-case.
                 SetRestrictedErrorInfo(restrictedErrorInformation.get());
             }
         }

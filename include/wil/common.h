@@ -615,10 +615,10 @@ namespace details
 
 //! @defgroup typesafety Type Validation
 //! Helpers to validate variable types to prevent accidental, but allowed type conversions.
-//! These helpers are most useful when building macros that accept a particular type.  Putting these functions around the
-//! types accepted prior to pushing that type through to a function (or using it within the macro) allows the macro to add an
-//! additional layer of type safety that would ordinarily be stripped away by C++ implicit conversions.  This system is
-//! extensively used in the error handling helper macros to validate the types given to various macro parameters.
+//! These helpers are most useful when building macros that accept a particular type.  Putting these functions around the types
+//! accepted prior to pushing that type through to a function (or using it within the macro) allows the macro to add an additional
+//! layer of type safety that would ordinarily be stripped away by C++ implicit conversions.  This system is extensively used in
+//! the error handling helper macros to validate the types given to various macro parameters.
 //! @{
 
 /** Verify that `val` can be evaluated as a logical bool.
@@ -737,8 +737,8 @@ commonly used when manipulating Win32 error codes.
 template <typename T>
 _Post_satisfies_(return == error) inline T verify_win32(T error)
 {
-    // Note: Win32 error code are defined as 'long' (#define ERROR_SUCCESS 0L), but are more frequently used as DWORD
-    // (unsigned long). This accept both types.
+    // Note: Win32 error code are defined as 'long' (#define ERROR_SUCCESS 0L), but are more frequently used as DWORD (unsigned
+    // long). This accept both types.
     static_assert(
         wistd::is_same<T, long>::value || wistd::is_same<T, unsigned long>::value,
         "Wrong Type: Win32 error code (long / unsigned long) expected");
@@ -750,7 +750,7 @@ _Post_satisfies_(return == error) inline T verify_win32(T error)
 // Implementation details for macros and helper functions... do not use directly.
 namespace details
 {
-    // Use size-specific casts to avoid sign extending numbers -- avoid warning C4310: cast truncates constant value
+// Use size-specific casts to avoid sign extending numbers -- avoid warning C4310: cast truncates constant value
 #define __WI_MAKE_UNSIGNED(val) \
     (__pragma(warning(push)) __pragma(warning(disable : 4310 4309))( \
         sizeof(val) == 1   ? static_cast<unsigned char>(val) \

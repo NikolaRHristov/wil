@@ -237,8 +237,8 @@ protected:
 /**
  * @brief Implements a property type with notifications
  * @tparam T the property type
- * @details Use the #INIT_NOTIFY_PROPERTY macro to initialize this property in your class constructor. This will set up the
- * right property name, and bind it to the `notify_property_changed_base` implementation.
+ * @details Use the #INIT_NOTIFY_PROPERTY macro to initialize this property in your class constructor. This will set up the right
+ * property name, and bind it to the `notify_property_changed_base` implementation.
  */
 template <typename T, typename Xaml_Data_PropertyChangedEventHandler = wil::details::Xaml_Data_PropertyChangedEventHandler, typename Xaml_Data_PropertyChangedEventArgs = wil::details::Xaml_Data_PropertyChangedEventArgs>
 struct single_threaded_notifying_property : single_threaded_rw_property<T>

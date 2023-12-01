@@ -555,8 +555,8 @@ namespace reg
      *        If `nullptr`, then `key` is used without modification.
      * \param value_name The name of the registry value whose data is to be updated.
      *        Can be nullptr to write to the unnamed default registry value.
-     * \param data The null-terminated, unexpanded string value to write to the specified registry value. For example,
-     * `%PATH%`. \exception std::exception (including wil::ResultException) will be thrown on all failures
+     * \param data The null-terminated, unexpanded string value to write to the specified registry value. For example, `%PATH%`.
+     * \exception std::exception (including wil::ResultException) will be thrown on all failures
      */
     inline void set_value_expanded_string(HKEY key, _In_opt_ PCWSTR subkey, _In_opt_ PCWSTR value_name, PCWSTR data)
     {
@@ -569,8 +569,8 @@ namespace reg
      * \param key An open or well-known registry key
      * \param value_name The name of the registry value whose data is to be updated.
      *        Can be nullptr to write to the unnamed default registry value.
-     * \param data The null-terminated, unexpanded string value to write to the specified registry value. For example,
-     * `%PATH%`. \exception std::exception (including wil::ResultException) will be thrown on all failures
+     * \param data The null-terminated, unexpanded string value to write to the specified registry value. For example, `%PATH%`.
+     * \exception std::exception (including wil::ResultException) will be thrown on all failures
      */
     inline void set_value_expanded_string(HKEY key, _In_opt_ PCWSTR value_name, PCWSTR data)
     {
@@ -2311,8 +2311,8 @@ namespace reg
      *        Can be nullptr to read from the unnamed default registry value.
      * \param[out] return_value A WCHAR array receiving the value read from the registry.
      *             Will write to the WCHAR array the string value read from the registry, guaranteeing null-termination
-     * \param[out] requiredBytes An optional pointer to a unsigned 32-bit value to receive the required bytes of the string in
-     * the registry \return HRESULT error code indicating success or failure (does not throw C++ exceptions)
+     * \param[out] requiredBytes An optional pointer to a unsigned 32-bit value to receive the required bytes of the string in the
+     * registry \return HRESULT error code indicating success or failure (does not throw C++ exceptions)
      */
     template <size_t Length, typename DwordType, wistd::enable_if_t<wistd::is_same_v<DwordType, uint32_t> || wistd::is_same_v<DwordType, unsigned long>>* = nullptr>
     HRESULT get_value_string_nothrow(
@@ -2330,8 +2330,8 @@ namespace reg
      *        Can be nullptr to read from the unnamed default registry value.
      * \param[out] return_value A WCHAR array receiving the value read from the registry.
      *             Will write to the WCHAR array the string value read from the registry, guaranteeing null-termination
-     * \param[out] requiredBytes An optional pointer to an unsigned 32-bit value to receive the required bytes of the string
-     * to be read \return HRESULT error code indicating success or failure (does not throw C++ exceptions)
+     * \param[out] requiredBytes An optional pointer to an unsigned 32-bit value to receive the required bytes of the string to be
+     * read \return HRESULT error code indicating success or failure (does not throw C++ exceptions)
      */
     template <size_t Length, typename DwordType, wistd::enable_if_t<wistd::is_same_v<DwordType, uint32_t> || wistd::is_same_v<DwordType, unsigned long>>* = nullptr>
     HRESULT get_value_string_nothrow(HKEY key, _In_opt_ PCWSTR value_name, WCHAR (&return_value)[Length], _Out_opt_ DwordType* requiredBytes) WI_NOEXCEPT
@@ -2971,8 +2971,8 @@ namespace reg
      *        If `nullptr`, then `key` is used without modification.
      * \param value_name The name of the registry value whose data is to be read.
      *        Can be nullptr to read from the unnamed default registry value.
-     * \param[out] return_value A ::wil::unique_cotaskmem_array_ptr<::wil::unique_cotaskmem_string> receiving the value read
-     * from the registry \return HRESULT error code indicating success or failure (does not throw C++ exceptions)
+     * \param[out] return_value A ::wil::unique_cotaskmem_array_ptr<::wil::unique_cotaskmem_string> receiving the value read from
+     * the registry \return HRESULT error code indicating success or failure (does not throw C++ exceptions)
      */
     inline HRESULT get_value_nothrow(
         HKEY key,
@@ -2996,8 +2996,8 @@ namespace reg
      * \param key An open or well-known registry key
      * \param value_name The name of the registry value whose data is to be read.
      *        Can be nullptr to read from the unnamed default registry value.
-     * \param[out] return_value A ::wil::unique_cotaskmem_array_ptr<::wil::unique_cotaskmem_string> receiving the value read
-     * from the registry \return HRESULT error code indicating success or failure (does not throw C++ exceptions)
+     * \param[out] return_value A ::wil::unique_cotaskmem_array_ptr<::wil::unique_cotaskmem_string> receiving the value read from
+     * the registry \return HRESULT error code indicating success or failure (does not throw C++ exceptions)
      */
     inline HRESULT get_value_nothrow(
         HKEY key, _In_opt_ PCWSTR value_name, ::wil::unique_cotaskmem_array_ptr<::wil::unique_cotaskmem_string>& return_value) WI_NOEXCEPT
@@ -3012,8 +3012,8 @@ namespace reg
      *        If `nullptr`, then `key` is used without modification.
      * \param value_name The name of the registry value whose data is to be read.
      *        Can be nullptr to read from the unnamed default registry value.
-     * \param[out] return_value A ::wil::unique_cotaskmem_array_ptr<::wil::unique_cotaskmem_string> receiving the value read
-     * from the registry \return HRESULT error code indicating success or failure (does not throw C++ exceptions)
+     * \param[out] return_value A ::wil::unique_cotaskmem_array_ptr<::wil::unique_cotaskmem_string> receiving the value read from
+     * the registry \return HRESULT error code indicating success or failure (does not throw C++ exceptions)
      */
     inline HRESULT get_value_multistring_nothrow(
         HKEY key,
@@ -3029,8 +3029,8 @@ namespace reg
      * \param key An open or well-known registry key
      * \param value_name The name of the registry value whose data is to be read.
      *        Can be nullptr to read from the unnamed default registry value.
-     * \param[out] return_value A ::wil::unique_cotaskmem_array_ptr<::wil::unique_cotaskmem_string> receiving the value read
-     * from the registry \return HRESULT error code indicating success or failure (does not throw C++ exceptions)
+     * \param[out] return_value A ::wil::unique_cotaskmem_array_ptr<::wil::unique_cotaskmem_string> receiving the value read from
+     * the registry \return HRESULT error code indicating success or failure (does not throw C++ exceptions)
      */
     inline HRESULT get_value_multistring_nothrow(
         HKEY key, _In_opt_ PCWSTR value_name, ::wil::unique_cotaskmem_array_ptr<::wil::unique_cotaskmem_string>& return_value) WI_NOEXCEPT

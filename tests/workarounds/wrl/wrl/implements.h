@@ -766,8 +766,8 @@ namespace WRL
 #pragma region Implements helper templates
 
         // Helper template used by Implements. This template traverses a list of interfaces and adds them as base class and
-        // information to enable QI. doStrictCheck is typically false only for the first interface, allowing IInspectable to
-        // be explicitly specified only as the first interface.
+        // information to enable QI. doStrictCheck is typically false only for the first interface, allowing IInspectable to be
+        // explicitly specified only as the first interface.
         template <typename RuntimeClassFlagsT, bool doStrictCheck, typename... TInterfaces>
         struct __declspec(novtable) ImplementsHelper;
 
@@ -1571,8 +1571,8 @@ namespace WRL
 // PREFast cannot see through template instantiation for AsIID()
 #pragma warning(disable : 6388)
 
-        // Reference counting functions that check overflow. If overflow is detected, ref count value will stop at LONG_MAX,
-        // and the object being reference-counted will be leaked.
+        // Reference counting functions that check overflow. If overflow is detected, ref count value will stop at LONG_MAX, and
+        // the object being reference-counted will be leaked.
         inline unsigned long SafeUnknownIncrementReference(long volatile& refcount) throw()
         {
             long oldValue = refcount;

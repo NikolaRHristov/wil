@@ -374,8 +374,8 @@ public:
     }
 
     //! Returns the address of the internal pointer (releases ownership of the pointer BEFORE returning the address).
-    //! The pointer is explicitly released to prevent accidental leaks of the pointer.  Coding standards generally indicate
-    //! that there is little valid `_Inout_` use of `IInterface**`, making this safe to do under typical use.
+    //! The pointer is explicitly released to prevent accidental leaks of the pointer.  Coding standards generally indicate that
+    //! there is little valid `_Inout_` use of `IInterface**`, making this safe to do under typical use.
     //! @see addressof
     //! ~~~~
     //! STDAPI GetMuffin(IMuffin **muffin);
@@ -403,10 +403,10 @@ public:
     }
 
     //! Returns the address of the internal pointer (releases ownership of the pointer BEFORE returning the address).
-    //! The pointer is explicitly released to prevent accidental leaks of the pointer.  Coding standards generally indicate
-    //! that there is little valid `_Inout_` use of `IInterface**`, making this safe to do under typical use.  Since this
-    //! behavior is not always immediately apparent, prefer to scope variables as close to use as possible (generally avoiding
-    //! use of the same com_ptr variable in successive calls to receive an output interface).
+    //! The pointer is explicitly released to prevent accidental leaks of the pointer.  Coding standards generally indicate that
+    //! there is little valid `_Inout_` use of `IInterface**`, making this safe to do under typical use.  Since this behavior is
+    //! not always immediately apparent, prefer to scope variables as close to use as possible (generally avoiding use of the same
+    //! com_ptr variable in successive calls to receive an output interface).
     //! @see addressof
     pointer* operator&() WI_NOEXCEPT
     {
@@ -531,8 +531,8 @@ public:
     result query_to(_COM_Outptr_ U** ptrResult) const
     {
         // Prefast cannot see through the error policy + query_policy mapping and as a result fires 6388 and 28196 for this
-        // function. Suppression is also not working. Wrapping this entire function in #pragma warning(disable: 6388 28196)
-        // does not stop all of the prefast errors from being emitted.
+        // function. Suppression is also not working. Wrapping this entire function in #pragma warning(disable: 6388 28196) does
+        // not stop all of the prefast errors from being emitted.
 #if defined(_PREFAST_)
         *ptrResult = nullptr;
         return err_policy::HResult(E_NOINTERFACE);
@@ -565,9 +565,9 @@ public:
     //!                     do not return a value (void).
     result query_to(REFIID riid, _COM_Outptr_ void** ptrResult) const
     {
-        // Prefast cannot see through the error policy + query_policy mapping and as a result and as a result fires 6388 and
-        // 28196 for this function. Suppression is also not working. Wrapping this entire function in #pragma warning(disable:
-        // 6388 28196) does not stop the prefast errors from being emitted.
+        // Prefast cannot see through the error policy + query_policy mapping and as a result and as a result fires 6388 and 28196
+        // for this function. Suppression is also not working. Wrapping this entire function in #pragma warning(disable: 6388
+        // 28196) does not stop the prefast errors from being emitted.
 #if defined(_PREFAST_)
         *ptrResult = nullptr;
         return err_policy::HResult(E_NOINTERFACE);
@@ -586,8 +586,8 @@ public:
     //! See @ref page_query for more information.
     //! @{
 
-    //! Attempt a query and return a smart pointer matching the interface specified by 'U':  `auto foo =
-    //! m_ptr.try_query<IFoo>();` (null result when interface is unsupported). See @ref page_query for more information.
+    //! Attempt a query and return a smart pointer matching the interface specified by 'U':  `auto foo = m_ptr.try_query<IFoo>();`
+    //! (null result when interface is unsupported). See @ref page_query for more information.
     //!
     //! This method can be used to query a com_ptr for an interface when it's known that support for that interface is
     //! optional (failing the query should not produce an error).  The caller must examine the returned pointer to see
@@ -668,15 +668,14 @@ public:
     //! See @ref page_query for more information.
     //! @{
 
-    //! Query and return a smart pointer matching the interface specified by 'U':  `auto foo = m_ptr.copy<IFoo>();` (succeeds
-    //! and returns a null ptr if the queried pointer is null). See @ref page_query for more information.
+    //! Query and return a smart pointer matching the interface specified by 'U':  `auto foo = m_ptr.copy<IFoo>();` (succeeds and returns a null ptr if the queried pointer is null).
+    //! See @ref page_query for more information.
     //!
     //! This method is identical to @ref query with the exception that it can be used when the pointer is null.  When used
-    //! against a null pointer, the returned pointer will always be null and an error will not be produced.  Like query it
-    //! will produce an error for a non-null pointer that does not support the requested interface.
+    //! against a null pointer, the returned pointer will always be null and an error will not be produced.  Like query it will
+    //! produce an error for a non-null pointer that does not support the requested interface.
     //! @tparam U Represents the interface being queried
-    //! @return A `com_ptr_t` pointer to the given interface `U`.  The pointer will be null ONLY if the pointer being queried
-    //! is null.  The returned
+    //! @return A `com_ptr_t` pointer to the given interface `U`.  The pointer will be null ONLY if the pointer being queried is null.  The returned
     //!         `com_ptr_t` type will be @ref com_ptr or @ref com_ptr_failfast (matching the error handling form of the
     //!         pointer being queried (exception based or fail-fast).
     template <class U>
@@ -704,9 +703,9 @@ public:
     {
         if (m_ptr)
         {
-            // Prefast cannot see through the error policy + query_policy mapping and as a result and as a result fires 6388
-            // and 28196 for this function. Suppression is also not working. Wrapping this entire function in #pragma
-            // warning(disable: 6388 28196) does not stop the prefast errors from being emitted.
+            // Prefast cannot see through the error policy + query_policy mapping and as a result and as a result fires 6388 and
+            // 28196 for this function. Suppression is also not working. Wrapping this entire function in #pragma warning(disable:
+            // 6388 28196) does not stop the prefast errors from being emitted.
 #if defined(_PREFAST_)
             *ptrResult = nullptr;
             return err_policy::HResult(E_NOINTERFACE);
@@ -721,7 +720,7 @@ public:
     //! Query for the requested interface using the iid, ppv pattern:  `ptr.copy_to(riid, ptr);`. (succeeds and returns null ptr if the queried pointer is null).
     //! See @ref page_query for more information.
     //!
-    //! Identical to the corresponding @ref query_to method with the exception that it can be used when the pointer is null. When used
+    //! Identical to the corresponding @ref query_to method with the exception that it can be used when the pointer is null.  When used
     //! against a null pointer, the returned pointer will always be null and an error will not be produced.  Like query_to it will
     //! produce an error for a non-null pointer that does not support the requested interface.
     //! @param riid         The interface to query for.
@@ -734,9 +733,9 @@ public:
     {
         if (m_ptr)
         {
-            // Prefast cannot see through the error policy + query_policy mapping and as a result and as a result fires 6388
-            // and 28196 for this function. Suppression is also not working. Wrapping this entire function in #pragma
-            // warning(disable: 6388 28196) does not stop the prefast errors from being emitted.
+            // Prefast cannot see through the error policy + query_policy mapping and as a result and as a result fires 6388 and
+            // 28196 for this function. Suppression is also not working. Wrapping this entire function in #pragma warning(disable:
+            // 6388 28196) does not stop the prefast errors from being emitted.
 #if defined(_PREFAST_)
             *ptrResult = nullptr;
             return err_policy::HResult(E_NOINTERFACE);
@@ -773,13 +772,12 @@ public:
         return com_ptr_t<U, err_policy>(m_ptr, details::tag_try_com_copy());
     }
 
-    //! Attempts to query for the interface matching the given output parameter; returns a bool indicating if the query was
-    //! successful (returns `false` if the pointer is null). See @ref page_query for more information.
+    //! Attempts to query for the interface matching the given output parameter; returns a bool indicating if the query was successful (returns `false` if the pointer is null).
+    //! See @ref page_query for more information.
     //!
-    //! Identical to the corresponding @ref try_query_to method with the exception that it can be used when the pointer is
-    //! null. When used against a null pointer, the returned pointer will be null and the return value will be `false`.
-    //! @param ptrResult    The pointer to query for.  The interface to query is deduced from the type of this out parameter;
-    //! do not specify
+    //! Identical to the corresponding @ref try_query_to method with the exception that it can be used when the pointer is null. When used
+    //! against a null pointer, the returned pointer will be null and the return value will be `false`.
+    //! @param ptrResult    The pointer to query for.  The interface to query is deduced from the type of this out parameter; do not specify
     //!                     the type directly to the template.
     //! @return             A `bool` indicating `true` of the query was successful (the returned parameter is non-null).
     template <class U>
@@ -801,7 +799,7 @@ public:
     //! @param riid         The interface to query for.
     //! @param ptrResult    The output pointer that will receive the newly queried interface.  This pointer will be assigned null on failure or
     //!                     if the source pointer being queried is null.
-    //! @return             A `bool` indicating `true` of the query was successful (the returned parameter is non-null). Querying a null
+    //! @return             A `bool` indicating `true` of the query was successful (the returned parameter is non-null).  Querying a null
     //!                     pointer will return `false` with a null result.
     _Success_return_ bool try_copy_to(REFIID riid, _COM_Outptr_result_maybenull_ void** ptrResult) const
     {
@@ -1299,8 +1297,8 @@ com_ptr_failfast<T> make_com_ptr_failfast(T* p)
 //! @{
 
 #ifdef WIL_ENABLE_EXCEPTIONS
-//! Queries for the specified interface and returns an exception-based wil::com_ptr to that interface (exception if
-//! unsupported). See @ref page_query for more information.
+//! Queries for the specified interface and returns an exception-based wil::com_ptr to that interface (exception if unsupported).
+//! See @ref page_query for more information.
 //! @param ptrSource    The pointer to query (may be a raw interface pointer, wil com_ptr, or WRL ComPtr), should not be null
 //! @tparam U           Represents the interface being queried
 //! @return             A `wil::com_ptr<U>` pointer to the given interface `U`.  The returned pointer is guaranteed not null.
@@ -1994,8 +1992,8 @@ wil::com_ptr_nothrow<Interface> CoCreateInstanceNoThrow(REFCLSID rclsid, DWORD d
     return CoCreateInstance<Interface, err_returncode_policy>(rclsid, dwClsContext);
 }
 
-/** constructs a COM object using the class as the identifier (that has an associated CLSID) on a specific interface or
-IUnknown. Note, failures are reported as a null result, the HRESULT is lost. */
+/** constructs a COM object using the class as the identifier (that has an associated CLSID) on a specific interface or IUnknown.
+Note, failures are reported as a null result, the HRESULT is lost. */
 template <typename Class, typename Interface = IUnknown>
 wil::com_ptr_nothrow<Interface> CoCreateInstanceNoThrow(DWORD dwClsContext = CLSCTX_INPROC_SERVER) WI_NOEXCEPT
 {
