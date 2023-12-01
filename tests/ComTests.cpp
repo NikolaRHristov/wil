@@ -2837,25 +2837,36 @@ TEST_CASE("StreamTests::Saver", "[com][IStream]")
 }
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) && WIL_HAS_CXX_17
 
-template<typename T>
+template <typename T>
 struct EnumT : IUnknown
 {
     // IUnknown
-    HRESULT __stdcall QueryInterface(REFIID, void**) noexcept { return E_NOINTERFACE; }
-    ULONG __stdcall AddRef() noexcept { return 0; }
-    ULONG __stdcall Release() noexcept { return 0; }
+    HRESULT __stdcall QueryInterface(REFIID, void**) noexcept
+    {
+        return E_NOINTERFACE;
+    }
+    ULONG __stdcall AddRef() noexcept
+    {
+        return 0;
+    }
+    ULONG __stdcall Release() noexcept
+    {
+        return 0;
+    }
     // IEnumXxx
     HRESULT __stdcall Next(ULONG, T* output, ULONG*) noexcept
     {
         if (m_nextIndex++ < m_nItems)
         {
-            *output = m_mockValue; 
+            *output = m_mockValue;
             return S_OK;
         }
         return S_FALSE;
     }
 
-    EnumT(int nItems, const T& value) : m_nItems(nItems), m_mockValue(value) {}
+    EnumT(int nItems, const T& value) : m_nItems(nItems), m_mockValue(value)
+    {
+    }
 
     int m_nItems = 0;
     int m_nextIndex = 0;
@@ -2890,7 +2901,8 @@ TEST_CASE("COMEnumerator", "[com][enumerator]")
         static_assert(std::is_same_v<wil::details::com_enumerator_traits<IEnumMuffins>::smart_result, int32_t>);
 
         static_assert(std::is_same_v<wil::details::com_enumerator_next_traits<decltype(&IEnumMuffinsCOM::Next)>::Result, IUnknown*>);
-        static_assert(std::is_same_v<wil::details::com_enumerator_next_traits<decltype(&IEnumMuffinsCOM::Next)>::Interface, IEnumMuffinsCOM>);
+        static_assert(
+            std::is_same_v<wil::details::com_enumerator_next_traits<decltype(&IEnumMuffinsCOM::Next)>::Interface, IEnumMuffinsCOM>);
         static_assert(std::is_same_v<wil::details::com_enumerator_traits<IEnumMuffinsCOM>::Result, IUnknown*>);
         static_assert(std::is_same_v<wil::details::com_enumerator_traits<IEnumMuffinsCOM>::smart_result, wil::com_ptr<IUnknown>>);
     }
@@ -2957,7 +2969,7 @@ TEST_CASE("COMEnumerator", "[com][enumerator]")
         {
             REQUIRE(assocHandler);
             found = true;
-            break; 
+            break;
         }
         REQUIRE(found);
     }
@@ -2967,8 +2979,7 @@ TEST_CASE("COMEnumerator", "[com][enumerator]")
         wil::verify_hresult(SHAssocEnumHandlers(L".jpg", ASSOC_FILTER_RECOMMENDED, &enumAssocHandlers));
         REQUIRE(enumAssocHandlers);
         auto iterator = wil::make_range(enumAssocHandlers.get());
-        const auto it = std::find_if(iterator.begin(), iterator.end(), [](const wil::com_ptr<IAssocHandler>& assocHandler)
-        {
+        const auto it = std::find_if(iterator.begin(), iterator.end(), [](const wil::com_ptr<IAssocHandler>& assocHandler) {
             return assocHandler != nullptr;
         });
         REQUIRE(*it != nullptr);

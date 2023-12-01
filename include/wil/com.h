@@ -3069,30 +3069,29 @@ void for_each_site(_In_opt_ IUnknown* siteInput, TLambda&& callback)
 
 #endif // __IObjectWithSite_INTERFACE_DEFINED__
 
-
 // if C++17 or greater
 #if WIL_HAS_CXX_17
 #ifdef WIL_ENABLE_EXCEPTIONS
 namespace details
 {
-    template<typename>
+    template <typename>
     struct com_enumerator_next_traits;
 
-    template<typename Itf, typename T, typename Ret>
-    struct com_enumerator_next_traits<Ret(__stdcall Itf::*)(ULONG, T*, ULONG*)>
+    template <typename Itf, typename T, typename Ret>
+    struct com_enumerator_next_traits<Ret (__stdcall Itf::*)(ULONG, T*, ULONG*)>
     {
         using Interface = Itf;
         using Result = T;
     };
 
-    template<typename Itf, typename T, typename Ret>
-    struct com_enumerator_next_traits<Ret(__stdcall Itf::*)(ULONG, T*, ULONG*) noexcept>
+    template <typename Itf, typename T, typename Ret>
+    struct com_enumerator_next_traits<Ret (__stdcall Itf::*)(ULONG, T*, ULONG*) noexcept>
     {
         using Interface = Itf;
         using Result = T;
     };
 
-    template<typename T>
+    template <typename T>
     struct has_next
     {
         template <typename U = T>
@@ -3104,18 +3103,20 @@ namespace details
         static constexpr bool value = decltype(test<T>(0))::value;
     };
 
-    template<typename T>
+    template <typename T>
     constexpr bool has_next_v = has_next<T>::value;
 
-    template<typename Interface>
+    template <typename Interface>
     struct com_enumerator_traits
     {
         using Result = typename com_enumerator_next_traits<decltype(&Interface::Next)>::Result;
         // If the result is a COM pointer type (IFoo*), then we use wil::com_ptr<IFoo>. Otherwise, we use the raw pointer type IFoo*.
-        using smart_result = wistd::conditional_t<wistd::is_pointer_v<Result> && wistd::is_base_of_v<::IUnknown, wistd::remove_pointer_t<Result>>,
-            wil::com_ptr<wistd::remove_pointer_t<Result>>, Result>;
+        using smart_result = wistd::conditional_t<
+            wistd::is_pointer_v<Result> && wistd::is_base_of_v<::IUnknown, wistd::remove_pointer_t<Result>>,
+            wil::com_ptr<wistd::remove_pointer_t<Result>>,
+            Result>;
     };
-}
+} // namespace details
 
 template <typename IEnumType, typename TStoredType = typename details::com_enumerator_traits<IEnumType>::smart_result>
 struct com_iterator
@@ -3189,8 +3190,7 @@ private:
     }
 };
 
-
-template<typename IEnumXxx, wistd::enable_if_t<wil::details::has_next_v<IEnumXxx*>, int> = 0>
+template <typename IEnumXxx, wistd::enable_if_t<wil::details::has_next_v<IEnumXxx*>, int> = 0>
 WI_NODISCARD auto make_range(IEnumXxx* enumPtr)
 {
     struct iterator_range
@@ -3218,6 +3218,6 @@ WI_NODISCARD auto make_range(IEnumXxx* enumPtr)
 #endif // WIL_HAS_CXX_17
 #endif // WIL_ENABLE_EXCEPTIONS
 
-} // wil
+} // namespace wil
 
 #endif
