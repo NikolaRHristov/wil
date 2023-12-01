@@ -181,6 +181,10 @@ TypenameMacros: [
 WhitespaceSensitiveMacros: [
   __WI_CLANG_DISABLE_WARNING,
 ]
+
+# TODO: Only supported by clang-format version 17+
+# Macros:
+# - WI_NOEXCEPT=noexcept
 ---
 Language: CSharp
 AlignAfterOpenBracket: AlwaysBreak
